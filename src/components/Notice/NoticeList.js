@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 const NoticeList = ({ notices }) => {
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">공지사항</h1>
       <table className="min-w-full border-collapse border border-gray-300">
         <thead>
           <tr>

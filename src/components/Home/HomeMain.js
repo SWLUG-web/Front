@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import '../../styles/Home.css'; // 스타일 추가
 
 const HomeMain = () => {
+  const [hoverIndex, setHoverIndex] = useState(null); // hover 상태 관리
+
+  // 주요 활동 데이터
+  const activities = [
+    { id: 1, title: '스터디 📚', image: '/hover1.jpg', link: '/intro' },
+    { id: 2, title: '프로젝트 📂', image: '/hover2.png', link: '/intro' },
+    { id: 3, title: '특강 / 멘토·멘티 🎓', image: '/hover3.png', link: '/intro' },
+    { id: 4, title: '세미나 🔒', image: '/hover4.png', link: '/intro' },
+  ];
+
   return (
     <div>
       {/* 메인 콘텐츠 */}
@@ -37,30 +48,25 @@ const HomeMain = () => {
           주요 활동 <span className="ml-2">🔍</span>
         </h2>
         <div className="grid grid-cols-2 gap-8 max-w-3xl mx-auto">
-          <Link
-            to="/intro"
-            className="border rounded-lg py-12 px-16 shadow hover:bg-gray-100 flex justify-center items-center text-xl font-bold"
-          >
-            <span>스터디 📚</span>
-          </Link>
-          <Link
-            to="/intro"
-            className="border rounded-lg py-12 px-16 shadow hover:bg-gray-100 flex justify-center items-center text-xl font-bold"
-          >
-            <span>프로젝트 📂</span>
-          </Link>
-          <Link
-            to="/intro"
-            className="border rounded-lg py-12 px-16 shadow hover:bg-gray-100 flex justify-center items-center text-xl font-bold"
-          >
-            <span>특강 / 멘토·멘티 🎓</span>
-          </Link>
-          <Link
-            to="/intro"
-            className="border rounded-lg py-12 px-16 shadow hover:bg-gray-100 flex justify-center items-center text-xl font-bold"
-          >
-            <span>세미나 🔒</span>
-          </Link>
+          {activities.map((activity, index) => (
+            <Link
+              key={activity.id}
+              to={activity.link}
+              className="activity-card"
+              onMouseEnter={() => setHoverIndex(index)} // Hover 상태 설정
+              onMouseLeave={() => setHoverIndex(null)} // Hover 상태 해제
+            >
+              {hoverIndex === index ? (
+                <img
+                  src={activity.image}
+                  alt={activity.title}
+                  className="rounded shadow-md w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-xl font-bold">{activity.title}</span>
+              )}
+            </Link>
+          ))}
         </div>
       </div>
     </div>
