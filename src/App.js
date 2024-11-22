@@ -6,6 +6,7 @@ import NoticePage from './pages/Notice/NoticePage';
 import NoticeDetailPage from './pages/Notice/NoticeDetailPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import FAQPage from './pages/FAQ/FAQPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/main" element={<HomePage />} />
             <Route path="/notice" element={<NoticePage />} />
             <Route path="/notice/:id" element={<NoticeDetailPage />} />
+            <Route path="/faq" element={<FAQPage />} />
           </Routes>
         </main>
         <Footer />
