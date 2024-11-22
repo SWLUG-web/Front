@@ -2,7 +2,7 @@ import React from 'react';
 
 const Header = () => {
   return (
-    <header className="bg-white shadow-md">
+    <header className="bg-white">
       <div className="container mx-auto flex items-center justify-between h-20 px-8">
         <div className="logo">
           {/* 수정된 경로 */}

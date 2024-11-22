@@ -10,7 +10,7 @@ function App() {
     <div className="App flex flex-col min-h-screen">
       <Header />
       <main className="min-h-screen">
-        <div className="container mx-auto py-12 text-center">
+        <div className="container mx-auto text-center">
         <RouterProvider router={root}/>
           <h1 className="text-3xl font-bold text-gray-800">
            

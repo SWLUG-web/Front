@@ -34,6 +34,7 @@
     border: 1px solid #6a6a6a;
     border-radius: 20px;
     font-size: 16px;
+    background-color: #f9f9f9;
 }
 
 /* 오류 메시지 스타일 */
@@ -41,7 +42,8 @@
     color: #E71818;
     font-size: 16px;
     margin-top: 5px;
-    margin-left: -150px; /* 라벨 너비 + 마진 */
+    margin-left: -150px;
+    /* 라벨 너비 + 마진 */
 }
 
 .info-text {
@@ -49,5 +51,10 @@
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 15px;
-    margin-top: 50px;
+    margin-top: 30px;
+}
+
+.form_subtitle {
+    font-size: 20px;
+    font-weight: 600px;
 }
