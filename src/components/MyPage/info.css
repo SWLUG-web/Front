@@ -27,3 +27,12 @@
     font-weight: 600;
     margin-bottom: 30px;
 }
+
+.password-reset-button {
+    width: 140px;
+    height: 35px;
+    margin-left: 20px;
+    border-radius: 10px;
+    background-color: #202123;
+    color: #F9F9F9;
+}

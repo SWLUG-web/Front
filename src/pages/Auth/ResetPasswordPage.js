@@ -1,15 +1,14 @@
-// 로그인 비밀번호 재설정 페이지
+// 로그인 비밀번호 재설정
 
-import React, { useState } from 'react';
-import ResetPassword from '../../components/Auth/ResetPassword';
+import React from "react";
+import PasswordReset from "../../components/Auth/ResetPassword";
 
-const ResetPasswordPage = () => {
+function ResetPasswordPage() {
   return (
     <div>
-      <h1>비밀번호 재설정</h1>
-      <ResetPassword />
+      <PasswordReset isLoginPage={true} />
     </div>
   );
-};
+}
 
 export default ResetPasswordPage;

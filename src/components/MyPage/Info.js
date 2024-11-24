@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react"; 
+import React, { useEffect, useState, useTransition } from "react";
 // import axios from "axios"; // 백엔드 연결 시 사용
-import "../../styles/input.css"
-import "../../styles/common.css"
-import "./info.css"
+import "../../styles/input.css";
+import "../../styles/common.css";
+import "./info.css";
+import { useNavigate } from "react-router-dom";
 
 function Info() {
   const [userInfo, setUserInfo] = useState({
@@ -11,6 +12,15 @@ function Info() {
     email: "songha1744@naver.com",
     phone: "010-1111-2222",
   });
+
+  const navigate = useNavigate();
+  const [ _, startTransition] = useTransition();
+
+  const handlePasswordReset = () => {
+    startTransition(() => {
+      navigate("/users/update", { state: { fromMyPage: true } });
+    });
+  };
 
   useEffect(() => {
     // ** 실제 백엔드 연결 코드 **
@@ -29,25 +39,39 @@ function Info() {
       <div className="info-form_field">
         <div className="input-wrapper">
           <label>아이디</label>
-          <input value={userInfo.id} disabled className="info-form_input" />
+          <input value={userInfo.id} className="info-form_input" />
         </div>
       </div>
       <div className="info-form_field">
         <div className="input-wrapper">
           <label>닉네임</label>
-          <input value={userInfo.nickname} disabled className="info-form_input" />
+          <input value={userInfo.nickname} className="info-form_input" />
         </div>
       </div>
+
+      {/* 비밀번호 재설정 버튼 */}
+      <div className="info-form_field">
+        <div className="input-wrapper">
+          <label>비밀번호</label>
+            <button
+              onClick={handlePasswordReset}
+              className="password-reset-button"
+            >
+              비밀번호 재설정
+            </button>
+          </div>
+      </div>
+
       <div className="info-form_field">
         <div className="input-wrapper">
           <label>이메일</label>
-          <input value={userInfo.email} disabled className="info-form_input" />
+          <input value={userInfo.email} className="info-form_input" />
         </div>
       </div>
       <div className="info-form_field">
         <div className="input-wrapper">
           <label>전화 번호</label>
-          <input value={userInfo.phone} disabled className="info-form_input" />
+          <input value={userInfo.phone} className="info-form_input" />
         </div>
       </div>
     </div>
