@@ -1,55 +1,44 @@
 import React, { useState, useEffect } from "react";
 // import axios from "axios"; // 백엔드 연결 시 사용
 import Info from "../../components/MyPage/Info";
-import "./MyPage.css"
+import "./MyPage.css";
 
 function MyPage() {
-  const [posts, setPosts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPage = 3; // Mock 데이터 기준
+  const [posts, setPosts] = useState([]); // 모든 게시물
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const postsPerPage = 7; // 한 페이지당 게시물 수
+  const [totalPage, setTotalPage] = useState(1); // 전체 페이지 수
 
+  // Mock 데이터 가져오기
   useEffect(() => {
-    // ** 실제 백엔드 연결 코드 **
-    /*
-    axios
-      .post("/users/mypage", { id: "2021111350", page: currentPage })
-      .then((response) => setPosts(response.data.board))
-      .catch((error) => console.error("게시글 불러오기 실패", error));
-    */
-
-    // Mock 데이터로 테스트
-    const mockPosts = [
-      { boardId: 1, title: "글 제목 1", date: "2024.10.19" },
-      { boardId: 2, title: "글 제목 2", date: "2024.10.18" },
-      { boardId: 3, title: "글 제목 3", date: "2024.10.17" },
-    ];
+    // Mock 데이터
+    const mockPosts = Array.from({ length: 23 }, (_, index) => ({
+      boardId: index + 1,
+      title: `글 제목 들어갈 예정이에요 ${index + 1}`,
+      date: `2024.10.${19 - (index % 30)}`,
+    }));
     setPosts(mockPosts);
-  }, [currentPage]);
+    setTotalPage(Math.ceil(mockPosts.length / postsPerPage)); // 총 페이지 수 계산
+  }, []);
 
+  // 게시물 삭제 처리
   const handleDelete = (boardId) => {
-    // ** 실제 백엔드 연결 코드 **
-    /*
-    axios
-      .get(`/board/delete`, { params: { boardId } })
-      .then(() => setPosts(posts.filter((post) => post.boardId !== boardId)))
-      .catch((error) => console.error("게시글 삭제 실패", error));
-    */
-
-    // Mock 데이터 삭제 테스트
-    setPosts(posts.filter((post) => post.boardId !== boardId));
+    const updatedPosts = posts.filter((post) => post.boardId !== boardId);
+    setPosts(updatedPosts);
+    setTotalPage(Math.ceil(updatedPosts.length / postsPerPage)); // 삭제 후 총 페이지 수 재계산
   };
 
+  // 페이지 변경 처리
   const handlePageChange = (page) => {
+    if (page < 1 || page > totalPage) return; // 페이지 범위 제한
     setCurrentPage(page);
-
-    // ** 실제 백엔드 연결 코드 (필요 시 페이지네이션 적용) **
-    /*
-    axios
-      .post("/users/mypage", { id: "2021111350", page })
-      .then((response) => setPosts(response.data.board))
-      .catch((error) => console.error("페이지 이동 실패", error));
-    */
   };
+
+  // 현재 페이지에 해당하는 게시물 가져오기
+  const currentPosts = posts.slice(
+    (currentPage - 1) * postsPerPage,
+    currentPage * postsPerPage
+  );
 
   return (
     <div className="mypage">
@@ -62,8 +51,8 @@ function MyPage() {
       <section className="user-posts">
         <h2 className="form_subtitle">작성한 글</h2>
         <div className="posts-list">
-          {posts.length > 0 ? (
-            posts.map((post) => (
+          {currentPosts.length > 0 ? (
+            currentPosts.map((post) => (
               <div className="post-item" key={post.boardId}>
                 <span>{post.boardId}</span>
                 <span>{post.title}</span>
@@ -76,7 +65,15 @@ function MyPage() {
             <div className="no-posts">게시물이 없습니다.</div>
           )}
         </div>
+
+        {/* 페이지네이션 */}
         <div className="pagination">
+          <button onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
+            &lt;&lt; {/* 첫 페이지 */}
+          </button>
+          <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+            &lt; {/* 이전 페이지 */}
+          </button>
           {[...Array(totalPage)].map((_, index) => (
             <button
               key={index}
@@ -86,6 +83,12 @@ function MyPage() {
               {index + 1}
             </button>
           ))}
+          <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPage}>
+            &gt; {/* 다음 페이지 */}
+          </button>
+          <button onClick={() => handlePageChange(totalPage)} disabled={currentPage === totalPage}>
+            &gt;&gt; {/* 마지막 페이지 */}
+          </button>
         </div>
       </section>
     </div>
