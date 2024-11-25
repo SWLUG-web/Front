@@ -1,12 +1,12 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/Home/HomePage';
 import NoticePage from './pages/Notice/NoticePage';
 import NoticeDetailPage from './pages/Notice/NoticeDetailPage';
+import FAQPage from './pages/FAQ/FAQPage';
+import ApplyPage from './pages/Apply/ApplyPage'; // 추가
 import Header from './components/Header';
 import Footer from './components/Footer';
-import FAQPage from './pages/FAQ/FAQPage';
 
 function App() {
   return (
@@ -19,6 +19,7 @@ function App() {
             <Route path="/notice" element={<NoticePage />} />
             <Route path="/notice/:id" element={<NoticeDetailPage />} />
             <Route path="/faq" element={<FAQPage />} />
+            <Route path="/apply" element={<ApplyPage />} /> {/* 추가 */}
           </Routes>
         </main>
         <Footer />
