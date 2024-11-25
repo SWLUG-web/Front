@@ -7,24 +7,33 @@ const NoticePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const noticesPerPage = 10; // 페이지당 공지사항 수
+
+  // 필터링된 공지사항
   const filteredNotices = notices.filter((notice) =>
     notice.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // 페이지네이션 처리
   const totalPages = Math.ceil(filteredNotices.length / noticesPerPage);
   const startIndex = (currentPage - 1) * noticesPerPage;
   const currentNotices = filteredNotices.slice(startIndex, startIndex + noticesPerPage);
 
+  // 검색어 변경 시 페이지 초기화
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // 검색어가 변경될 때 페이지를 1로 초기화
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
-      <h1 className="text-3xl font-bold mb-6">공지사항</h1>
+      <h1 className="apply-title text-4xl font-bold text-center mb-6">공지사항</h1>
       {/* 검색 입력란 */}
       <div className="flex items-center border rounded-full px-4 py-2 mb-6 shadow-sm">
         <input
           type="text"
           placeholder="제목 검색"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearchChange}
           className="flex-grow border-none focus:outline-none text-sm"
         />
         <button type="button">

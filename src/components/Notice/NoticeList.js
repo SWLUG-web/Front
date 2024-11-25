@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 const NoticeList = ({ notices }) => {
   return (
@@ -17,11 +16,7 @@ const NoticeList = ({ notices }) => {
           {notices.map((notice) => (
             <tr key={notice.id}>
               <td className="border border-gray-300 px-4 py-2 text-center">{notice.id}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                <Link to={`/notice/${notice.id}`} className="text-blue-500 hover:underline">
-                  {notice.title}
-                </Link>
-              </td>
+              <td className="border border-gray-300 px-4 py-2 text-black">{notice.title}</td>
               <td className="border border-gray-300 px-4 py-2 text-center">{notice.date}</td>
               <td className="border border-gray-300 px-4 py-2 text-center">{notice.author}</td>
             </tr>
