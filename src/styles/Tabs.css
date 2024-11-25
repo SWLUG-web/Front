@@ -14,7 +14,7 @@
 .tab-button {
     flex: 1;
     text-align: center;
-    padding: 10px 0;
+    padding: 20px 0;
     cursor: pointer;
     border: 1px solid #000000; /* 탭 개별 테두리 */
     border-bottom: none; /* 아래쪽 테두리 제거 */
