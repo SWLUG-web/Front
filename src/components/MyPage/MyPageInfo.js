@@ -2,7 +2,7 @@ import React, { useEffect, useState, useTransition } from "react";
 // import axios from "axios"; // 백엔드 연결 시 사용
 import "../../styles/input.css";
 import "../../styles/common.css";
-import "./MyPageInfo.css";
+import "../..styles/MyPageInfo.css";
 import { useNavigate } from "react-router-dom";
 
 function Info() {
