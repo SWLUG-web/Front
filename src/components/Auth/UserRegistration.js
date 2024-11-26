@@ -21,8 +21,28 @@ const UserRegistration = ({ onNext, onPrev }) => {
     emailAuthError: false,
   });
 
+  const [authButtonText, setAuthButtonText] = useState("인증번호 전송"); // 버튼 텍스트 상태
+
+  const [passwordMatch, setPasswordMatch] = useState(false);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    // 비밀번호 확인 로직
+    if (name === 'pw' || name === 'pwCheck') {
+      if (name === 'pw') {
+        setPasswordMatch(value === formData.pwCheck && value !== '');
+      } else {
+        setPasswordMatch(value === formData.pw && value !== '');
+      }
+    }
+  };
+
+  const handleAuthButtonClick = () => {
+    // 인증번호 전송 로직 (백엔드 연동 필요)
+    //alert("인증번호가 전송되었습니다.");
+    setAuthButtonText("인증번호 재전송"); // 버튼 텍스트 변경
   };
 
   const handleSubmit = () => {
@@ -128,23 +148,30 @@ const UserRegistration = ({ onNext, onPrev }) => {
             />
           </div>
         </div>
-
         <div className="info-form_field">
           <div className="input-wrapper">
             <label htmlFor="pwCheck">비밀번호 확인</label>
-            <input
-              name="pwCheck"
-              id="pwCheck"
-              type="password"
-              placeholder="비밀번호를 다시 입력해주세요"
-              value={formData.pwCheck}
-              onChange={handleChange}
-              className="info-form_input"
-            />
+            <div className="input-container">
+              <input
+                name="pwCheck"
+                id="pwCheck"
+                type="password"
+                value={formData.pwCheck}
+                onChange={handleChange}
+                className="info-form_input"
+              />
+              {passwordMatch && (
+                <img 
+                  src="/pwCheck.png" 
+                  alt="check" 
+                  className="check-icon"
+                />
+              )}
+            </div>
+            {formErrors.pwMatchError && (
+              <span className="info-form_error">일치하지 않습니다.</span>
+            )}
           </div>
-          {formErrors.pwMatchError && (
-            <span className="info-form_error">일치하지 않습니다.</span>
-          )}
         </div>
 
         <div className="info-form_field">
@@ -175,9 +202,13 @@ const UserRegistration = ({ onNext, onPrev }) => {
                 onChange={handleChange}
                 className="info-form_input"
               />
-              <button type="button" className="auth-button">인증번호 전송</button>
-              {/* 백엔드 연동 시 onClick 핸들러 추가 */}
-              {/* <button type="button" className="auth-button" onClick={handleSendAuthCode}>인증번호 전송</button> */}
+              <button
+                type="button"
+                className="auth-button"
+                onClick={handleAuthButtonClick} // 버튼 클릭 핸들러 추가
+              >
+                {authButtonText} {/* 버튼 텍스트 상태 */}
+              </button>
             </div>
           </div>
         </div>

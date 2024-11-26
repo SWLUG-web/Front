@@ -18,10 +18,18 @@ function ResetPassword() {
   });
 
   const [error, setError] = useState("");
+  const [passwordMatch, setPasswordMatch] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    // 비밀번호 확인 로직
+    if (name === "newPw" || name === "confirmPw") {
+      const match = name === "newPw" ? value === formData.confirmPw : value === formData.newPw;
+      setPasswordMatch(match);
+      setError(match ? "" : "비밀번호가 일치하지 않습니다.");
+    }
   };
 
   const handleSubmit = () => {
@@ -99,83 +107,108 @@ function ResetPassword() {
                 </div>
             </div>
             <div className="form-field">
-                <div className="input-wrapper">
-                <label>새로운 비밀번호</label>
-                <input
-                    type="password"
-                    name="newPw"
-                    value={formData.newPw}
-                    onChange={handleChange}
-                    placeholder="새 비밀번호 입력"
-                />
-                </div>
-            </div>
-            <div className="form-field">
-                <div className="input-wrapper">
-                <label>비밀번호 확인</label>
-                <input
-                    type="password"
-                    name="confirmPw"
-                    value={formData.confirmPw}
-                    onChange={handleChange}
-                    placeholder="비밀번호 확인 입력"
-                />
-                </div>
-                {error && <div className="error-message">{error}</div>}
-            </div>
+        <div className="input-wrapper">
+          <label>새로운 비밀번호</label>
+          <div className="input-container">
+            <input
+              type="password"
+              name="newPw"
+              value={formData.newPw}
+              onChange={handleChange}
+              placeholder="새 비밀번호 입력"
+              className="info-form_input"
+            />
+          </div>
+        </div>
+      </div>
+      <div className="form-field">
+        <div className="input-wrapper">
+          <label>비밀번호 확인</label>
+          <div className="input-container">
+            <input
+              type="password"
+              name="confirmPw"
+              value={formData.confirmPw}
+              onChange={handleChange}
+              placeholder="비밀번호 확인 입력"
+              className="info-form_input"
+            />
+            {passwordMatch && (
+              <img
+                src="/pwCheck.png"
+                alt="check"
+                className="check-icon"
+              />
+            )}
+          </div>
+        </div>
+        {error && <div className="error-message">{error}</div>}
+      </div>
             </>
         ) : (
             <div className="mypage-section">
-                <h3>비밀번호 재설정</h3>
-                
+            <h3>비밀번호 재설정</h3>
+            
             <div className="form-field">
                 <div className="input-wrapper">
-                <label>현재 비밀번호</label>
-                <input
-                    type="password"
-                    name="currentPw"
-                    value={formData.currentPw}
-                    onChange={handleChange}
-                    placeholder="현재 비밀번호 입력"
-                />
+                    <label>현재 비밀번호</label>
+                    <input
+                        type="password"
+                        name="currentPw"
+                        value={formData.currentPw}
+                        onChange={handleChange}
+                        placeholder="현재 비밀번호 입력"
+                    />
                 </div>
             </div>
 
             <div className="form-field">
                 <div className="input-wrapper">
-                <label>새로운 비밀번호</label>
-                <input
-                    type="password"
-                    name="newPw"
-                    value={formData.newPw}
-                    onChange={handleChange}
-                    placeholder="새 비밀번호 입력"
-                />
+                    <label>새로운 비밀번호</label>
+                    <div className="input-container">
+                        <input
+                            type="password"
+                            name="newPw"
+                            value={formData.newPw}
+                            onChange={handleChange}
+                            placeholder="새 비밀번호 입력"
+                        />
+                    </div>
                 </div>
             </div>
+
             <div className="form-field">
                 <div className="input-wrapper">
-                <label>비밀번호 확인</label>
-                <input
-                    type="password"
-                    name="confirmPw"
-                    value={formData.confirmPw}
-                    onChange={handleChange}
-                    placeholder="비밀번호 확인 입력"
-                />
+                    <label>비밀번호 확인</label>
+                    <div className="input-container">
+                        <input
+                            type="password"
+                            name="confirmPw"
+                            value={formData.confirmPw}
+                            onChange={handleChange}
+                            placeholder="비밀번호 확인 입력"
+                        />
+                        {passwordMatch && (
+                            <img 
+                                src="/pwCheck.png" 
+                                alt="check" 
+                                className="check-icon"
+                            />
+                        )}
+                    </div>
                 </div>
                 {error && <div className="error-message">{error}</div>}
             </div>
 
             <div className="resetBtn">
                 <div className="MyResetBtn">
-                <button onClick={handleSubmit}>확인</button>
+                    <button onClick={handleSubmit}>확인</button>
                 </div>
                 <div className="MyResetBtn">
-                <button onClick={handleCancel}>취소</button>
+                    <button onClick={handleCancel}>취소</button>
                 </div>
             </div>
-            </div>
+        </div>
         )}
 
         {!isFromMyPage && (

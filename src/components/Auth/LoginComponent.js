@@ -32,9 +32,18 @@ function LoginComponent() {
     }
   };
 
+  const handleLogoClick = () => {
+    window.location.href = '/main'; // 로고 클릭 시 메인 페이지로 이동
+  };
+
   return (
     <div className="login-container">
-      <img src="/img/Logo4.png" alt="SWLUG Logo" className="login_logo" />
+      <img
+        src="/img/Logo4.png"
+        alt="SWLUG Logo"
+        className="login_logo"
+        onClick={handleLogoClick} // 로고 클릭 이벤트 핸들러 추가
+      />
       <form className="login-form" onSubmit={handleSubmit}>
         <input
           type="text"

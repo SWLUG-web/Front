@@ -59,3 +59,15 @@
     font-size: 20px;
     font-weight: bold;
 }
+
+.check-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    /* 입력 필드 오른쪽에 여백 */
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+    /* 아이콘이 클릭되지 않도록 */
+}
