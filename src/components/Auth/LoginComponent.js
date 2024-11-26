@@ -1,39 +1,38 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess, loginFailure, setLoading } from '../../slices/authSlice';
 import "../../styles/LoginComponent.css";
 import "../../styles/common.css";
 import { login } from '../../services/api';
 
 function LoginComponent() {
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector(state => state.auth);
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
-  const [tryCount, setTryCount] = useState(0);
-  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (tryCount >= 5) {
-      setErrorMessage('비밀번호 입력 제한 초과. 관리자에게 문의하세요.');
-      return;
-    }
+    dispatch(setLoading());
 
     try {
-      const response = await login({ id, pw: password, try: tryCount + 1 });
+      const response = await login({ id, pw: password, try: 0 });
       if (response.status === 200) {
-        //alert('로그인 성공!');
-        window.location.href = '/main'; // 메인 페이지로 이동
+        dispatch(loginSuccess({
+          user: { id },
+          token: response.token // API 응답에서 토큰을 받아온다고 가정
+        }));
+        window.location.href = '/main';
       } else {
-        setTryCount((prev) => prev + 1);
-        setErrorMessage('아이디 또는 비밀번호가 잘못되었습니다.');
+        dispatch(loginFailure('아이디 또는 비밀번호가 잘못되었습니다.'));
       }
     } catch (err) {
-      setTryCount((prev) => prev + 1);
-      setErrorMessage('로그인 중 문제가 발생했습니다.');
+      dispatch(loginFailure('로그인 중 문제가 발생했습니다.'));
     }
   };
 
   const handleLogoClick = () => {
-    window.location.href = '/main'; // 로고 클릭 시 메인 페이지로 이동
+    window.location.href = '/main';
   };
 
   return (
@@ -42,7 +41,7 @@ function LoginComponent() {
         src="/img/Logo4.png"
         alt="SWLUG Logo"
         className="login_logo"
-        onClick={handleLogoClick} // 로고 클릭 이벤트 핸들러 추가
+        onClick={handleLogoClick}
       />
       <form className="login-form" onSubmit={handleSubmit}>
         <input
@@ -57,13 +56,16 @@ function LoginComponent() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        {error && <p className="error-message">{error}</p>}
         <div className="links">
           <a href="/users/update">비밀번호 재설정</a> | <a href="/users/join">회원가입</a>
         </div>
-        <button type="submit"
+        <button type="submit" 
           className='hover:bg-customHover hover:text-customHoverText duration-200'
-        >로그인</button>
+          disabled={loading}
+        >
+          {loading ? '로그인 중...' : '로그인'}
+        </button>
       </form>
     </div>
   );
