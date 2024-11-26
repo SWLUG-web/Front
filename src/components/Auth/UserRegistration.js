@@ -25,6 +25,8 @@ const UserRegistration = ({ onNext, onPrev }) => {
 
   const [passwordMatch, setPasswordMatch] = useState(false);
 
+  const [authSuccess, setAuthSuccess] = useState(false); // 이메일 인증 성공 상태
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -36,6 +38,11 @@ const UserRegistration = ({ onNext, onPrev }) => {
       } else {
         setPasswordMatch(value === formData.pw && value !== '');
       }
+    }
+
+    // 인증 번호 확인 로직
+    if (name === "emailAuth") {
+      setAuthSuccess(value === "123456"); // 예시 인증 번호와 비교
     }
   };
 
@@ -49,7 +56,7 @@ const UserRegistration = ({ onNext, onPrev }) => {
     let errors = {
       idError: !formData.id.match(/^\d{10}$/), // 예시 학번 형식 체크 (10자리 숫자)
       pwMatchError: formData.pw !== formData.pwCheck,
-      emailAuthError: formData.emailAuth !== "123456", // 예시 인증번호 체크
+      emailAuthError: !authSuccess, // 예시 인증번호 체크
     };
 
     setFormErrors(errors);
@@ -216,20 +223,29 @@ const UserRegistration = ({ onNext, onPrev }) => {
         <div className="info-form_field">
           <div className="input-wrapper">
             <label htmlFor="emailAuth">인증 번호</label>
-            <input
-              name="emailAuth"
-              id="emailAuth"
-              placeholder=""
-              value={formData.emailAuth}
-              onChange={handleChange}
-              className="info-form_input"
-            />
+            <div className="input-container">
+              <input
+                name="emailAuth"
+                id="emailAuth"
+                placeholder="인증번호를 입력하세요"
+                value={formData.emailAuth}
+                onChange={handleChange}
+                className="info-form_input"
+              />
+              {/* 인증 성공 상태일 때 아이콘 표시 */}
+              {authSuccess && (
+                <img 
+                  src="/pwCheck.png" 
+                  alt="check" 
+                  className="check-icon"
+                />
+              )}
+            </div>
           </div>
           {formErrors.emailAuthError && (
             <span className="info-form_error">인증에 실패했습니다.</span>
           )}
         </div>
-
         <h1 className="info-text">전화번호는 공백없이 -로 구분하여 입력해주세요.</h1>
 
         <div className="info-form_field">
