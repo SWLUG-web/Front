@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import "./ResetPassword.css";
+import "../../styles/ResetPassword.css";
 import "../../styles/common.css";
 import "../../styles/input.css";
 

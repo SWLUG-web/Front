@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/common.css";
-import "./RegistrationComplete.css"
+import "../../styles/RegistrationComplete.css"
 
 const RegistrationComplete = ({ formData }) => {
   const [message, setMessage] = useState("");

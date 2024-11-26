@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "./TermsAgreement.css"; // 공통 스타일 CSS 파일을 적용
+import "../../styles/TermsAgreement.css"; // 공통 스타일 CSS 파일을 적용
 import "../../styles/common.css";
 import PrevNextButtons from "../../components/Auth/PrevNextButtons";
 

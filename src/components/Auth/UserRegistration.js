@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PrevNextButtons from "../../components/Auth/PrevNextButtons";
-import "./UserRegistration.css"; 
+import "../../styles/UserRegistration.css"; 
 import "../../styles/input.css"
 // import axios from 'axios'; // 백엔드 연동 시 주석 해제
 

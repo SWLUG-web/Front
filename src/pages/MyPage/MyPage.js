@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 // import axios from "axios"; // 백엔드 연결 시 사용
-import Info from "../../components/MyPage/Info";
-import "./MyPage.css";
+import Info from "../../components/MyPage/MyPageInfo";
+import "../../styles/MyPage.css";
 
 function MyPage() {
   const [posts, setPosts] = useState([]); // 모든 게시물
