@@ -47,11 +47,37 @@ export const logout = async () => {
   return axios.get(`${API_URL}/users/logout`);
 };
 
+// 회원가입 관련 API
 export const register = async (formData) => {
   if (process.env.NODE_ENV === 'development') {
-    return fetch('/mock-join.json');
+    try {
+      const response = await fetch('/mock-join.json');
+      if (!response.ok) throw new Error('네트워크 응답이 실패했습니다.');
+      
+      return {
+        status: 200,
+        data: {
+          roleType: "GUEST"
+        }
+      };
+    } catch (error) {
+      console.error('JSON 파일을 읽는 중 오류 발생:', error);
+      throw error;
+    }
   }
-  return axios.post(`${API_URL}/users/join`, formData);
+  
+  const requestBody = {
+    id: formData.id,
+    pw: formData.pw,
+    pwCheck: formData.pwCheck,
+    name: formData.name,
+    email: formData.email,
+    emailAuth: formData.emailAuth,
+    phone: formData.phone,
+    privacyCheck: formData.privacyCheck
+  };
+  
+  return axios.post(`${API_URL}/users/join`, requestBody);
 };
 
 // 회원정보 관련 API

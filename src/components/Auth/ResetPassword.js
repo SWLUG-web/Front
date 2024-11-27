@@ -34,7 +34,7 @@ function ResetPassword() {
 
   const handleSubmit = () => {
     if (formData.newPw !== formData.confirmPw) {
-      setError("일치하지 않습니다.");
+      //setError("일치하지 않습니다.");
       return;
     }
 
@@ -107,43 +107,43 @@ function ResetPassword() {
                 </div>
             </div>
             <div className="form-field">
-        <div className="input-wrapper">
-          <label>새로운 비밀번호</label>
-          <div className="input-container">
-            <input
-              type="password"
-              name="newPw"
-              value={formData.newPw}
-              onChange={handleChange}
-              placeholder="새 비밀번호 입력"
-              className="info-form_input"
-            />
-          </div>
-        </div>
-      </div>
-      <div className="form-field">
-        <div className="input-wrapper">
-          <label>비밀번호 확인</label>
-          <div className="input-container">
-            <input
-              type="password"
-              name="confirmPw"
-              value={formData.confirmPw}
-              onChange={handleChange}
-              placeholder="비밀번호 확인 입력"
-              className="info-form_input"
-            />
-            {passwordMatch && (
-              <img
-                src="/pwCheck.png"
-                alt="check"
-                className="check-icon"
-              />
-            )}
-          </div>
-        </div>
-        {error && <div className="error-message">{error}</div>}
-      </div>
+              <div className="input-wrapper">
+                <label>새로운 비밀번호</label>
+                <div className="input-container">
+                  <input
+                    type="password"
+                    name="newPw"
+                    value={formData.newPw}
+                    onChange={handleChange}
+                    placeholder="새 비밀번호 입력"
+                    className="info-form_input"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="form-field">
+              <div className="input-wrapper">
+                <label>비밀번호 확인</label>
+                <div className="input-container">
+                  <input
+                    type="password"
+                    name="confirmPw"
+                    value={formData.confirmPw}
+                    onChange={handleChange}
+                    placeholder="비밀번호 확인 입력"
+                    className="info-form_input"
+                  />
+                  {passwordMatch && (
+                    <img
+                      src="/pwCheck.png"
+                      alt="check"
+                      className="check-icon"
+                    />
+                  )}
+                </div>
+              </div>
+              {error && <div className="error-message">{error}</div>}
+            </div>
             </>
         ) : (
             <div className="mypage-section">

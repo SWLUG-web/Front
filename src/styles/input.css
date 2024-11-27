@@ -42,17 +42,21 @@
 /* 오류 메시지 스타일 */
 .info-form_error {
     color: #E71818;
+    display: flex;
     font-size: 16px;
     margin-top: 5px;
-    margin-left: -150px;
-    /* 라벨 너비 + 마진 */
+    margin-left: 150px;
+}
+
+.div.info-form_error {
+    margin-left: 20px;
 }
 
 .info-text {
     color: #444CE0;
     font-size: 16px;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     margin-top: 50px;
 }
 

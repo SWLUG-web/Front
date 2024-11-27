@@ -37,7 +37,7 @@ const Header = () => {
               onClick={() => window.location.href = '/users/login'}
               className="text-lg font-medium text-gray-700 hover:text-blue-600"
             >
-              로그인
+              로그인 ▼
             </button>
           ) : (
             <div className="relative">

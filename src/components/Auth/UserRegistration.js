@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { register } from '../../services/api';
 import PrevNextButtons from "../../components/Auth/PrevNextButtons";
 import "../../styles/UserRegistration.css"; 
 import "../../styles/input.css"
@@ -13,6 +14,7 @@ const UserRegistration = ({ onNext, onPrev }) => {
     email: "",
     emailAuth: "",
     phone: "",
+    privacyCheck: true
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -23,6 +25,7 @@ const UserRegistration = ({ onNext, onPrev }) => {
 
   const [authButtonText, setAuthButtonText] = useState("인증번호 전송"); // 버튼 텍스트 상태
 
+  const [error, setError] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(false);
 
   const [authSuccess, setAuthSuccess] = useState(false); // 이메일 인증 성공 상태
@@ -30,19 +33,22 @@ const UserRegistration = ({ onNext, onPrev }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    
+
     // 비밀번호 확인 로직
-    if (name === 'pw' || name === 'pwCheck') {
-      if (name === 'pw') {
-        setPasswordMatch(value === formData.pwCheck && value !== '');
-      } else {
-        setPasswordMatch(value === formData.pw && value !== '');
-      }
+    if (name === "pw" || name === "pwCheck") {
+      const match = name === "pw" ? value === formData.pwCheck : value === formData.pw;
+      setPasswordMatch(match);
+      setError(match ? "" : "비밀번호가 일치하지 않습니다.");
     }
 
     // 인증 번호 확인 로직
     if (name === "emailAuth") {
-      setAuthSuccess(value === "123456"); // 예시 인증 번호와 비교
+      const isAuthSuccess = value === "123456";
+      setAuthSuccess(isAuthSuccess);
+      setFormErrors(prev => ({
+        ...prev,
+        emailAuthError: !isAuthSuccess && value !== ''
+      }));
     }
   };
 
@@ -52,64 +58,41 @@ const UserRegistration = ({ onNext, onPrev }) => {
     setAuthButtonText("인증번호 재전송"); // 버튼 텍스트 변경
   };
 
-  const handleSubmit = () => {
-    let errors = {
-      idError: !formData.id.match(/^\d{10}$/), // 예시 학번 형식 체크 (10자리 숫자)
-      pwMatchError: formData.pw !== formData.pwCheck,
-      emailAuthError: !authSuccess, // 예시 인증번호 체크
-    };
-
-    setFormErrors(errors);
-
-    if (!errors.idError && !errors.pwMatchError && !errors.emailAuthError) {
-      onNext(formData);
-    }
-  };
-
-  // 백엔드 연동 시 사용할 handleSubmit 함수
-  /*
   const handleSubmit = async () => {
     let errors = {
       idError: !formData.id.match(/^\d{10}$/),
       pwMatchError: formData.pw !== formData.pwCheck,
-      emailAuthError: false // 서버에서 확인
+      emailAuthError: !authSuccess,
     };
-
+    
     setFormErrors(errors);
-
-    if (!errors.idError && !errors.pwMatchError) {
+  
+    if (!errors.idError && !errors.pwMatchError && !errors.emailAuthError) {
       try {
-        const response = await axios.post(`${API_URL}/users/register`, formData);
+        const submitData = {
+          id: formData.id,
+          pw: formData.pw,
+          pwCheck: formData.pw === formData.pwCheck,
+          name: formData.name,
+          email: formData.email,
+          emailAuth: authSuccess,
+          phone: formData.phone,
+          privacyCheck: true
+        };
         
-        if (response.data.success) {
-          onNext(response.data.user);
-        } else {
-          setFormErrors({
-            ...errors,
-            ...response.data.errors
+        const response = await register(submitData);
+        if (response.status === 200) {
+          onNext({
+            ...formData,
+            roleType: response.data.roleType
           });
         }
       } catch (error) {
         console.error('Registration error:', error);
-        alert('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
+        alert('회원가입 중 오류가 발생했습니다.');
       }
     }
   };
-  */
-
-  // 이메일 인증 로직 (백엔드 연동 시 사용)
-  /*
-  const handleSendAuthCode = async () => {
-    try {
-      await axios.post(`${API_URL}/users/send-auth-code`, { email: formData.email }); -> api.js랑 연동되게 임시로 작성한 것
-      alert('인증번호가 전송되었습니다.');
-    } catch (error) {
-      console.error('Error sending auth code:', error);
-      alert('인증번호 전송에 실패했습니다.');
-    }
-  };
-  */
-
 
   return (
     <form method="post" className="form">
@@ -156,30 +139,28 @@ const UserRegistration = ({ onNext, onPrev }) => {
           </div>
         </div>
         <div className="info-form_field">
-          <div className="input-wrapper">
-            <label htmlFor="pwCheck">비밀번호 확인</label>
-            <div className="input-container">
-              <input
-                name="pwCheck"
-                id="pwCheck"
-                type="password"
-                value={formData.pwCheck}
-                onChange={handleChange}
-                className="info-form_input"
-              />
-              {passwordMatch && (
-                <img 
-                  src="/pwCheck.png" 
-                  alt="check" 
-                  className="check-icon"
-                />
-              )}
+              <div className="input-wrapper">
+                <label htmlFor="pwCheck">비밀번호 확인</label>
+                    <div className="input-container">
+                    <input
+                      name="pwCheck"
+                      id="pwCheck"
+                      type="password"
+                      value={formData.pwCheck}
+                      onChange={handleChange}
+                      className="info-form_input"
+                    />
+                        {passwordMatch && (
+                            <img 
+                                src="/pwCheck.png" 
+                                alt="check" 
+                                className="check-icon"
+                            />
+                        )}
+                    </div>
+                </div>
+                {error && <div className="info-form_error">{error}</div>}
             </div>
-            {formErrors.pwMatchError && (
-              <span className="info-form_error">일치하지 않습니다.</span>
-            )}
-          </div>
-        </div>
 
         <div className="info-form_field">
           <div className="input-wrapper">
