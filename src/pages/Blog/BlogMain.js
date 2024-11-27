@@ -123,7 +123,7 @@ const BlogMain = () => {
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
                     >
-                        &lt;
+                        &lt;&lt;
                     </button>
                     {Array.from({ length: totalPages }, (_, index) => (
                         <button
