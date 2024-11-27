@@ -39,13 +39,13 @@ function Info() {
       <div className="info-form_field">
         <div className="input-wrapper">
           <label>아이디</label>
-          <input value={userInfo.id} className="info-form_input" />
+          <input value={userInfo.id} className="info-form_input" readOnly  />
         </div>
       </div>
       <div className="info-form_field">
         <div className="input-wrapper">
           <label>닉네임</label>
-          <input value={userInfo.nickname} className="info-form_input" />
+          <input value={userInfo.nickname} className="info-form_input" readOnly />
         </div>
       </div>
 
@@ -65,13 +65,13 @@ function Info() {
       <div className="info-form_field">
         <div className="input-wrapper">
           <label>이메일</label>
-          <input value={userInfo.email} className="info-form_input" />
+          <input value={userInfo.email} className="info-form_input" readOnly />
         </div>
       </div>
       <div className="info-form_field">
         <div className="input-wrapper">
           <label>전화 번호</label>
-          <input value={userInfo.phone} className="info-form_input" />
+          <input value={userInfo.phone} className="info-form_input" readOnly />
         </div>
       </div>
     </div>

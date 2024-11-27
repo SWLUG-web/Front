@@ -85,8 +85,30 @@ export const deleteUser = async (userData) => {
   return axios.post(`${API_URL}/users/delete`, userData);
 };
 
+// 회원정보 수정 관련 API
 export const updateUser = async (userData) => {
-  return axios.put(`${API_URL}/users/update`, userData);
+  if (process.env.NODE_ENV === 'development') {
+    try {
+      const response = await fetch('/mock-update-user.json');
+      if (!response.ok) throw new Error('네트워크 응답이 실패했습니다.');
+      
+      return {
+        status: 200,
+        message: '회원정보가 성공적으로 수정되었습니다.'
+      };
+    } catch (error) {
+      console.error('JSON 파일을 읽는 중 오류 발생:', error);
+      throw error;
+    }
+  }
+  
+  const requestBody = {
+    id: userData.id,
+    pw: userData.pw,
+    pwdCheck: userData.pwdCheck
+  };
+  
+  return axios.put(`${API_URL}/users/update`, requestBody);
 };
 
 export const getUserInfo = async (userData) => {

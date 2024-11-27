@@ -28,18 +28,6 @@ const mockResetPassword = async (formData) => {
   );
 };
 
-// Mock API: 비밀번호 변경
-const mockChangePassword = async (formData) => {
-  const mockData = {
-    status: 200,
-    message: '비밀번호가 성공적으로 변경되었습니다.',
-  };
-
-  return new Promise((resolve) =>
-    setTimeout(() => resolve(mockData), 1000) // 1초 대기 후 응답 반환
-  );
-};
-
 // 비밀번호 재설정 - 로그인
 export const resetPassword = async (formData) => {
   const { id, newPassword } = formData;

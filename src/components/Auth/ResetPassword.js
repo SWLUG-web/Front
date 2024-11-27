@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate  } from "react-router-dom";
+import PrevNextButtons from "../../components/Auth/PrevNextButtons";
 import "../../styles/ResetPassword.css";
 import "../../styles/common.css";
 import "../../styles/input.css";
 
 function ResetPassword() {
   const location = useLocation();
+  const navigate = useNavigate();
   const isFromMyPage = location.state && location.state.fromMyPage; // 마이페이지에서 온지 확인
 
   const [formData, setFormData] = useState({
@@ -33,36 +35,29 @@ function ResetPassword() {
   };
 
   const handleSubmit = () => {
+    // 비밀번호 일치 여부 확인
     if (formData.newPw !== formData.confirmPw) {
-      //setError("일치하지 않습니다.");
+      setError("비밀번호가 일치하지 않습니다.");
       return;
     }
-
-    // API 요청 (로그인 화면과 마이페이지 로직 통합)
+  
+    // 비밀번호 유효성 검사가 통과된 경우에만 API 요청
     const requestBody = {
       id: formData.id,
       pw: formData.newPw,
-      pwdCheck: isFromMyPage ? true : false,
+      pwdCheck: formData.newPw === formData.confirmPw // 비밀번호 일치 여부에 따라 true/false 설정
     };
-
-    console.log("API 요청:", requestBody);
-
-    // API 호출 예제 (axios 사용)
-    /*
-    axios.post("/users/update", requestBody)
-      .then(() => {
-        alert("비밀번호가 성공적으로 변경되었습니다.");
-        // 페이지 리다이렉트 등 추가 로직
-      })
-      .catch((err) => {
-        console.error("API 요청 실패:", err);
-      });
-    */
+  
+    if (requestBody.pwdCheck) {
+      // API 요청 로직
+      console.log("API 요청:", requestBody);
+    } else {
+      setError("비밀번호 확인이 필요합니다.");
+    }
   };
 
-  const handleCancel = () => {
-    alert("변경이 취소되었습니다.");
-    // 추가 로직이 필요한 경우 여기에 작성
+  const handlePrev = () => {
+    navigate(-1); // 이전 페이지로 이동
   };
 
   return (
@@ -205,7 +200,11 @@ function ResetPassword() {
                     <button onClick={handleSubmit}>확인</button>
                 </div>
                 <div className="MyResetBtn">
-                    <button onClick={handleCancel}>취소</button>
+                  <PrevNextButtons 
+                    onPrev={handlePrev}
+                    showNextButton={false}
+                    prevText="취소"
+                  />
                 </div>
             </div>
         </div>
