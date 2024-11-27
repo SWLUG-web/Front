@@ -116,14 +116,14 @@ const BlogMain = () => {
                         onClick={() => handlePageChange(1)}
                         disabled={currentPage === 1}
                     >
-                        &laquo; {/* << */}
+                        &lt;&lt;
                     </button>
                     <button
                         className="pagination-arrow"
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
                     >
-                        &lsaquo; {/* < */}
+                        &lt;
                     </button>
                     {Array.from({ length: totalPages }, (_, index) => (
                         <button
@@ -139,14 +139,14 @@ const BlogMain = () => {
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
                     >
-                        &rsaquo; {/* > */}
+                        &gt;
                     </button>
                     <button
                         className="pagination-arrow"
                         onClick={() => handlePageChange(totalPages)}
                         disabled={currentPage === totalPages}
                     >
-                        &raquo; {/* >> */}
+                        &gt;&gt;
                     </button>
                 </div>
             )}
