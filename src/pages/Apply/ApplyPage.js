@@ -4,7 +4,7 @@ import '../../styles/ApplyPage.css';
 const ApplyPage = () => {
   const today = new Date();
   const applyStartDate = new Date('2024-02-21T18:00:00');
-  const applyEndDate = new Date('2024-11-23T23:59:59');
+  const applyEndDate = new Date('2024-11-28T23:59:59');
   const isApplyPeriod = today >= applyStartDate && today <= applyEndDate;
 
   return (

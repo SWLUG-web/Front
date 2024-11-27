@@ -1,52 +1,39 @@
-.notice-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    background-color: #F9F9F9; /* Header와 동일한 배경색 */
-  }
-  
-  .notice-header {
-    text-align: center;
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-    background-color: #F9F9F9; /* Header와 동일한 배경색 */
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: #F9F9F9; /* Header와 동일한 배경색 */
-  }
-  
-  .table th,
-  .table td {
-    border: 1px solid #D9D9D9;
-    padding: 10px;
-    text-align: left;
-  }
-  
-  .table th {
-    background-color: #EFEFEF; /* 테이블 헤더 색상 */
-    font-weight: bold;
-  }
-  
-  .table td {
-    background-color: #FFFFFF; /* 테이블 데이터 기본 색상 */
-  }
-  
-  .search-bar {
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #D9D9D9;
-    border-radius: 5px;
-    background-color: #FFFFFF; /* 검색바 색상 */
-  }
-  
-  .search-bar input {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    outline: none;
-    font-size: 14px;
-  }
-  
+.notice-list-container {
+  width: 100%;
+  margin: 0 auto;
+  overflow-x: auto;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+thead th {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 8px;
+  background-color: #f3f3f3;
+  text-align: left;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+tbody tr:hover {
+  background-color: #e6e6e6;
+}
+
+td {
+  font-size: 14px;
+  padding: 12px 8px;
+  border: 1px solid #ddd;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

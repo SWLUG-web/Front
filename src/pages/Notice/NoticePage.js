@@ -27,18 +27,23 @@ const NoticePage = () => {
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
       <h1 className="apply-title text-4xl font-bold text-center mb-6">공지사항</h1>
+
       {/* 검색 입력란 */}
-      <div className="flex items-center border rounded-full px-4 py-2 mb-6 shadow-sm">
-        <input
-          type="text"
-          placeholder="제목 검색"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="flex-grow border-none focus:outline-none text-sm"
-        />
-        <button type="button">
-          <img src="/notice.png" alt="검색 아이콘" className="h-5 w-5" />
-        </button>
+      <div className="flex justify-end mb-6">
+        <div className="search-bar flex items-center border rounded-full shadow-sm px-4 py-2">
+          <span className="text-sm text-gray-700 mr-2">제목</span>
+          <div className="border-r border-gray-400 h-4 mx-2"></div> {/* 구분선 */}
+          <input
+            type="text"
+            placeholder="검색어를 입력하세요"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="flex-grow border-none focus:outline-none text-sm text-gray-700"
+          />
+          <button type="button">
+            <img src="/notice.png" alt="검색 아이콘" className="h-5 w-5" />
+          </button>
+        </div>
       </div>
 
       {/* 공지사항 리스트 */}
@@ -49,20 +54,20 @@ const NoticePage = () => {
         <button
           onClick={() => setCurrentPage(1)}
           disabled={currentPage === 1}
-          className={`text-2xl hover:text-black ${
+          className={`text-xl hover:text-black ${
             currentPage === 1 && "text-gray-400 cursor-not-allowed"
           }`}
         >
-          ≪
+          &lt;&lt;
         </button>
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
-          className={`text-2xl hover:text-black ${
+          className={`text-xl hover:text-black ${
             currentPage === 1 && "text-gray-400 cursor-not-allowed"
           }`}
         >
-          ‹
+          &lt;
         </button>
         {Array.from({ length: totalPages }, (_, i) => (
           <button
@@ -80,20 +85,20 @@ const NoticePage = () => {
         <button
           onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={currentPage === totalPages}
-          className={`text-2xl hover:text-black ${
+          className={`text-xl hover:text-black ${
             currentPage === totalPages && "text-gray-400 cursor-not-allowed"
           }`}
         >
-          ›
+          &gt;
         </button>
         <button
           onClick={() => setCurrentPage(totalPages)}
           disabled={currentPage === totalPages}
-          className={`text-2xl hover:text-black ${
+          className={`text-xl hover:text-black ${
             currentPage === totalPages && "text-gray-400 cursor-not-allowed"
           }`}
         >
-          ≫
+          &gt;&gt;
         </button>
       </div>
     </div>
