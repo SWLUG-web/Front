@@ -1,16 +1,18 @@
 import React, { useEffect, useState, useTransition } from "react";
-// import axios from "axios"; // 백엔드 연결 시 사용
+import { useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux'; 
+import { getUserInfo } from '../../services/api';
 import "../../styles/input.css";
 import "../../styles/common.css";
 import "../../styles/MyPageInfo.css";
-import { useNavigate } from "react-router-dom";
 
-function Info() {
+function MyPageInfo() {
+  const user = useSelector(state => state.auth.user);
   const [userInfo, setUserInfo] = useState({
     id: "2021111350",
     nickname: "25기_이송하",
     email: "songha1744@naver.com",
-    phone: "010-1111-2222",
+    phone: "010-1111-2222"
   });
 
   const navigate = useNavigate();
@@ -23,14 +25,26 @@ function Info() {
   };
 
   useEffect(() => {
-    // ** 실제 백엔드 연결 코드 **
-    /*
-    axios
-      .post("/users/mypage", { id: "2021111350", pw: "hihi" })
-      .then((response) => setUserInfo(response.data))
-      .catch((error) => console.error("회원 정보 불러오기 실패", error));
-    */
-  }, []);
+    const fetchUserInfo = async () => {
+      try {
+        const response = await getUserInfo({
+          id: user.id,  // Redux 상태에서 가져온 사용자 ID
+          pw: user.pw   // Redux 상태에서 가져온 비밀번호
+        });
+        
+        if (response.status === 200) {
+          setUserInfo(response.data);
+        }
+
+      } catch (error) {
+        console.error('회원 정보 불러오기 실패:', error);
+      }
+    };
+
+    if (user) {
+      fetchUserInfo();
+    }
+  }, [user]);
 
   return (
     <div className="info-form">
@@ -78,4 +92,4 @@ function Info() {
   );
 }
 
-export default Info;
+export default MyPageInfo;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-// import axios from "axios"; // 백엔드 연결 시 사용
+import { useSelector } from 'react-redux';
+import { getUserInfo } from "../../services/api"
 import Info from "../../components/MyPage/MyPageInfo";
 import "../../styles/MyPage.css";
 
@@ -9,17 +10,32 @@ function MyPage() {
   const postsPerPage = 7; // 한 페이지당 게시물 수
   const [totalPage, setTotalPage] = useState(1); // 전체 페이지 수
 
-  // Mock 데이터 가져오기
+
+  const user = useSelector(state => state.auth.user);
+  const localUser = JSON.parse(localStorage.getItem('user'));
+
   useEffect(() => {
-    // Mock 데이터
-    const mockPosts = Array.from({ length: 23 }, (_, index) => ({
-      boardId: index + 1,
-      title: `글 제목 들어갈 예정이에요 ${index + 1}`,
-      date: `2024.10.${19 - (index % 30)}`,
-    }));
-    setPosts(mockPosts);
-    setTotalPage(Math.ceil(mockPosts.length / postsPerPage)); // 총 페이지 수 계산
-  }, []);
+    const fetchUserPosts = async () => {
+      try {
+        const currentUser = user || localUser;
+        if (currentUser) {
+          const response = await getUserInfo({
+            id: currentUser.id,
+            pw: currentUser.pw
+          });
+          
+          if (response.status === 200) {
+            setPosts(response.data.board);
+            setTotalPage(Math.ceil(response.data.board.length / postsPerPage));
+          }
+        }
+      } catch (error) {
+        console.error('게시물 불러오기 실패:', error);
+      }
+    };
+
+    fetchUserPosts();
+  }, [user, localUser]);
 
   // 게시물 삭제 처리
   const handleDelete = (boardId) => {

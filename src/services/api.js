@@ -10,7 +10,6 @@ export const login = async (credentials) => {
       if (!response.ok) throw new Error('네트워크 응답이 실패했습니다.');
       const data = await response.json();
       
-      // 로그인 시도 횟수 확인
       if (credentials.try >= 5) {
         return { 
           status: 300, 
@@ -22,28 +21,29 @@ export const login = async (credentials) => {
         (user) => user.id === credentials.id && user.pw === credentials.pw
       );
 
-      return user 
-        ? { status: 200, message: 'Login successful' }
-        : { 
-            status: 401, 
-            message: 'Invalid credentials',
-            try: credentials.try + 1
-          };
+      if (user) {
+        // 로그인 성공 시 토큰 저장
+        localStorage.setItem('authToken', 'mock-token');
+        localStorage.setItem('user', JSON.stringify(user));
+        return { status: 200, message: 'Login successful' };
+      }
+      return { 
+        status: 401, 
+        message: 'Invalid credentials',
+        try: credentials.try + 1
+      };
     } catch (error) {
       console.error('JSON 파일을 읽는 중 오류 발생:', error);
       throw error;
     }
   }
   
-  // 실제 API 호출 시에도 try 카운트 포함
-  return axios.post(`${API_URL}/users/login`, {
-    id: credentials.id,
-    pw: credentials.pw,
-    try: credentials.try
-  });
+  return axios.post(`${API_URL}/users/login`, credentials);
 };
 
 export const logout = async () => {
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('user');
   return axios.get(`${API_URL}/users/logout`);
 };
 
@@ -112,14 +112,28 @@ export const updateUser = async (userData) => {
 };
 
 export const getUserInfo = async (userData) => {
-  return axios.post(`${API_URL}/users/mypage`, userData);
+  if (process.env.NODE_ENV === 'development') {
+    try {
+      const response = await fetch('/mock-mypage.json');
+      if (!response.ok) throw new Error('네트워크 응답이 실패했습니다.');
+      const data = await response.json();
+      return {
+        status: 200,
+        data
+      };
+    } catch (error) {
+      console.error('JSON 파일을 읽는 중 오류 발생:', error);
+      throw error;
+    }
+  }
+  
+  return axios.post(`${API_URL}/users/mypage`, {
+    id: userData.id,
+    pw: userData.pw
+  });
 };
 
 // 게시판 관련 API
-export const getPost = async (page, boardId) => {
-  return axios.get(`${API_URL}/${page}/board/view/${boardId}`);
-};
-
 export const deletePost = async (page, postData) => {
   return axios.delete(`${API_URL}/${page}/board/delete`, { data: postData });
 };
@@ -127,7 +141,6 @@ export const deletePost = async (page, postData) => {
 export const updatePost = async (page, postData) => {
   return axios.put(`${API_URL}/${page}/board/write`, postData);
 };
-
 
 export const sendAuthCode = async (email) => {
   if (process.env.NODE_ENV === 'development') {
