@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/Home/HomePage';
 import NoticePage from './pages/Notice/NoticePage';
-//import NoticeDetailPage from './pages/Notice/NoticeDetailPage';
 import FAQPage from './pages/FAQ/FAQPage';
 import ApplyPage from './pages/Apply/ApplyPage'; // 추가
 import Header from './components/Header';
