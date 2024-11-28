@@ -42,8 +42,14 @@ export const login = async (credentials) => {
 };
 
 export const logout = async () => {
-  localStorage.removeItem('authToken');
-  localStorage.removeItem('user');
+  if (process.env.NODE_ENV === 'development') {
+    return new Promise((resolve) => {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      resolve({ status: 200, message: 'Logout successful' });
+    });
+  }
+  
   return axios.get(`${API_URL}/users/logout`);
 };
 
@@ -111,6 +117,7 @@ export const updateUser = async (userData) => {
   return axios.put(`${API_URL}/users/update`, requestBody);
 };
 
+// 마이페이지 관련 API
 export const getUserInfo = async (userData) => {
   if (process.env.NODE_ENV === 'development') {
     try {
