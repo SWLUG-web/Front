@@ -1,16 +1,19 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // react-router-dom 추가
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Intro from './pages/Intro/Intro'; // Intro 페이지 임포트
-import BlogMain from './pages/Blog/BlogMain'; // BlogMain 페이지 추가
-import BlogPost from './pages/Blog/BlogPost'; // BlogPost 페이지 추가
-import BlogWrite from './pages/Blog/BlogWrite'; // BlogWrite 페이지 추가
-import "./styles/common.css";
-
-// Redux Store 사용
 import { Provider } from 'react-redux';
 import store from './store/store';
+import HomePage from './pages/Home/HomePage';
+import NoticePage from './pages/Notice/NoticePage';
+import FAQPage from './pages/FAQ/FAQPage';
+import ApplyPage from './pages/Apply/ApplyPage';
+import Intro from './pages/Intro/Intro';
+import BlogMain from './pages/Blog/BlogMain';
+import BlogPost from './pages/Blog/BlogPost';
+import BlogWrite from './pages/Blog/BlogWrite';
+
+import "./styles/common.css";
 
 function App() {
   return (
@@ -19,18 +22,23 @@ function App() {
         <div className="App flex flex-col min-h-screen">
           <Header />
           <main className="min-h-screen bg-gray-100">
-            <Routes>
-              {/* /intro 경로에 Intro 컴포넌트를 연결 */}
-              <Route path="/intro" element={<Intro />} />
+            <div className="container mx-auto text-center">
+              <Routes>
 
-              {/* 블로그 관련 라우트 */}
-              <Route path="/blog" element={<BlogMain />} />
-              <Route path="/board/post/:boardId" element={<BlogPost />} /> {/* Mock Data Test Route */}
-              <Route path="/board/write" element={<BlogWrite />} />
+                <Route path="/main" element={<HomePage />} />
+                <Route path="/notice" element={<NoticePage />} />
+                <Route path="/faq" element={<FAQPage />} />
+                <Route path="/apply" element={<ApplyPage />} />
 
-              {/* 기본 경로 */}
-              <Route path="/" element={<h1 className="text-3xl font-bold text-gray-800">메인 페이지</h1>} />
-            </Routes>
+                <Route path="/intro" element={<Intro />} />
+                <Route path="/blog" element={<BlogMain />} />
+                <Route path="/board/post/:boardId" element={<BlogPost />} />
+                <Route path="/board/write" element={<BlogWrite />} />
+
+                {/* 기본 경로 */}
+                <Route path="/" element={<HomePage />} />
+              </Routes>
+            </div>
           </main>
           <Footer />
         </div>
