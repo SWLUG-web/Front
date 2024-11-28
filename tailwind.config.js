@@ -1,8 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'], // src 폴더의 모든 파일을 감지
+  content: ["./src/**/*.{html,js}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        customHover: '#202123', // 사용자 정의 색상 추가
+        customHoverText: '#F9F9F9', // 사용자 정의 글자색
+      },
+    },
   },
   plugins: [],
-};
+}
+
