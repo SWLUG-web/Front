@@ -3,11 +3,14 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: #F9F9F9;
-  /* 글로벌 배경 */
-  border-bottom: 1px solid #D9D9D9;
-  /* 구분선 */
+  background-color: transparent;
+  /* 배경색 투명 */
+  border-bottom: none;
+  /* 구분선 제거 */
+  box-shadow: none;
+  /* 혹시 있을 수도 있는 그림자 제거 */
 }
+
 
 .logo img {
   width: 150px;
@@ -21,10 +24,13 @@
   padding: 0;
 }
 
+.navigation ul li {
+  list-style: none;
+}
+
 .navigation a {
   text-decoration: none;
   color: #202123;
-  /* 글로벌 폰트 색상 */
   font-weight: bold;
   font-size: 16px;
   font-family: 'Pretendard-Regular';
@@ -32,5 +38,4 @@
 
 .navigation a:hover {
   color: #444CE0;
-  /* 강조 파랑 */
 }

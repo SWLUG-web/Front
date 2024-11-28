@@ -1,0 +1,19 @@
+.introduction-header {
+    position: relative;
+    width: 1200px; /* 양쪽 여백을 위해 전체 너비의 90%로 설정 */
+    height: 550px; /* 박스 높이 */
+    margin: 30px auto; /* 세로로 50px 아래로 내리고, 중앙 정렬 */
+    overflow: hidden; /* 넘치는 이미지 숨기기 */
+    border: 2px solid #000; /* 테두리 추가 */
+    display: flex; /* 플렉스 박스 활성화 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    background-color: white; /* 필요 시 배경색 */
+}
+
+.background-img {
+    width: auto;
+    height: 90%;
+    max-width: none;
+    object-fit: cover; /* 비율 유지하며 영역 채우기 */
+}
