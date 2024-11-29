@@ -72,7 +72,7 @@ const BlogWrite = () => {
                     게시판 선택
                 </option>
                 <option value="0">공지사항</option>
-                <option value="1">블로그</option>
+                <option value="1">후기</option>
                 <option value="2">활동</option>
                 <option value="3">정보</option>
                 <option value="4">성과물</option>

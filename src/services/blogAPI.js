@@ -1,8 +1,17 @@
-export const fetchPosts = async (page, size) => {
-    const response = await fetch(`/blog?page=${page}&size=${size}`);
+export const fetchPosts = async (page, size, tag = "", query = "", category = "") => {
+    let url = `/blog?page=${page}&size=${size}`;
+
+    // 카테고리, 태그, 검색어가 있을 경우 쿼리 파라미터 추가
+    if (tag) url += `&tag=${tag}`;
+    if (query) url += `&query=${query}`;
+    if (category) url += `&category=${category}`;
+
+    const response = await fetch(url);
+
     if (!response.ok) {
         throw new Error("게시물 데이터를 가져오는 데 실패했습니다.");
     }
+
     return response.json();
 };
 

@@ -11,6 +11,7 @@ const BlogMain = () => {
     const [selectedTag, setSelectedTag] = useState(""); // 선택된 태그
     const [searchQuery, setSearchQuery] = useState(""); // 검색어
     const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
+    const [selectedCategory, setSelectedCategory] = useState(""); // 선택된 카테고리
     const postsPerPage = 9; // 한 페이지에 표시할 게시물 수
     const navigate = useNavigate(); // 페이지 이동을 위한 hook
 
@@ -18,7 +19,7 @@ const BlogMain = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetchPosts(currentPage, postsPerPage); // 서버에서 게시물 가져오기
+                const response = await fetchPosts(currentPage, postsPerPage, selectedTag, searchQuery, selectedCategory); // 서버에서 게시물 가져오기
                 const { board, totalPage } = response; // API 응답 데이터 구조에 따라
                 setPosts(board); // 게시물 데이터 설정
                 setTotalPages(totalPage); // 총 페이지 수 설정
@@ -28,7 +29,7 @@ const BlogMain = () => {
         };
 
         fetchData();
-    }, [currentPage]);
+    }, [currentPage, selectedTag, searchQuery, selectedCategory]);
 
     // 게시물 클릭 시 상세 페이지로 이동
     const handlePostClick = (boardId) => {
@@ -38,7 +39,7 @@ const BlogMain = () => {
     // 게시물 필터링 및 검색
     const handleSearch = async () => {
         try {
-            const response = await fetchPosts(1, postsPerPage, selectedTag, searchQuery); // 검색/필터링된 게시물 가져오기
+            const response = await fetchPosts(1, postsPerPage, selectedTag, searchQuery, selectedCategory); // 검색/필터링된 게시물 가져오기
             const { board, totalPage } = response;
             setPosts(board);
             setTotalPages(totalPage);
@@ -53,15 +54,42 @@ const BlogMain = () => {
         setCurrentPage(pageNumber);
     };
 
+    const handleCategoryChange = (category) => {
+        setSelectedCategory(category); // 선택된 카테고리 변경
+        setCurrentPage(1); // 페이지를 1로 리셋
+    };
+
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString("ko-KR"); // 한국어 형식으로 날짜 변환
     };
 
+    const filteredPosts = posts.filter((post) =>
+        selectedCategory === "" ? true : post.category === selectedCategory
+    );
+
 
     return (
         <div className="blog-main">
+
+            {/* 카테고리 필터 */}
+            <div className="category-filter">
+                {["성과", "정보", "후기", "활동"].map((category, index) => (
+                    <button
+                        key={index}
+                        className={`category-button ${selectedCategory === `${index}` ? "active" : ""}`}
+                        onClick={() =>
+                            setSelectedCategory((prevCategory) =>
+                                prevCategory === `${index}` ? "" : `${index}` // 토글 기능
+                            )
+                        }
+                    >
+                        {category}
+                    </button>
+                ))}
+            </div>
             <h1 className="blog-title">Blog</h1>
+
 
             {/* 태그 필터와 검색 */}
             <div className="tags-and-search">
@@ -87,8 +115,8 @@ const BlogMain = () => {
             {/* 게시물 리스트 */}
             <h3 className="posts-title">Posts</h3>
             <div className="posts">
-                {posts.length > 0 ? (
-                    posts.map((post) => (
+                {filteredPosts.length > 0 ? (
+                    filteredPosts.map((post) => (
                         <div
                             key={post.boardId}
                             className="post-card"
@@ -125,7 +153,7 @@ const BlogMain = () => {
                     >
                         &lt;
                     </button>
-                    {Array.from({ length: totalPages }, (_, index) => (
+                    {Array.from({length: totalPages}, (_, index) => (
                         <button
                             key={index + 1}
                             className={`page-button ${currentPage === index + 1 ? "active" : ""}`}
