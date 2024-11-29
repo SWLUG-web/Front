@@ -47,7 +47,7 @@ const Header = () => {
             <li><a href="/intro" className="hover:text-blue-600">소개</a></li>
             <li><a href="/blog" className="hover:text-blue-600">블로그</a></li>
             <li><a href="/notice" className="hover:text-blue-600">공지</a></li>
-            <li><a href="/support" className="hover:text-blue-600">지원</a></li>
+            <li><a href="/apply" className="hover:text-blue-600">지원</a></li>
             <li><a href="/faq" className="hover:text-blue-600">FAQ</a></li>
           </ul>
         </nav>
@@ -57,7 +57,7 @@ const Header = () => {
               onClick={() => window.location.href = '/users/login'}
               className="text-lg font-medium text-gray-700 hover:text-blue-600"
             >
-              로그인▼
+              로그인 ▼
             </button>
           ) : (
             <div className="relative">
