@@ -4,11 +4,18 @@ import '../../styles/ApplyPage.css';
 const ApplyPage = () => {
   const today = new Date();
   const applyStartDate = new Date('2024-02-21T18:00:00');
-  const applyEndDate = new Date('2024-11-28T23:59:59');
+  const applyEndDate = new Date('2024-11-24T23:59:59');
   const isApplyPeriod = today >= applyStartDate && today <= applyEndDate;
 
   return (
-    <div className="apply-page container mx-auto px-4 py-8">
+    <div
+      className="apply-page container mx-auto px-4 py-8"
+      style={{
+        backgroundImage: 'url(/apply_back.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <h1 className="apply-title text-4xl font-bold text-center mb-6">지원</h1>
       <div className="apply-content">
         <img src="/apply_swlug.png" alt="SWLUG" className="apply-logo mx-auto" />
