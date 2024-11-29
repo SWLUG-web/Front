@@ -17,9 +17,11 @@ const notices = [
   { id: 16, title: '공지사항 제목 16', date: '2024.10.15', author: '관리자', content: '공지사항 내용 16' },
   { id: 17, title: '공지사항 제목 17', date: '2024.10.15', author: '관리자', content: '공지사항 내용 17' },
   { id: 18, title: '공지사항 제목 18', date: '2024.10.15', author: '관리자', content: '공지사항 내용 18' },
-  { id: 19, title: '공지사항 제목 19', date: '2024.10.15', author: '관리자', content: '공지사항 내용 19' },
-  { id: 20, title: '공지사항 제목 20', date: '2024.10.15', author: '관리자', content: '공지사항 내용 20' },
-  { id: 21, title: '공지사항 제목 21', date: '2024.10.15', author: '관리자', content: '공지사항 내용 21' }
+  { id: 19, title: '공지사항 제목 19', date: '2024.11.25', author: '관리자', content: '공지사항 내용 19' },
+  { id: 20, title: '공지사항 제목 20', date: '2024.11.26', author: '관리자', content: '공지사항 내용 20' },
+  { id: 21, title: '공지사항 제목 21', date: '2024.11.27', author: '관리자', content: '공지사항 내용 21' },
+  { id: 22, title: '공지사항 제목 22', date: '2024.11.28', author: '관리자', content: '공지사항 내용 22' },
+  { id: 23, title: '공지사항 제목 23', date: '2024.11.29', author: '관리자', content: '공지사항 내용 23' }
 ];
 
 export default notices;
