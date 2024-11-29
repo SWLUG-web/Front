@@ -26,7 +26,7 @@ const NoticePage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
-      <h1 className="apply-title text-4xl font-bold text-center mb-6">공지사항</h1>
+      <h1 className="apply-title text-3xl font-bold text-center mb-6" style={{ fontSize: '24px' }}>공지사항</h1>
 
       {/* 검색 입력란 */}
       <div className="flex justify-end mb-6">

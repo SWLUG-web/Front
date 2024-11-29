@@ -4,7 +4,7 @@ import '../../styles/ApplyPage.css';
 const ApplyPage = () => {
   const today = new Date();
   const applyStartDate = new Date('2024-02-21T18:00:00');
-  const applyEndDate = new Date('2024-11-24T23:59:59');
+  const applyEndDate = new Date('2024-11-29T23:59:59');
   const isApplyPeriod = today >= applyStartDate && today <= applyEndDate;
 
   return (
@@ -16,7 +16,7 @@ const ApplyPage = () => {
         backgroundPosition: 'center',
       }}
     >
-      <h1 className="apply-title text-4xl font-bold text-center mb-6">지원</h1>
+      <h1 className="apply-title text-3xl font-bold text-center mb-6" style={{ fontSize: '24px' }}>지원</h1>
       <div className="apply-content">
         <img src="/apply_swlug.png" alt="SWLUG" className="apply-logo mx-auto" />
         {isApplyPeriod ? (

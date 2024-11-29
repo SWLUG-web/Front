@@ -15,7 +15,7 @@ const FAQPage = () => {
 
   return (
     <div className="faq-page container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-6">FAQ</h1>
+      <h1 className="apply-title text-3xl font-bold text-center mb-6" style={{ fontSize: '24px' }}>FAQ</h1>
       <div className="faq-filters">
         {categories.map((cat) => (
           <button
