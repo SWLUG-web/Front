@@ -9,19 +9,26 @@ const RecentNotices = () => {
   return (
     <div>
       {/* 제목 */}
-      <h2 className="text-2xl font-bold text-center mb-8">
-        공지사항<span className="ml-2">📌</span>
-      </h2>
+      <h2
+  className="font-bold text-center mb-8"
+  style={{ fontSize: '20px' }} // 공지사항 글자 크기 20px
+>
+  공지사항<span className="ml-2">📌</span>
+</h2>
+
 
       {/* 공지사항 리스트 */}
       <div className="notice-list">
         {/* 헤더 */}
+        {/*
         <div className="notice-header flex items-center justify-between py-3 border-b-2 border-black font-bold text-center">
           <div className="flex-shrink-0 w-10">번호</div>
           <div className="flex-grow">제목</div>
           <div className="flex-shrink-0 w-32">작성일</div>
+          <div className="flex-shrink-0 w-20">작성자</div>
         </div>
-
+        */}
+        
         {/* 공지사항 항목 */}
         {recentNotices.map((notice) => (
           <div
@@ -31,6 +38,7 @@ const RecentNotices = () => {
             <div className="flex-shrink-0 w-10 text-center">{notice.id}</div>
             <div className="flex-grow text-center truncate">{notice.title}</div>
             <div className="flex-shrink-0 w-32 text-center">{notice.date}</div>
+            <div className="flex-shrink-0 w-20 text-center">{notice.author}</div>
           </div>
         ))}
       </div>

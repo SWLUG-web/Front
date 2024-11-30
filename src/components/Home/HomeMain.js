@@ -17,13 +17,20 @@ const HomeMain = () => {
     <div>
       {/* 메인 콘텐츠 */}
       <div className="container mx-auto px-4 py-12 flex flex-col lg:flex-row items-center">
-        {/* Left: Image */}
+        {/* Left: YouTube Video */}
         <div className="w-full lg:w-1/2 mb-8 lg:mb-0 flex justify-center">
-          <img
-            src="/home.png"
-            alt="Home Banner"
-            className="w-full max-w-lg h-auto rounded shadow-md"
-          />
+          <div className="relative" style={{ width: '80%', maxWidth: '600px' }}>
+            <iframe
+              width="100%"
+              height="315"
+              src="https://www.youtube.com/embed/ANyFScpNOW8"
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="rounded shadow-md"
+            ></iframe>
+          </div>
         </div>
         {/* Right: Text */}
         <div className="w-full lg:w-1/2 text-left lg:pl-8">
@@ -45,9 +52,12 @@ const HomeMain = () => {
 
       {/* 주요 활동 */}
       <div className="container mx-auto px-4 py-12 text-center">
-        <h2 className="text-3xl font-bold flex items-center justify-center mb-12">
-          주요 활동 <span className="ml-2">🔍</span>
-        </h2>
+      <h2
+    className="font-bold flex items-center justify-center mb-12"
+    style={{ fontSize: '20px' }} // 주요 활동 글자 크기 20px
+  >
+    주요 활동 <span className="ml-2">🔎</span>
+  </h2>
         <div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-7xl mx-auto"
           // max-w-5xl을 max-w-7xl로 변경하여 전체 컨테이너 너비를 넓힘
@@ -56,14 +66,11 @@ const HomeMain = () => {
             <Link
               key={activity.id}
               to={activity.link}
-              className="activity-card relative block overflow-hidden rounded-lg shadow-lg bg-white"
+              className={`activity-card relative block overflow-hidden rounded-lg shadow-lg bg-white ${
+                hoverIndex === index ? 'hover-active' : ''
+              }`}
               onMouseEnter={() => setHoverIndex(index)} // Hover 상태 설정
               onMouseLeave={() => setHoverIndex(null)} // Hover 상태 해제
-              style={{
-                height: '200px', // 박스 높이 유지
-                transition: 'transform 0.3s',
-                transform: hoverIndex === index ? 'scale(1.05)' : 'scale(1)', // Hover 시 확대 효과
-              }}
             >
               {hoverIndex === index ? (
                 <img
