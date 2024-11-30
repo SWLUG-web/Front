@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess, loginFailure, setLoading } from '../../slices/authSlice';
 import "../../styles/LoginComponent.css";
 import "../../styles/common.css";
-import { login } from '../../services/api';
+import { login, getUserInfo  } from '../../services/api';
 
 function LoginComponent() {
   const dispatch = useDispatch();
@@ -18,11 +18,21 @@ function LoginComponent() {
     try {
       const response = await login({ id, pw: password, try: 0 });
       if (response.status === 200) {
-        dispatch(loginSuccess({
-          user: { id },
-          token: response.token // API 응답에서 토큰을 받아온다고 가정
-        }));
-        window.location.href = '/main';
+        // 로그인 성공 후 사용자 정보 요청
+        const userInfoResponse = await getUserInfo({ id, pw: password });
+        if (userInfoResponse.status === 200) {
+          dispatch(loginSuccess({
+            user: { 
+              id: userInfoResponse.data.id,
+              nickname: userInfoResponse.data.nickname
+            },
+            token: response.token
+          }));
+          localStorage.setItem('userId', id);
+          window.location.href = '/main';
+        } else {
+          dispatch(loginFailure('사용자 정보를 가져오는데 실패했습니다.'));
+        }
       } else {
         dispatch(loginFailure('아이디 또는 비밀번호가 잘못되었습니다.'));
       }
