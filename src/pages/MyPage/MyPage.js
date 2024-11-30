@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
-import { getUserInfo } from "../../services/api"
+import { getUserInfo, deletePost } from "../../services/api"
 import Info from "../../components/MyPage/MyPageInfo";
 import "../../styles/MyPage.css";
+import {useNavigate} from "react-router-dom";
 
 function MyPage() {
   const [posts, setPosts] = useState([]); // 모든 게시물
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const postsPerPage = 7; // 한 페이지당 게시물 수
   const [totalPage, setTotalPage] = useState(1); // 전체 페이지 수
-
+  const navigate = useNavigate();
 
   const user = useSelector(state => state.auth.user);
   const localUser = JSON.parse(localStorage.getItem('user'));
@@ -38,11 +39,32 @@ function MyPage() {
   }, [user, localUser]);
 
   // 게시물 삭제 처리
-  const handleDelete = (boardId) => {
-    const updatedPosts = posts.filter((post) => post.boardId !== boardId);
-    setPosts(updatedPosts);
-    setTotalPage(Math.ceil(updatedPosts.length / postsPerPage)); // 삭제 후 총 페이지 수 재계산
-  };
+  const handleDelete = async (boardId) => {
+    try {
+      const response = await deletePost('mypage', { boardId }); // 'mypage'로 API 요청
+      if (response.status === 200) {
+        const updatedPosts = posts.filter((post) => post.boardId !== boardId);
+        setPosts(updatedPosts);
+        setTotalPage(Math.ceil(updatedPosts.length / postsPerPage)); // 삭제 후 총 페이지 수 재계산
+        alert('게시물이 성공적으로 삭제되었습니다.');
+      } else {
+        console.error('삭제 실패:', response);
+        alert('게시물 삭제에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('게시물 삭제 중 오류 발생:', error);
+      alert('게시물 삭제 중 오류가 발생했습니다.');
+    }
+  };  
+
+  const handleEdit = (post) => {
+    navigate('/board/write', { 
+        state: { 
+            post, 
+            isMyPageEdit: true
+        } 
+    });
+};
 
   // 페이지 변경 처리
   const handlePageChange = (page) => {
@@ -73,7 +95,7 @@ function MyPage() {
                 <span>{post.boardId}</span>
                 <span>{post.title}</span>
                 <span>{post.date}</span>
-                <button onClick={() => alert(`수정 페이지 이동: ${post.boardId}`)}>수정</button>
+                <button onClick={() => handleEdit(post)}>수정</button>
                 <button onClick={() => handleDelete(post.boardId)}>삭제</button>
               </div>
             ))

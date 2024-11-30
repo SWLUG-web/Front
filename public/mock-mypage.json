@@ -12,16 +12,16 @@
             "boardId": 1,
             "title": "제목1",
             "id": "2021111350",
-            "category": "1",
-            "content": "게시글 내용",
+            "category": "2",
+            "contents": "게시글 내용",
             "tag": "인턴"
         },
         {
             "boardId": 2,
             "title": "제목2",
             "id": "2021111350",
-            "category": "1",
-            "content": "게시글 내용",
+            "category": "2",
+            "contents": "게시글 내용",
             "tag": [
                 "BoB",
                 "대외활동"
@@ -31,8 +31,8 @@
             "boardId": 3,
             "title": "제목3",
             "id": "2021111350",
-            "category": "1",
-            "content": "게시글 내용",
+            "category": "3",
+            "contents": "게시글 내용",
             "tag": "인턴"
         },
         {
@@ -40,7 +40,7 @@
             "title": "제목4",
             "id": "2021111350",
             "category": "1",
-            "content": "게시글 내용",
+            "contents": "게시글 내용",
             "tag": [
                 "BoB",
                 "대외활동"
@@ -51,7 +51,7 @@
             "title": "제목5",
             "id": "2021111350",
             "category": "1",
-            "content": "게시글 내용",
+            "contents": "게시글 내용",
             "tag": "인턴"
         },
         {
@@ -59,7 +59,7 @@
             "title": "제목6",
             "id": "2021111350",
             "category": "1",
-            "content": "게시글 내용",
+            "contents": "게시글 내용",
             "tag": [
                 "BoB",
                 "대외활동"
@@ -70,7 +70,7 @@
             "title": "제목7",
             "id": "2021111350",
             "category": "1",
-            "content": "게시글 내용",
+            "contents": "게시글 내용",
             "tag": "인턴"
         },
         {
@@ -78,7 +78,7 @@
             "title": "제목8",
             "id": "2021111350",
             "category": "1",
-            "content": "게시글 내용",
+            "contents": "게시글 내용",
             "tag": [
                 "BoB",
                 "대외활동"

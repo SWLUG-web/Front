@@ -55,7 +55,7 @@ const Header = () => {
 
 
   return (
-    <header className="bg-white">
+    <header className="bg-white relative z-10">
       <div className="container mx-auto flex items-center justify-between h-20 px-8">
         <div className="logo">
           <img src="/swlug.png" alt="SWLUG Logo" className="w-24 h-auto" />
