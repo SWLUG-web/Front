@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
+import Privacy from "../pages/Privacy";
 
 // Lazy-loaded components
 const Login = lazy(() => import("../pages/Auth/LoginPage"));
@@ -31,6 +32,7 @@ const root = createBrowserRouter([
   { path: "/blog", element: <BlogMain /> },
   { path: "/board/post/:boardId", element: <BlogPost /> },
   { path: "/board/write", element: <BlogWrite /> },
+  { path: "/privacy", element: <Privacy /> },
   { path: "/", element: <HomePage /> }, // 기본 경로
 ]);
 
