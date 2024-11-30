@@ -46,11 +46,18 @@ export const logout = async () => {
     return new Promise((resolve) => {
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
+      localStorage.removeItem('userId');
       resolve({ status: 200, message: 'Logout successful' });
     });
   }
   
-  return axios.get(`${API_URL}/users/logout`);
+  const response = await axios.get(`${API_URL}/users/logout`);
+  if (response.status === 200) {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
+    localStorage.removeItem('userId');
+  }
+  return response;
 };
 
 // 회원가입 관련 API
