@@ -7,6 +7,7 @@ const BlogWrite = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const postToEdit = location.state?.post || null; // 수정할 게시물 정보
+    const isMyPageEdit = location.state?.isMyPageEdit || false;
 
     const [title, setTitle] = useState(postToEdit?.title || "");
     const [contents, setContents] = useState(postToEdit?.contents || "");
@@ -54,7 +55,7 @@ const BlogWrite = () => {
 
             await writePost(formData); // 서버로 데이터 전송
             alert(postToEdit ? "게시물이 수정되었습니다." : "게시물이 등록되었습니다.");
-            navigate("/blog");
+            navigate(isMyPageEdit ? "/mypage" : "/blog");
         } catch (error) {
             console.error("글 등록/수정 실패:", error);
             alert("글 등록/수정에 실패했습니다. 다시 시도해주세요.");
@@ -114,7 +115,9 @@ const BlogWrite = () => {
             </div>
             <div className="buttons-container">
                 <button className="submit-button" onClick={handleSubmit}>
-                    {postToEdit ? "수정 완료" : "완료"}
+                    {postToEdit 
+                        ? (isMyPageEdit ? "수정 완료" : "수정 완료") 
+                        : "완료"}
                 </button>
             </div>
         </div>

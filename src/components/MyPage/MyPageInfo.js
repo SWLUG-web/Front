@@ -9,10 +9,10 @@ import "../../styles/MyPageInfo.css";
 function MyPageInfo() {
   const user = useSelector(state => state.auth.user);
   const [userInfo, setUserInfo] = useState({
-    id: "2021111350",
-    nickname: "25기_이송하",
-    email: "songha1744@naver.com",
-    phone: "010-1111-2222"
+    id: "",
+    nickname: "",
+    email: "",
+    phone: ""
   });
 
   const navigate = useNavigate();
