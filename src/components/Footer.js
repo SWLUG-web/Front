@@ -1,6 +1,11 @@
 import React from 'react';
 
 const Footer = () => {
+
+  const handlePrivacyClick = () => {
+    window.location.href = '/privacy';
+  };
+
   return (
     <footer className="footer bg-black text-white py-6">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
@@ -28,8 +33,10 @@ const Footer = () => {
 
         {/* 오른쪽: 개인정보처리방침, 로고, 저작권 */}
         <div className="logo-and-policy text-right flex flex-col items-end">
-          <div className="privacy-policy text-sm mb-2">개인정보처리방침</div>
-          <img src="/footer_logo.png" alt="SWLUG Footer Logo" className="w-16 h-auto mt-2" />
+        <div className="privacy-policy text-sm mb-2" onClick={handlePrivacyClick}>개인정보처리방침</div>
+          <img src="/footer_logo.png" alt="SWLUG Footer Logo" className="w-16 h-auto mt-2" 
+            onClick={handlePrivacyClick}
+          />
           <p className="text-sm mt-2">&copy; 2025 SWLUG. All rights reserved.</p>
         </div>
       </div>
