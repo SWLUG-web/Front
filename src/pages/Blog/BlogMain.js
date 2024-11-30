@@ -81,7 +81,7 @@ const BlogMain = () => {
 
     return (
         <div className="container mx-auto px-4 py-8 bg-white">
-            <h1 className="apply-title text-4xl font-bold text-center mb-6">Blog</h1>
+            <h1 className="apply-title font-bold text-center mb-6">Blog</h1>
 
             {/* 태그 필터와 검색 */}
             <div className="tags-and-search">
