@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../../styles/BlogMain.css";
 import { fetchPosts } from "../../services/blogAPI"; // API 호출 함수 import
 import TagFilter from "../../components/Blog/TagFilter";
@@ -11,9 +11,19 @@ const BlogMain = () => {
     const [selectedTag, setSelectedTag] = useState(""); // 선택된 태그
     const [searchQuery, setSearchQuery] = useState(""); // 검색어
     const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
-    const [selectedCategory, setSelectedCategory] = useState(""); // 선택된 카테고리
     const postsPerPage = 9; // 한 페이지에 표시할 게시물 수
     const navigate = useNavigate(); // 페이지 이동을 위한 hook
+
+    // URL 파라미터 읽기
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const initialCategory = searchParams.get("category") || "";
+    const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+
+    // 게시물 필터링
+    useEffect(() => {
+        setSelectedCategory(initialCategory); // URL 파라미터 기반으로 상태 초기화
+    }, [initialCategory])
 
     // 게시물 데이터 가져오기
     useEffect(() => {
@@ -70,26 +80,8 @@ const BlogMain = () => {
 
 
     return (
-        <div className="blog-main">
-
-            {/* 카테고리 필터 */}
-            <div className="category-filter">
-                {["성과", "정보", "후기", "활동"].map((category, index) => (
-                    <button
-                        key={index}
-                        className={`category-button ${selectedCategory === `${index}` ? "active" : ""}`}
-                        onClick={() =>
-                            setSelectedCategory((prevCategory) =>
-                                prevCategory === `${index}` ? "" : `${index}` // 토글 기능
-                            )
-                        }
-                    >
-                        {category}
-                    </button>
-                ))}
-            </div>
-            <h1 className="blog-title">Blog</h1>
-
+        <div className="container mx-auto px-4 py-8 bg-white">
+            <h1 className="apply-title text-4xl font-bold text-center mb-6">Blog</h1>
 
             {/* 태그 필터와 검색 */}
             <div className="tags-and-search">
