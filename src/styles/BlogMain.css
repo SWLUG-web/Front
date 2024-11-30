@@ -1,16 +1,3 @@
-.blog-main {
-    padding: 40px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.blog-title {
-    font-size: 26px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 60px;
-}
-
 .tags-and-search {
     display: flex;
     justify-content: space-between;
@@ -21,6 +8,7 @@
     font-size: 26px !important;
     font-weight: bold;
     margin-bottom: 15px;
+    text-align: left;
 }
 
 .search-bar {
@@ -63,6 +51,7 @@
     font-size: 26px;
     font-weight: bold;
     margin-bottom: 15px;
+    text-align: left;
 }
 
 .posts {
@@ -130,41 +119,6 @@
 .pagination-arrow:hover {
     color: #000; /* 호버 시 색상 */
 }
-
-.category-filter {
-    display: flex;
-    justify-content: space-around; /* 버튼 간격 균등 */
-    background-color: #f5f5f5; /* 상자 배경색 */
-    border-radius: 10px; /* 둥근 모서리 */
-    padding: 10px 0; /* 상하 여백 */
-    margin-bottom: 20px; /* 하단 여백 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
-    width: 40%; /* 전체 가로 크기 줄이기 (예: 60%) */
-    margin: 0 auto 20px auto; /* 중앙 정렬 */
-}
-
-.category-button {
-    flex: 1; /* 버튼 크기를 동일하게 설정 */
-    text-align: center; /* 텍스트 중앙 정렬 */
-    padding: 5px 0; /* 버튼 내부 여백 */
-    font-size: 14px; /* 글씨 크기 */
-    font-weight: 500; /* 글씨 두께 */
-    border: none; /* 버튼 테두리 제거 */
-    background-color: transparent; /* 버튼 배경 투명 */
-    cursor: pointer; /* 마우스 포인터 */
-    transition: all 0.2s ease-in-out; /* 클릭 애니메이션 */
-}
-
-.category-button.active {
-    font-weight: bold; /* 선택된 버튼 강조 */
-    text-decoration: underline; /* 선택된 버튼 밑줄 */
-}
-
-.category-button:hover {
-    font-weight:bold;
-}
-
-
 
 .post-card h3 {
     font-size: 16px;
