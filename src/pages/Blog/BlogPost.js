@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { deletePost, fetchPostDetail } from "../../services/blogAPI";
+import {deletePost, fetchAdjacentPosts, fetchPostDetail} from "../../services/blogAPI";
 import "../../styles/BlogPost.css";
 
 const BlogPost = () => {
@@ -8,12 +8,17 @@ const BlogPost = () => {
     const navigate = useNavigate();
     const [post, setPost] = useState(null); // 게시물 데이터 저장
     const [loading, setLoading] = useState(true); // 로딩 상태
+    const [adjacentPosts, setAdjacentPosts] = useState({ previous: null, next: null }); // 이전/다음 글 데이터
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const data = await fetchPostDetail(boardId); // 서버에서 게시물 상세 데이터 가져오기
                 setPost(data);
+
+                const adjacentData = await fetchAdjacentPosts(boardId); // 이전/다음 글 데이터 가져오기
+                setAdjacentPosts(adjacentData);
+
                 setLoading(false);
             } catch (error) {
                 console.error("게시물 데이터를 가져오는 중 오류:", error);
@@ -22,6 +27,10 @@ const BlogPost = () => {
         };
         fetchData();
     }, [boardId]);
+
+    const handleNavigate = (id) => {
+        navigate(`/board/post/${id}`);
+    };
 
     const handleDelete = async () => {
         if (window.confirm("정말 삭제하시겠습니까?")) {
@@ -81,6 +90,22 @@ const BlogPost = () => {
                         #{tag}
                     </span>
                 ))}
+            </div>
+
+            {/* 이전 글/다음 글 네비게이션 */}
+            <div className="navigation">
+                <button
+                    onClick={() => adjacentPosts.previous && handleNavigate(adjacentPosts.previous.id)}
+                    disabled={!adjacentPosts.previous}
+                >
+                    {adjacentPosts.previous ? `< 이전글: ${adjacentPosts.previous.title}` : "글이 없습니다"}
+                </button>
+                <button
+                    onClick={() => adjacentPosts.next && handleNavigate(adjacentPosts.next.id)}
+                    disabled={!adjacentPosts.next}
+                >
+                    {adjacentPosts.next ? `다음글: ${adjacentPosts.next.title} >` : "글이 없습니다"}
+                </button>
             </div>
         </div>
     );

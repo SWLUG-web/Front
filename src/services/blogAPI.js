@@ -23,6 +23,15 @@ export const fetchPostDetail = async (boardId) => {
     return response.json();
 };
 
+export const fetchAdjacentPosts = async (boardId) => {
+    const response = await fetch(`/board/adjacent/${boardId}`);
+    if (!response.ok) {
+        throw new Error("이전/다음 글 데이터를 가져오는 데 실패했습니다.");
+    }
+    return response.json();
+};
+
+
 export const writePost = async (formData) => {
     const response = await fetch("/board/save", {
         method: "POST",
@@ -46,7 +55,7 @@ export const searchPosts = async (searchQuery, tag) => {
 };
 
 export const updatePost = async (post) => {
-    const response = await fetch("/board/write", {
+    const response = await fetch("/board/update", {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -60,6 +69,7 @@ export const updatePost = async (post) => {
 
     return response.json();
 };
+
 
 export const deletePost = async (boardId) => {
     const response = await fetch(`/board/delete`, {

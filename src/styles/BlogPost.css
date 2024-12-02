@@ -87,3 +87,24 @@
     color: #aaa;
     font-size: 14px;
 }
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.navigation button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #000000;
+    cursor: pointer;
+    text-align: center;
+}
+
+.navigation button:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
