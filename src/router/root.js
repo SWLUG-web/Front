@@ -15,6 +15,7 @@ const Intro = lazy(() => import("../pages/Intro/Intro"));
 const BlogMain = lazy(() => import("../pages/Blog/BlogMain"));
 const BlogPost = lazy(() => import("../pages/Blog/BlogPost"));
 const BlogWrite = lazy(() => import("../pages/Blog/BlogWrite"));
+const NotFound = lazy(() => import("../components/NotFound"))
 
 const root = createBrowserRouter([
   // /users 경로
@@ -22,7 +23,7 @@ const root = createBrowserRouter([
   { path: "/users/join", element: <Join /> },
   { path: "/users/mypage", element: <MyPage /> },
   { path: "/users/update", element: <ResetPasswordPage /> },
-  
+  { path: "*", element: <NotFound /> },
   // 기존 경로
   { path: "/main", element: <HomePage /> },
   { path: "/notice", element: <NoticePage /> },
