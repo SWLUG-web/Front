@@ -5,7 +5,7 @@ import "../styles/NotFound.css";
 function NotFound() {
   return (
     <div
-      className="error-page container mx-auto px-4 py-8 flex flex-col items-center justify-center h-screen"
+      className="error-page container flex flex-col items-center justify-center min-h-screen"
       style={{
         backgroundImage: 'url(/apply_back.png)',
         backgroundSize: 'cover',

@@ -2,7 +2,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-top: 50px;
+  margin-bottom: 20px;
 }
 
 .error-logo {
@@ -26,4 +27,5 @@
 
 .error-btn {
     margin-top: 50px;
+    margin-bottom: 100px;
 }
