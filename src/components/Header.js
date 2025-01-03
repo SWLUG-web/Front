@@ -56,12 +56,14 @@ const Header = () => {
 
   return (
     <header className="bg-white relative z-10">
-      <div className="container mx-auto flex items-center justify-between h-20 px-8">
-        <div className="logo">
+      <div className="container mx-auto flex items-center justify-between h-20">
+      <div className="logo">
+        <a href="/">
           <img src="/swlug.png" alt="SWLUG Logo" className="w-24 h-auto" />
-        </div>
+        </a>
+      </div>
         <nav className="flex-1">
-          <ul className="flex justify-center items-center space-x-8 text-lg font-medium text-gray-700">
+          <ul className="flex justify-center items-center space-x-8 text-lg font-medium text-gray-700" style={{ marginLeft: "0px" }}>
             <li><a href="/intro" className="hover:text-blue-600">소개</a></li>
             <li
                 onMouseEnter={() => setIsBlogHover(true)}

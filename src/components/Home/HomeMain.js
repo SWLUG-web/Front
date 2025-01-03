@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/Home.css'; // 스타일 추가
+import ReactPlayer from "react-player";
+
 
 const HomeMain = () => {
   const [hoverIndex, setHoverIndex] = useState(null); // hover 상태 관리
@@ -20,16 +22,15 @@ const HomeMain = () => {
         {/* Left: YouTube Video */}
         <div className="w-full lg:w-1/2 mb-8 lg:mb-0 flex justify-center">
           <div className="relative" style={{ width: '80%', maxWidth: '600px' }}>
-            <iframe
-              width="100%"
-              height="315"
-              src="https://www.youtube.com/embed/ANyFScpNOW8"
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="rounded shadow-md"
-            ></iframe>
+            <ReactPlayer
+                className="swlugPlayer"
+                url={"https://youtu.be/ANyFScpNOW8?si=ADg-wK7WzuC3QXQs"}
+                width='100%'
+                height='315px'
+                playing={true}
+                muted={true}
+                controls={true}
+            />
           </div>
         </div>
         {/* Right: Text */}
