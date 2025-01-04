@@ -107,7 +107,7 @@ const Header = () => {
           {!isAuthenticated ? (
             <button
               onClick={() => window.location.href = '/users/login'}
-              className="text-lg font-medium text-gray-700 hover:text-blue-600"
+              className="text-lg font-medium text-gray-700 hover:text-blue-600" style={{ marginLeft: "50px" }}
             >
               로그인 ▼
             </button>
