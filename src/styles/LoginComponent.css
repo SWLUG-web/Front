@@ -1,11 +1,11 @@
 .login-container {
   margin: 50px auto;
-    border: 1px solid #6A6A6A;
-    border-radius: 5px;
-    text-align: center;
-    padding-right: 30px;
-    padding-bottom: 30px;
-    padding-left: 30px;
+  border: 1px solid #6A6A6A;
+  border-radius: 5px;
+  text-align: center;
+  padding-right: 30px;
+  padding-bottom: 30px;
+  padding-left: 30px;
 }
 
 .login_logo {
