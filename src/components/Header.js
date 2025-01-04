@@ -75,24 +75,27 @@ const Header = () => {
               </a>
               {isBlogHover && (
                   <div
-                      className="absolute top-full left-0 bg-gray-100 shadow-lg rounded-lg px-4 py-2"
+                      className="absolute top-full left-1/2 transform -translate-x-1/2 rounded-lg px-8 py-2"
                       style={{
                         display: "flex", // Flexbox 사용
                         flexDirection: "row", // 가로 정렬
-                        gap: "10px", // 항목 간 간격
+                        gap: "40px", // 항목 간 간격
                         whiteSpace: "nowrap", // 줄바꿈
+                        height: "40px", // 높이 설정
+                        alignItems: "center", // 세로 가운데 정렬
+                        background: "#f3f3f3",
                       }}
                   >
-                    <a href="/blog?category=성과" className="hover:bg-gray-200 px-4 py-2 rounded-lg">
+                    <a href="/blog?category=성과" className="hover:underline hover:font-bold">
                       성과
                     </a>
-                    <a href="/blog?category=정보" className="hover:bg-gray-200 px-4 py-2 rounded-lg">
+                    <a href="/blog?category=정보" className="hover:underline hover:font-bold">
                       정보
                     </a>
-                    <a href="/blog?category=후기" className="hover:bg-gray-200 px-4 py-2 rounded-lg">
+                    <a href="/blog?category=후기" className="hover:underline hover:font-bold">
                       후기
                     </a>
-                    <a href="/blog?category=활동" className="hover:bg-gray-200 px-4 py-2 rounded-lg">
+                    <a href="/blog?category=활동" className="hover:underline hover:font-bold">
                       활동
                     </a>
                   </div>
