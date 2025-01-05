@@ -21,7 +21,7 @@ const HomeMain = () => {
       <div className="container mx-auto px-4 py-12 flex flex-col lg:flex-row items-center">
         {/* Left: YouTube Video */}
         <div className="w-full lg:w-1/2 mb-8 lg:mb-0 flex justify-center">
-          <div className="relative" style={{ width: '80%', maxWidth: '600px' }}>
+          <div className="relative" style={{ width: '80%', maxWidth: '700px' }}>
             <ReactPlayer
                 className="swlugPlayer"
                 url={"https://youtu.be/ANyFScpNOW8?si=ADg-wK7WzuC3QXQs"}
