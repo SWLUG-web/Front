@@ -1,13 +1,17 @@
 .tabs {
     margin: 20px auto;
     text-align: center;
+    /* 디버깅용 테두리 */
+    border: 2px dashed #ff0000;  /* 빨간색으로 전체 탭 영역 표시 */
 }
 
 .tab-buttons {
-    max-width: 1200px;
+    max-width: 1024px;
     display: flex;
     justify-content: space-between;
     margin: 0 auto;
+    /* 디버깅용 테두리 */
+    border: 2px dashed #00ff00;  /* 초록색으로 탭 버튼 컨테이너 표시 */
 }
 
 .tab-button {
@@ -16,45 +20,42 @@
     padding: 20px 0;
     cursor: pointer;
     border: 1px solid #000000;
-    /* 탭 개별 테두리 */
     border-bottom: none;
-    /* 아래쪽 테두리 제거 */
     background: #ffffff;
     font-size: 16px;
     transition: all 0.3s;
     border-radius: 30px 30px 0 0;
-    /* 윗부분만 둥글게 */
     margin-right: -1px;
-    /* 테두리 중첩 방지 */
+    /* 디버깅용 테두리 */
+    border: 2px solid #0000ff;  /* 파란색으로 각 탭 버튼 표시 */
 }
 
 .tab-button:last-child {
     margin-right: 0;
-    /* 마지막 탭은 마진 제거 */
 }
 
 .tab-button.active {
     font-weight: bold;
     text-decoration: underline;
-    /* 밑줄 */
     color: #000000;
     background-color: #f3f3f3;
-    /* 활성화된 탭 배경색 */
-
 }
 
 .tab-button:not(.active):hover {
     background-color: #f9f9f9;
-    /* 비활성 탭 hover 효과 */
 }
 
 .tab-content {
+    max-width: 1024px;
+    margin: 0 auto;
+    margin-bottom: 100px;
     padding: 30px;
     padding-bottom: 0px;
     background-color: #f3f3f3;
     border: 1px solid #6a6a6a;
-    /* 콘텐츠 박스 테두리 */
     border-radius: 10px;
     text-align: left;
-    margin-bottom: 100px;
+    /* 디버깅용 테두리 */
+    border: 2px dashed #00ff00;  /* 보라색으로 탭 컨텐츠 영역 표시 */
 }
+
