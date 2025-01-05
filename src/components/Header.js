@@ -123,18 +123,18 @@ const Header = () => {
                 {user?.nickname || user?.id || '사용자'} <span className="ml-1">▼</span>
               </button>
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-4">
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-2">
                   <div className="flex flex-col items-center">
                     <a
                       href="/users/mypage"
-                      className="block w-full text-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      className="block w-full text-center px-4 py-2 hover:font-bold"
                     >
                       마이페이지
                     </a>
                     <hr className="w-4/5 border-gray-300 my-2" />
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      className="block w-full text-center px-4 py-2 hover:font-bold"
                     >
                       로그아웃
                     </button>
