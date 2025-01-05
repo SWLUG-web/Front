@@ -16,6 +16,7 @@ const FAQPage = () => {
   return (
     <div className="faq-page container mx-auto px-4 py-8">
       <h1 className="apply-title text-3xl font-bold text-center mb-6" style={{ fontSize: '24px' }}>FAQ</h1>
+      <p className="faq-text">SWLUG 관련하여 궁금한 부분을 확인해보세요</p>
       <div className="faq-filters">
         {categories.map((cat) => (
           <button

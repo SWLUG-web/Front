@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../../styles/FAQPage.css';
 
-const FAQItem = ({ question, answer }) => {
+const FAQItem = ({ image = '/qna.png', question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -10,6 +10,7 @@ const FAQItem = ({ question, answer }) => {
         className="faq-question"
         onClick={() => setIsOpen((prev) => !prev)}
       >
+        <img src={image} alt="FAQ Icon" className="faq-icon" />
         <span>{question}</span>
         <img
           src={isOpen ? '/faq_up.png' : '/faq_down.png'}
@@ -24,24 +25,10 @@ const FAQItem = ({ question, answer }) => {
             src="/faq_penguin.png"
             alt="Penguin"
             className="faq-penguin"
-            style={{ width: '205px', height: '179px' }} // 펭귄 크기
           />
           {/* 말풍선 */}
-          <div
-            className="faq-speech-bubble"
-            style={{
-              width: '454px',
-              height: '195px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '20px',
-              borderRadius: '10px',
-              backgroundColor: '#f1f1f1',
-              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-            }}
-          >
-            {answer}
+          <div className="faq-speech-bubble">
+            <p className="speech-bubble-text">{answer}</p>
           </div>
         </div>
       )}
