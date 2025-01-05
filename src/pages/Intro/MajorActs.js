@@ -43,11 +43,11 @@ const MajorActs = () => {
                 <div key={index} className="activity-group">
                     <h2 className="activity-title">{activity.title}</h2>
                     <div className="activity-content">
-                        <div className="activity-card">
+                        <div className="intro-activity-card">
                             <img src={activity.image} alt={activity.title} className="activity-image" />
                             <p>{activity.description[0]}</p>
                         </div>
-                        <div className="activity-card">
+                        <div className="intro-activity-card">
                             <img src={activity.image} alt={activity.title} className="activity-image" />
                             <p>{activity.description[1]}</p>
                         </div>

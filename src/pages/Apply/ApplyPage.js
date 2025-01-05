@@ -18,7 +18,7 @@ const ApplyPage = () => {
     >
       <h1 className="apply-title text-3xl font-bold text-center mb-6" style={{ fontSize: '24px' }}>지원</h1>
       <div className="apply-content">
-        <img src="/apply_swlug.png" alt="SWLUG" className="apply-logo mx-auto" />
+        <img src="/img/Logo4.png" alt="SWLUG" className="apply-logo mx-auto" />
         {isApplyPeriod ? (
           <>
             <p className="apply-description text-center">
