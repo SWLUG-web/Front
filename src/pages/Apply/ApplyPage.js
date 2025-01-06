@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../styles/ApplyPage.css';
+import axios from "axios"
 
 const ApplyPage = () => {
-  const today = new Date();
-  const applyStartDate = new Date('2024-02-21T18:00:00');
-  const applyEndDate = new Date('2025-11-29T23:59:59');
-  const isApplyPeriod = today >= applyStartDate && today <= applyEndDate;
+  // const today = new Date();
+  // const applyStartDate = new Date('2024-02-21T18:00:00');
+  // const applyEndDate = new Date('2025-11-29T23:59:59');
+  // const isApplyPeriod = today >= applyStartDate && today <= applyEndDate;
+
+    const [isApplyPeriod, setIsApplyPeriod] = useState('');
+
+    useEffect(() => {
+        axios.get('/apply')
+            .then(res => setIsApplyPeriod(res.data))
+            .catch(err => console.log(err))
+    }, []);
 
   return (
     <div
@@ -19,7 +28,7 @@ const ApplyPage = () => {
       <h1 className="apply-title text-3xl font-bold text-center mb-6" style={{ fontSize: '24px' }}>지원</h1>
       <div className="apply-content">
         <img src="/img/Logo4.png" alt="SWLUG" className="apply-logo mx-auto" />
-        {isApplyPeriod ? (
+        { isApplyPeriod ? (
           <>
             <p className="apply-description text-center">
               서울여자대학교 정보보호학과 소학회 SWLUG에서 2n기 신입학회를 모집합니다.
