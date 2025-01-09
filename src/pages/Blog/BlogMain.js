@@ -20,10 +20,25 @@ const BlogMain = () => {
     const initialCategory = searchParams.get("category") || "";
     const [selectedCategory, setSelectedCategory] = useState(initialCategory);
 
+    // 임시 데이터 설정
+    useEffect(() => {
+        const dummyPosts = Array.from({ length: 20 }, (_, index) => ({
+            boardId: index + 1,
+            tag: index % 2 === 0 ? "인턴" : "채용",
+            id: `user${index + 1}`,
+            createAt: `2024-01-${String(index + 1).padStart(2, "0")}`,
+            category: index % 3 === 0 ? "BOB" : "채용",
+            title: `게시물 제목 ${index + 1}`,
+        }));
+
+        setPosts(dummyPosts);
+        setTotalPages(Math.ceil(dummyPosts.length / postsPerPage));
+    }, []);
+
     // 게시물 필터링
     useEffect(() => {
         setSelectedCategory(initialCategory); // URL 파라미터 기반으로 상태 초기화
-    }, [initialCategory])
+    }, [initialCategory]);
 
     // 게시물 데이터 가져오기
     useEffect(() => {
@@ -74,8 +89,17 @@ const BlogMain = () => {
         return date.toLocaleDateString("ko-KR"); // 한국어 형식으로 날짜 변환
     };
 
+    // 필터링된 게시물
     const filteredPosts = posts.filter((post) =>
-        selectedCategory === "" ? true : post.category === selectedCategory
+        (selectedCategory === "" || post.category === selectedCategory) &&
+        (selectedTag === "" || post.tag === selectedTag) &&
+        (searchQuery === "" || post.title.includes(searchQuery))
+    );
+
+    // 현재 페이지에 해당하는 게시물만 추출
+    const paginatedPosts = filteredPosts.slice(
+        (currentPage - 1) * postsPerPage,
+        currentPage * postsPerPage
     );
 
 
@@ -106,17 +130,20 @@ const BlogMain = () => {
 
             {/* 게시물 리스트 */}
             <h3 className="posts-title">Posts</h3>
+            <div className="posts-container">
             <div className="posts">
                 {filteredPosts.length > 0 ? (
-                    filteredPosts.map((post) => (
+                    paginatedPosts.map((post) => (
                         <div
                             key={post.boardId}
                             className="post-card"
                             onClick={() => handlePostClick(post.boardId)}
                         >
-                            {/* 항상 동일한 이미지 표시 */}
-                            <img src="/Logo5.png" alt="Default Logo"/>
+                            <div className="post-card-image-container">
+                                <img src="/apply_swlug.png" alt="Default Logo" />
+                            </div>
                             <p className="post-tag">{post.tag}</p>
+                            <p className="post-title">{post.title}</p>
                             <div className="post-info">
                                 <p className="post-id">{post.id}</p>
                                 <p className="post-date">{formatDate(post.createAt)}</p>
@@ -126,6 +153,14 @@ const BlogMain = () => {
                 ) : (
                     <p className="no-posts">등록된 글이 없습니다.</p>
                 )}
+            </div>
+        </div>
+
+        {/* 글쓰기 버튼 */}
+        <div className="write-button-container">
+                <button className="write-button" onClick={() => navigate("/board/write")}>
+                    글쓰기
+                </button>
             </div>
 
             {/* 페이지네이션 */}
@@ -171,12 +206,6 @@ const BlogMain = () => {
                 </div>
             )}
 
-            {/* 글쓰기 버튼 */}
-            <div className="write-button-container">
-                <button className="write-button" onClick={() => navigate("/board/write")}>
-                    글쓰기
-                </button>
-            </div>
         </div>
     );
 };

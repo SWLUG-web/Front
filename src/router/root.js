@@ -9,6 +9,7 @@ const MyPage = lazy(() => import("../pages/MyPage/MyPage"));
 const ResetPasswordPage = lazy(() => import("../pages/Auth/ResetPasswordPage"));
 const HomePage = lazy(() => import("../pages/Home/HomePage"));
 const NoticePage = lazy(() => import("../pages/Notice/NoticePage"));
+const NoticeDetailPage = lazy(() => import("../pages/Notice/NoticeDetailPage"));
 const FAQPage = lazy(() => import("../pages/FAQ/FAQPage"));
 const ApplyPage = lazy(() => import("../pages/Apply/ApplyPage"));
 const Intro = lazy(() => import("../pages/Intro/Intro"));
@@ -27,6 +28,7 @@ const root = createBrowserRouter([
   // 기존 경로
   { path: "/main", element: <HomePage /> },
   { path: "/notice", element: <NoticePage /> },
+  { path: "/notice/:noticeId", element: <NoticeDetailPage /> },
   { path: "/faq", element: <FAQPage /> },
   { path: "/apply", element: <ApplyPage /> },
   { path: "/intro", element: <Intro /> },

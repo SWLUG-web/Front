@@ -72,33 +72,66 @@
     text-align: left;
 }
 
+.posts-container {
+    display: flex;
+    justify-content: center;
+    /* 수평 중앙 정렬 */
+    align-items: center;
+    /* 수직 중앙 정렬 */
+    min-height: 100vh;
+    /* 화면 전체 높이를 차지하도록 설정 */
+}
+
 .posts {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
+    /* 3열 레이아웃 */
+    gap: 50px;
+    /* 카드 사이의 간격 */
+    width: 100%;
+    /* 부모의 너비를 따라감 */
 }
 
 .post-card {
-    display: flex; /* flexbox를 사용 */
-    flex-direction: column; /* 세로 방향 정렬 */
-    justify-content: center; /* 세로 중앙 정렬 */
-    align-items: center; /* 가로 중앙 정렬 */
-    padding: 10px; /* 내부 여백 */
-    transform: scale(0.9); /* 크기 줄임 */
-    transition: transform 0.2s ease-in-out; /* 호버 시 애니메이션 */
+    display: flex;
+    /* flexbox를 사용 */
+    flex-direction: column;
+    /* 세로 방향 정렬 */
+    justify-content: center;
+    /* 세로 중앙 정렬 */
+    align-items: center;
+    /* 가로 중앙 정렬 */
+    transition: transform 0.2s ease-in-out;
+    /* 호버 시 애니메이션 */
     border: none;
-    text-align: center; /* 카드 내부 텍스트 중앙 정렬 */
-    border-radius: 8px; /* 선택 사항: 둥근 모서리 */
+    text-align: center;
+    /* 카드 내부 텍스트 중앙 정렬 */
+}
+
+.post-card-image-container {
+    background-color: #f3f3f3;
+    /* 이미지 영역 배경 */
+    width: 100%;
+    /* 이미지 컨테이너 너비 */
+    display: flex;
+    /* 이미지 중앙 정렬을 위한 Flexbox */
+    justify-content: center;
+    /* 수평 중앙 정렬 */
+    align-items: center;
+    /* 수직 중앙 정렬 */
+    margin-bottom: 10px;
+    /* 이미지와 텍스트 간격 */
 }
 
 .post-card img {
-    max-width: 100%; /* 이미지가 부모 컨테이너를 넘지 않도록 설정 */
-    width: 150px; /* 원하는 너비 */
-    height: 150px; /* 원하는 높이 */
-    object-fit: cover; /* 이미지 잘림 방지 */
-    margin-bottom: 10px; /* 이미지와 아래 텍스트 사이 간격 */
-    background-color: #f2f2f2; /* 이미지 배경색 */
-    border-radius: 8px; /* 선택 사항: 둥근 모서리 */
+    max-width: 100%;
+    /* 이미지가 부모 컨테이너를 넘지 않도록 설정 */
+    object-fit: contain;
+}
+
+.post-title {
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .pagination {
@@ -165,20 +198,25 @@
 .post-tag {
     font-size: 14px;
     color: #007bff;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     text-align: center;
 }
 
 .post-info {
-    display: flex; /* flexbox 사용 */
-    justify-content: space-between; /* id는 왼쪽, date는 오른쪽 정렬 */
-    align-items: center; /* 세로 가운데 정렬 */
-    width: 100%; /* 부모 컨테이너의 전체 너비 사용 */
-    padding: 5px 0; /* 위아래 간격 추가 */
-    margin-top: 10px; /* 이미지와의 간격 */
+    display: flex;
+    /* flexbox 사용 */
+    justify-content: space-between;
+    /* id는 왼쪽, date는 오른쪽 정렬 */
+    align-items: center;
+    /* 세로 가운데 정렬 */
+    width: 100%;
+    /* 부모 컨테이너의 전체 너비 사용 */
+    padding: 5px;
+    /* 위아래 간격 추가 */
     font-size: 12px;
     color: #555;
 }
+
 .post-id {
     text-align: left;
     margin: 0;
@@ -212,16 +250,16 @@
     display: flex;
     justify-content: flex-end;
     /* 오른쪽 정렬 */
-    margin-top: 20px;
+    margin: 50px auto;
     /* 위와의 간격 조절 */
 }
 
 .write-button {
-    background-color: white;
-    color: black;
-    padding: 7px 20px;
+    background-color: #202123;
+    color: #F9F9F9;
+    padding: 5px 20px;
     border: black solid 1px;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 12px;
     cursor: pointer;
     box-shadow: none;

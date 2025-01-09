@@ -5,7 +5,7 @@ const IntroHeader = () => {
   return (
     <div className="introduction-header" style={{ position: "relative" }}>
       {/* 텍스트 로고 */}
-      <img src="/textLogo.png" alt="Text Logo" className="text-logo" />
+      <img src="/textLogo1.png" alt="Text Logo" className="text-logo" />
 
       {/* SWLUG 로고 */}
       <img src="/swlug.png" alt="SWLUG Logo" className="swlug-logo" />
