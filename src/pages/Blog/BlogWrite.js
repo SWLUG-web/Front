@@ -84,14 +84,14 @@ const BlogWrite = () => {
                 onChange={(e) => setCategory(e.target.value)}
                 className="category-select"
             >
-                <option value="" disabled>
+                <option value="" disabled hidden>
                     게시판 선택
                 </option>
                 <option value="0">공지사항</option>
-                <option value="1">후기</option>
-                <option value="2">활동</option>
-                <option value="3">정보</option>
-                <option value="4">성과물</option>
+                <option value="1">성과</option>
+                <option value="2">정보</option>
+                <option value="3">후기</option>
+                <option value="4">활동</option>
             </select>
             <input
                 type="text"
@@ -101,7 +101,7 @@ const BlogWrite = () => {
                 className="title-input"
             />
             <textarea
-                placeholder="내용을 입력하세요"
+                placeholder=""
                 value={contents}
                 onChange={(e) => setContents(e.target.value)}
                 className="content-input"
