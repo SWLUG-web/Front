@@ -21,10 +21,9 @@
 }
 
 .post-id {
-    font-size: 16px;
-    color: #333;
     margin-bottom: 10px;
     text-align: center;
+    color: #6a6a6a;
 }
 
 .blog-post img {
@@ -69,14 +68,14 @@
     align-items: center;
     gap: 10px; /* 버튼 사이 간격 */
     font-size: 14px;
-    color: #555;
+    color: #6a6a6a;
     margin: 20px auto;
 }
 
 .post-actions button {
     background: none;
     border: none;
-    color: #555;
+    color: #6a6a6a;
     cursor: pointer;
     font-size: 14px;
     padding: 0;

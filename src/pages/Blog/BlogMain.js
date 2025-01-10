@@ -24,11 +24,15 @@ const BlogMain = () => {
     useEffect(() => {
         const dummyPosts = Array.from({ length: 20 }, (_, index) => ({
             boardId: index + 1,
-            tag: index % 2 === 0 ? "인턴" : "채용",
-            id: `user${index + 1}`,
-            createAt: `2024-01-${String(index + 1).padStart(2, "0")}`,
-            category: index % 3 === 0 ? "BOB" : "채용",
+            category: index % 3 === 0 ? 2 : 1, // 카테고리를 숫자로 변경
             title: `게시물 제목 ${index + 1}`,
+            tag: [`${index % 2 === 0 ? "인턴" : "채용"}`], // 태그를 배열로 변경
+            roleType: null,
+            id: 123,
+            createAt: `2024-01-${String(index + 1).padStart(2, "0")} 14:00:00`,
+            updateAt: `2024-01-${String(index + 1).padStart(2, "0")} 14:00:00`,
+            contents: `게시물 ${index + 1}의 내용입니다.`,
+            imageUrl: "http://example.com/updated-image.jpg"
         }));
 
         setPosts(dummyPosts);
