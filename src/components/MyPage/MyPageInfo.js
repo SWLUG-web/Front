@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useTransition } from "react";
+// MyPageInfo.js
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -16,11 +17,21 @@ function MyPageInfo() {
   });
 
   const navigate = useNavigate();
-  const [_, startTransition] = useTransition();
 
   const handlePasswordReset = () => {
-    startTransition(() => {
-      navigate("/users/update", { state: { fromMyPage: true } });
+    if (!userInfo.id || !userInfo.email) {
+      console.error('사용자 정보가 없습니다.');
+      return;
+    }
+
+    navigate("/users/update", {
+      state: {
+        fromMyPage: true,
+        userInfo: {
+          userId: userInfo.id,
+          email: userInfo.email
+        }
+      }
     });
   };
 
@@ -38,7 +49,6 @@ function MyPageInfo() {
         }
       } catch (error) {
         console.error('회원 정보 불러오기 실패:', error);
-        // 401 에러시 로그인 페이지로 리다이렉트
         if (error.response?.status === 401) {
           navigate('/users/login');
         }
