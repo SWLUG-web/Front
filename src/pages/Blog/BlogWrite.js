@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { writePost, updatePost } from "../../services/blogAPI"; // blogAPI.js에서 import
 import "../../styles/BlogWrite.css";
 import {useLocation, useNavigate} from "react-router-dom";
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const BlogWrite = () => {
     const navigate = useNavigate();
@@ -102,24 +100,6 @@ const BlogWrite = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 className="title-input"
             />
-            <CKEditor
-                editor={ClassicEditor}
-                data="<p>Hello World</p>"
-                onReady={editor => {
-                    // console.log('Editor is ready to use!', editor);
-                }}
-                
-                onChange={(event, editor) => {
-                    const data = editor.getData();
-                }}
-                
-                onBlur={(event, editor) => {
-                    // console.log('Blur.', editor);
-                }}
-                
-                onFocus={(event, editor) => {
-                    // console.log('Focus.', editor);
-            }}/>
             <textarea
                 placeholder=""
                 value={contents}

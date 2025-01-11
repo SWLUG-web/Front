@@ -38,7 +38,7 @@ function MyPageInfo() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get('/users/mypage');
+        const response = await axios.get('/api/v1/mypage');
         if (response.status === 200) {
           setUserInfo({
             id: response.data.userId,
