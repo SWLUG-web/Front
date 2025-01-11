@@ -18,7 +18,7 @@ function MyPage() {
   useEffect(() => {
     const fetchUserPosts = async () => {
       try {
-        const response = await axios.get('/api/v1/mypage', {
+        const response = await axios.get('/users/mypage', {
           withCredentials: true
         });
 
@@ -38,7 +38,7 @@ function MyPage() {
       } catch (error) {
         if (error.response?.status === 401) {
           alert('로그인이 필요합니다.');
-          navigate('/login');
+          navigate('/users/login');
         } else {
           console.error('게시물 불러오기 실패:', error);
           alert('게시물을 불러오는데 실패했습니다.');
@@ -51,7 +51,7 @@ function MyPage() {
 
   const handleDelete = async (boardId) => {
     try {
-      const response = await axios.delete(`/api/v1/board/${boardId}`, {
+      const response = await axios.delete(`/users/board/${boardId}`, {
         withCredentials: true
       });
 

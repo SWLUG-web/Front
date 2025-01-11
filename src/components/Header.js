@@ -14,7 +14,7 @@ const Header = () => {
       const userId = localStorage.getItem('userId');
       if (userId && !isAuthenticated) {
         try {
-          const userInfoResponse = await axios.get('/api/v1/mypage');
+          const userInfoResponse = await axios.get('/users/mypage');
           if (userInfoResponse.status === 200) {
             dispatch(loginSuccess({
               user: {
@@ -34,7 +34,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post('/api/v1/login/logout');
+      const response = await axios.post('/users/login/logout');
       dispatch(logout());
       localStorage.clear();
       window.location.href = '/main';
