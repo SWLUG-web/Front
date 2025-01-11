@@ -122,7 +122,7 @@ function ResetPassword() {
 
   const handleRequestAuth = async () => {
     try {
-      await axios.post('/users/password/verify', {
+      await axios.post('/api/v1/password/verify', {
         userId: formData.id,
         email: formData.email
       });
@@ -150,7 +150,7 @@ function ResetPassword() {
     }
 
     try {
-      await axios.post('/users/password/verify-auth', {
+      await axios.post('/api/v1/password/verify-auth', {
         userId: formData.id,
         email: formData.email,
         authNumber: parseInt(formData.authCode)
@@ -181,7 +181,7 @@ function ResetPassword() {
     }
 
     try {
-      const response = await axios.post('/users/password/reset', {
+      const response = await axios.post('/api/v1/password/reset', {
         userId: formData.id,
         newPassword: formData.newPw
       });

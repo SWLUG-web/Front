@@ -16,13 +16,13 @@ function LoginComponent() {
     dispatch(setLoading());
 
     try {
-      const response = await axios.post('/users/login', {
+      const response = await axios.post('/api/v1/login', {
         userId: id,
         password: password
       });
 
       if (response.data.success) {
-        const userInfoResponse = await axios.get('/users/mypage');
+        const userInfoResponse = await axios.get('/api/v1/mypage');
 
         dispatch(loginSuccess({
           user: {
