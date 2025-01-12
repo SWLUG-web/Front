@@ -16,10 +16,19 @@ const PrevNextButtons = ({ onPrev, onNext, disableNext, showNextButton = true, p
     }
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+    });
+  };
+
   return (
     <div className="button-container">
       <div>
-        <button type="button" className="btn btn_prev" onClick={handlePrev}>
+        <button type="button" className="btn btn_prev" onClick={() => {
+          handlePrev();
+          scrollToTop();
+        }}>
           <span className="button-text">{prevText}</span>
         </button>
       </div>
@@ -28,7 +37,10 @@ const PrevNextButtons = ({ onPrev, onNext, disableNext, showNextButton = true, p
           <button 
             type="button" 
             className={`btn btn_next ${disableNext ? 'disabled' : ''}`} 
-            onClick={handleNext}
+            onClick={() => {
+              handleNext();
+              scrollToTop();
+            }}
             disabled={disableNext}
           >
             <span className="button-text">다음</span>

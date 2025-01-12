@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
-import { getUserInfo, deletePost } from "../../services/api"
+import axios from 'axios';
 import Info from "../../components/MyPage/MyPageInfo";
 import "../../styles/MyPage.css";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function MyPage() {
-  const [posts, setPosts] = useState([]); // 모든 게시물
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  const postsPerPage = 7; // 한 페이지당 게시물 수
-  const [totalPage, setTotalPage] = useState(1); // 전체 페이지 수
+  const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 7;
+  const [totalPage, setTotalPage] = useState(1);
   const navigate = useNavigate();
 
   const user = useSelector(state => state.auth.user);
@@ -18,118 +18,144 @@ function MyPage() {
   useEffect(() => {
     const fetchUserPosts = async () => {
       try {
-        const currentUser = user || localUser;
-        if (currentUser) {
-          const response = await getUserInfo({
-            id: currentUser.id,
-            pw: currentUser.pw
-          });
-          
-          if (response.status === 200) {
-            setPosts(response.data.board);
-            setTotalPage(Math.ceil(response.data.board.length / postsPerPage));
-          }
+        const response = await axios.get('/mypage', {
+          withCredentials: true
+        });
+
+        if (response.status === 200) {
+          const blogPosts = response.data.blogInfo || [];
+          setPosts(blogPosts.map(post => ({
+            boardId: post.id,
+            title: post.boardTitle,
+            date: new Date(post.createAt).toLocaleDateString(),
+            category: post.boardCategory,
+            isPin: post.isPin,
+            isSecure: post.isSecure,
+            isDelete: post.isDelete
+          })));
+          setTotalPage(Math.ceil(blogPosts.length / postsPerPage));
         }
       } catch (error) {
-        console.error('게시물 불러오기 실패:', error);
+        if (error.response?.status === 401) {
+          alert('로그인이 필요합니다.');
+          navigate('/login');
+        } else {
+          console.error('게시물 불러오기 실패:', error);
+          alert('게시물을 불러오는데 실패했습니다.');
+        }
       }
     };
 
     fetchUserPosts();
-  }, [user, localUser]);
+  }, [navigate]);
 
-  // 게시물 삭제 처리
   const handleDelete = async (boardId) => {
     try {
-      const response = await deletePost('mypage', { boardId }); // 'mypage'로 API 요청
+      const response = await axios.delete(`/board/${boardId}`, {
+        withCredentials: true
+      });
+
       if (response.status === 200) {
         const updatedPosts = posts.filter((post) => post.boardId !== boardId);
         setPosts(updatedPosts);
-        setTotalPage(Math.ceil(updatedPosts.length / postsPerPage)); // 삭제 후 총 페이지 수 재계산
+        setTotalPage(Math.ceil(updatedPosts.length / postsPerPage));
         alert('게시물이 성공적으로 삭제되었습니다.');
-      } else {
-        console.error('삭제 실패:', response);
-        alert('게시물 삭제에 실패했습니다.');
       }
     } catch (error) {
       console.error('게시물 삭제 중 오류 발생:', error);
-      alert('게시물 삭제 중 오류가 발생했습니다.');
+      alert('게시물 삭제에 실패했습니다.');
     }
-  };  
+  };
 
   const handleEdit = (post) => {
-    navigate('/board/write', { 
-        state: { 
-            post, 
-            isMyPageEdit: true
-        } 
+    navigate('/board/write', {
+      state: {
+        post,
+        isMyPageEdit: true
+      }
     });
-};
+  };
 
-  // 페이지 변경 처리
   const handlePageChange = (page) => {
-    if (page < 1 || page > totalPage) return; // 페이지 범위 제한
+    if (page < 1 || page > totalPage) return;
     setCurrentPage(page);
   };
 
-  // 현재 페이지에 해당하는 게시물 가져오기
   const currentPosts = posts.slice(
-    (currentPage - 1) * postsPerPage,
-    currentPage * postsPerPage
+      (currentPage - 1) * postsPerPage,
+      currentPage * postsPerPage
   );
 
   return (
-    <div className="mypage">
-      <h1 className="form_title">마이 페이지</h1>
+      <div className="mypage">
+        <h1 className="form_title">마이 페이지</h1>
 
-      {/* 회원 정보 */}
-      <Info />
+        <Info />
 
-      {/* 게시물 목록 */}
-      <section className="user-posts">
-        <h2 className="form_subtitle">작성한 글</h2>
-        <div className="posts-list">
-          {currentPosts.length > 0 ? (
-            currentPosts.map((post) => (
-              <div className="post-item" key={post.boardId}>
-                <span>{post.boardId}</span>
-                <span>{post.title}</span>
-                <span>{post.date}</span>
-                <button onClick={() => handleEdit(post)}>수정</button>
-                <button onClick={() => handleDelete(post.boardId)}>삭제</button>
+        <section className="user-posts">
+          <h2 className="form_subtitle">작성한 글</h2>
+          <div className="posts-list">
+            {currentPosts.length > 0 ? (
+                currentPosts.map((post, index) => {
+                  const displayNumber = posts.length - ((currentPage - 1) * postsPerPage + index);
+                  return (
+                      <div className="post-item" key={post.boardId}>
+                        <span className="post-number">{displayNumber}</span>
+                        <div className="post-title">
+                          <span className="title-text">{post.title}</span>
+                          {post.isPin && <span className="pin-badge">공지</span>}
+                          {post.isSecure > 0 && <span className="secure-badge">비공개</span>}
+                        </div>
+                        <span className="post-date">{post.date}</span>
+                        <button
+                            className="edit-btn"
+                            onClick={() => handleEdit(post)}
+                            disabled={post.isDelete > 0}
+                        >
+                          수정
+                        </button>
+                        <button
+                            className="delete-btn"
+                            onClick={() => handleDelete(post.boardId)}
+                            disabled={post.isDelete > 0}
+                        >
+                          삭제
+                        </button>
+                      </div>
+                  );
+                })
+            ) : (
+                <div className="no-posts">게시물이 없습니다.</div>
+            )}
+          </div>
+
+          {totalPage > 1 && (
+              <div className="pagination">
+                <button onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
+                  &lt;&lt;
+                </button>
+                <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                  &lt;
+                </button>
+                {[...Array(totalPage)].map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => handlePageChange(index + 1)}
+                        className={currentPage === index + 1 ? "active" : ""}
+                    >
+                      {index + 1}
+                    </button>
+                ))}
+                <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPage}>
+                  &gt;
+                </button>
+                <button onClick={() => handlePageChange(totalPage)} disabled={currentPage === totalPage}>
+                  &gt;&gt;
+                </button>
               </div>
-            ))
-          ) : (
-            <div className="no-posts">게시물이 없습니다.</div>
           )}
-        </div>
-
-        {/* 페이지네이션 */}
-        <div className="pagination">
-          <button onClick={() => handlePageChange(1)} disabled={currentPage === 1}>
-            &lt;&lt; {/* 첫 페이지 */}
-          </button>
-          <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-            &lt; {/* 이전 페이지 */}
-          </button>
-          {[...Array(totalPage)].map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handlePageChange(index + 1)}
-              className={currentPage === index + 1 ? "active" : ""}
-            >
-              {index + 1}
-            </button>
-          ))}
-          <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPage}>
-            &gt; {/* 다음 페이지 */}
-          </button>
-          <button onClick={() => handlePageChange(totalPage)} disabled={currentPage === totalPage}>
-            &gt;&gt; {/* 마지막 페이지 */}
-          </button>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
   );
 }
 

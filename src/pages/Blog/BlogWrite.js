@@ -1,9 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import { writePost, updatePost } from "../../services/blogAPI"; // blogAPI.js에서 import
 import "../../styles/BlogWrite.css";
 import {useLocation, useNavigate} from "react-router-dom";
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { CKEditor, useCKEditorCloud } from '@ckeditor/ckeditor5-react';
+import UploadAdapter from './UploadAdapter';
 
-const BlogWrite = () => {
+function MyCustomUploadAdapterPlugin(editor) {
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+        return new UploadAdapter(loader)
+    }
+}
+
+const LICENSE_KEY = 
+    'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NjgyNjIzOTksImp0aSI6ImQxMWFlMjhjLTRhNGEtNGQ4MC1hNTBmLTA3MTI5NmI5YjE4ZCIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiZGMyZWIzYjUifQ.bGfz0zMJry9GHH6ANiZ8qqhYMFF94RHXyA0e9FVZLeMYpS1c02VFc4zm-KRJdYR7dgFnuGAvj8VvP9uPoV-Glw';
+
+    const BlogWrite = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const postToEdit = location.state?.post || null; // 수정할 게시물 정보
@@ -15,24 +27,6 @@ const BlogWrite = () => {
     const [tag, setTag] = useState(postToEdit?.tag || "");
     const [category, setCategory] = useState(postToEdit?.category || "");
     const [image, setImage] = useState(null);
-    const [preview, setPreview] = useState(null); // 이미지 미리보기 URL
-
-    // 이미지 변경 핸들러
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        setImage(file);
-
-        // 이미지 미리보기 URL 설정
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreview(reader.result);
-            };
-            reader.readAsDataURL(file);
-        } else {
-            setPreview(null);
-        }
-    };
 
     // 폼 제출 핸들러
     const handleSubmit = async () => {
@@ -77,6 +71,247 @@ const BlogWrite = () => {
         }
     };
 
+    const editorContainerRef = useRef(null);
+	const editorRef = useRef(null);
+	const [isLayoutReady, setIsLayoutReady] = useState(false);
+	const cloud = useCKEditorCloud({ version: '44.1.0', translations: ['ko'] });
+
+	useEffect(() => {
+		setIsLayoutReady(true);
+
+		return () => setIsLayoutReady(false);
+	}, []);
+
+	const { ClassicEditor, editorConfig } = useMemo(() => {
+		if (cloud.status !== 'success' || !isLayoutReady) {
+			return {};
+		}
+
+		const {
+			ClassicEditor,
+			Autoformat,
+			AutoImage,
+			Autosave,
+			BlockQuote,
+			Bold,
+			CloudServices,
+			Code,
+			Essentials,
+			FontBackgroundColor,
+			FontColor,
+			FontFamily,
+			FontSize,
+			Heading,
+			ImageBlock,
+			ImageCaption,
+			ImageInline,
+			ImageInsert,
+			ImageInsertViaUrl,
+			ImageResize,
+			ImageStyle,
+			ImageTextAlternative,
+			ImageToolbar,
+			ImageUpload,
+			Indent,
+			IndentBlock,
+			Italic,
+			Link,
+			LinkImage,
+			List,
+			ListProperties,
+			MediaEmbed,
+			Paragraph,
+			PasteFromOffice,
+			SimpleUploadAdapter,
+			Strikethrough,
+			Table,
+			TableCaption,
+			TableCellProperties,
+			TableColumnResize,
+			TableProperties,
+			TableToolbar,
+			TextTransformation,
+			TodoList,
+			Underline
+		} = cloud.CKEditor;
+
+		return {
+			ClassicEditor,
+			editorConfig: {
+				toolbar: {
+					items: [
+						'heading',
+						'|',
+						'fontSize',
+						'fontFamily',
+						'fontColor',
+						'fontBackgroundColor',
+						'|',
+						'bold',
+						'italic',
+						'underline',
+						'strikethrough',
+						'code',
+						'|',
+						'link',
+						'insertImage',
+						'mediaEmbed',
+						'insertTable',
+						'blockQuote',
+						'|',
+						'bulletedList',
+						'numberedList',
+						'todoList',
+						'outdent',
+						'indent'
+					],
+					shouldNotGroupWhenFull: false
+				},
+				plugins: [
+					Autoformat,
+					AutoImage,
+					Autosave,
+					BlockQuote,
+					Bold,
+					CloudServices,
+					Code,
+					Essentials,
+					FontBackgroundColor,
+					FontColor,
+					FontFamily,
+					FontSize,
+					Heading,
+					ImageBlock,
+					ImageCaption,
+					ImageInline,
+					ImageInsert,
+					ImageInsertViaUrl,
+					ImageResize,
+					ImageStyle,
+					ImageTextAlternative,
+					ImageToolbar,
+					ImageUpload,
+					Indent,
+					IndentBlock,
+					Italic,
+					Link,
+					LinkImage,
+					List,
+					ListProperties,
+					MediaEmbed,
+					Paragraph,
+					PasteFromOffice,
+					SimpleUploadAdapter,
+					Strikethrough,
+					Table,
+					TableCaption,
+					TableCellProperties,
+					TableColumnResize,
+					TableProperties,
+					TableToolbar,
+					TextTransformation,
+					TodoList,
+					Underline,
+                    MyCustomUploadAdapterPlugin
+				],
+				fontFamily: {
+					supportAllValues: true
+				},
+				fontSize: {
+					options: [10, 12, 14, 'default', 18, 20, 22],
+					supportAllValues: true
+				},
+				heading: {
+					options: [
+						{
+							model: 'paragraph',
+							title: 'Paragraph',
+							class: 'ck-heading_paragraph'
+						},
+						{
+							model: 'heading1',
+							view: 'h1',
+							title: 'Heading 1',
+							class: 'ck-heading_heading1'
+						},
+						{
+							model: 'heading2',
+							view: 'h2',
+							title: 'Heading 2',
+							class: 'ck-heading_heading2'
+						},
+						{
+							model: 'heading3',
+							view: 'h3',
+							title: 'Heading 3',
+							class: 'ck-heading_heading3'
+						},
+						{
+							model: 'heading4',
+							view: 'h4',
+							title: 'Heading 4',
+							class: 'ck-heading_heading4'
+						},
+						{
+							model: 'heading5',
+							view: 'h5',
+							title: 'Heading 5',
+							class: 'ck-heading_heading5'
+						},
+						{
+							model: 'heading6',
+							view: 'h6',
+							title: 'Heading 6',
+							class: 'ck-heading_heading6'
+						}
+					]
+				},
+				image: {
+					toolbar: [
+						'toggleImageCaption',
+						'imageTextAlternative',
+						'|',
+						'imageStyle:inline',
+						'imageStyle:wrapText',
+						'imageStyle:breakText',
+						'|',
+						'resizeImage'
+					]
+				},
+				initialData:
+                    '',
+                licenseKey: LICENSE_KEY,
+				link: {
+					addTargetToExternalLinks: true,
+					defaultProtocol: 'https://',
+					decorators: {
+						toggleDownloadable: {
+							mode: 'manual',
+							label: 'Downloadable',
+							attributes: {
+								download: 'file'
+							}
+						}
+					}
+				},
+				list: {
+					properties: {
+						styles: true,
+						startIndex: true,
+						reversed: true
+					}
+				},
+                simpleUpload: {
+                    uploadUrl: 'http://localhost:8000/image/upload',
+                },
+				placeholder: '내용을 입력하세요',
+				table: {
+					contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
+				}
+			}
+		};
+	}, [cloud, isLayoutReady]);
+
     return (
         <div className="blog-write">
             <select
@@ -84,14 +319,14 @@ const BlogWrite = () => {
                 onChange={(e) => setCategory(e.target.value)}
                 className="category-select"
             >
-                <option value="" disabled>
+                <option value="" disabled hidden>
                     게시판 선택
                 </option>
                 <option value="0">공지사항</option>
-                <option value="1">후기</option>
-                <option value="2">활동</option>
-                <option value="3">정보</option>
-                <option value="4">성과물</option>
+                <option value="1">성과</option>
+                <option value="2">정보</option>
+                <option value="3">후기</option>
+                <option value="4">활동</option>
             </select>
             <input
                 type="text"
@@ -100,12 +335,13 @@ const BlogWrite = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 className="title-input"
             />
-            <textarea
-                placeholder="내용을 입력하세요"
-                value={contents}
-                onChange={(e) => setContents(e.target.value)}
-                className="content-input"
-            />
+            <div className="main-container">
+                <div className="editor-container editor-container_classic-editor" ref={editorContainerRef}>
+                    <div className="editor-container__editor">
+                        <div ref={editorRef}>{ClassicEditor && editorConfig && <CKEditor editor={ClassicEditor} config={editorConfig} />}</div>
+                    </div>
+                </div>
+            </div>
             <div className="tag-input">
                 <input
                     type="text"
@@ -113,20 +349,6 @@ const BlogWrite = () => {
                     value={tag}
                     onChange={(e) => setTag(e.target.value)}
                 />
-            </div>
-            <div className="image-upload">
-                <label htmlFor="image-upload"/>
-                <input
-                    id="image-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                />
-                {preview && (
-                    <div className="image-preview">
-                        <img src={preview} alt="미리보기"/>
-                    </div>
-                )}
             </div>
             <div className="buttons-container">
                 <button className="submit-button" onClick={handleSubmit}>
