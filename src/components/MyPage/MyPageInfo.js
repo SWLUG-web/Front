@@ -1,4 +1,3 @@
-// MyPageInfo.js
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
@@ -38,7 +37,7 @@ function MyPageInfo() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get('/api/v1/mypage');
+        const response = await axios.get('/mypage');
         if (response.status === 200) {
           setUserInfo({
             id: response.data.userId,

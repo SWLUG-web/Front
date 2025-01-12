@@ -1,4 +1,3 @@
-// ResetPassword.js
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -12,15 +11,21 @@ function ResetPassword() {
   const isFromMyPage = location.state?.fromMyPage;
   const userInfo = location.state?.userInfo;
 
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     id: userInfo?.userId || "",
     email: userInfo?.email || "",
     authCode: "",
     newPw: "",
     confirmPw: "",
+
+
   });
 
+
+
   const [error, setError] = useState({
+    id: "",
     email: "",
     auth: "",
     password: "",
@@ -31,7 +36,8 @@ function ResetPassword() {
     email: "",
     auth: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    submit: ""
   });
 
   const [passwordMatch, setPasswordMatch] = useState(false);
@@ -40,9 +46,20 @@ function ResetPassword() {
   const [emailVerified, setEmailVerified] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
 
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    // 입력값 유효성 검사
+    if (name === 'id' && value.length > 20) return;
+    if (name === 'email' && value.length > 50) return;
+    if (name === 'authCode' && !/^\d{0,6}$/.test(value)) return;
+    if ((name === 'newPw' || name === 'confirmPw') && value.length > 20) return;
+
+    setFormData({ ...formData, [name]: value.trim() });
 
     // 입력값이 없을 때는 모든 메시지를 초기화
     if (!value) {
@@ -50,7 +67,6 @@ function ResetPassword() {
       setSuccess(prev => ({ ...prev, [name]: "" }));
       if (name === "newPw") {
         setPasswordValid(false);
-        // 비밀번호 필드가 비워졌을 때 확인 필드 메시지도 초기화
         if (formData.confirmPw) {
           setError(prev => ({ ...prev, confirmPassword: "" }));
           setSuccess(prev => ({ ...prev, confirmPassword: "" }));
@@ -121,10 +137,27 @@ function ResetPassword() {
   };
 
   const handleRequestAuth = async () => {
+    if (!formData.id.trim()) {
+      setError(prev => ({
+        ...prev,
+        email: "아이디를 먼저 입력해주세요."
+      }));
+      return;
+    }
+
+    if (!isValidEmail(formData.email)) {
+      setError(prev => ({
+        ...prev,
+        email: "올바른 이메일 형식이 아닙니다."
+      }));
+      return;
+    }
+
     try {
-      await axios.post('/api/v1/password/verify', {
-        userId: formData.id,
-        email: formData.email
+      setIsLoading(true);
+      await axios.post('/password/verify', {
+        userId: formData.id.trim(),
+        email: formData.email.trim()
       });
       setTimer(300);
       setIsEmailSent(true);
@@ -133,13 +166,25 @@ function ResetPassword() {
     } catch (err) {
       setError(prev => ({
         ...prev,
-        email: err.response?.data || "인증번호 발송에 실패했습니다."
+        email: err.response?.data || "인증번호 발송에 실패했습니다. 잠시 후 다시 시도해주세요."
       }));
       setSuccess(prev => ({ ...prev, email: "" }));
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleVerifyAuth = async () => {
+    const authCode = formData.authCode.trim();
+
+    if (!/^\d{6}$/.test(authCode)) {
+      setError(prev => ({
+        ...prev,
+        auth: "인증번호는 6자리 숫자여야 합니다."
+      }));
+      return;
+    }
+
     if (!timer) {
       setError(prev => ({
         ...prev,
@@ -150,24 +195,40 @@ function ResetPassword() {
     }
 
     try {
-      await axios.post('/api/v1/password/verify-auth', {
-        userId: formData.id,
-        email: formData.email,
-        authNumber: parseInt(formData.authCode)
+      setIsLoading(true);
+      await axios.post('/password/verify-auth', {
+        userId: formData.id.trim(),
+        email: formData.email.trim(),
+        authNumber: parseInt(authCode, 10)
       });
       setEmailVerified(true);
       setError(prev => ({ ...prev, auth: "" }));
       setSuccess(prev => ({ ...prev, auth: "인증이 완료되었습니다." }));
     } catch (err) {
-      setError(prev => ({
-        ...prev,
-        auth: err.response?.data || "인증번호가 일치하지 않습니다."
-      }));
+      const errorMessage = err.response?.data || "인증에 실패했습니다. 잠시 후 다시 시도해주세요.";
+      setError(prev => ({ ...prev, auth: errorMessage }));
       setSuccess(prev => ({ ...prev, auth: "" }));
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSubmit = async () => {
+    // 모든 필수 값 검증
+    const requiredFields = {
+      id: "아이디를 입력해주세요.",
+      email: "이메일을 입력해주세요.",
+      newPw: "새 비밀번호를 입력해주세요.",
+      confirmPw: "비밀번호 확인을 입력해주세요."
+    };
+
+    for (const [field, message] of Object.entries(requiredFields)) {
+      if (!formData[field].trim()) {
+        setError(prev => ({ ...prev, [field]: message }));
+        return;
+      }
+    }
+
     if (!emailVerified) {
       setError(prev => ({
         ...prev,
@@ -176,24 +237,41 @@ function ResetPassword() {
       return;
     }
 
-    if (!passwordValid || !passwordMatch) {
+    if (!passwordValid) {
+      setError(prev => ({
+        ...prev,
+        password: "비밀번호 형식이 올바르지 않습니다."
+      }));
+      return;
+    }
+
+    if (!passwordMatch) {
+      setError(prev => ({
+        ...prev,
+        confirmPassword: "비밀번호가 일치하지 않습니다."
+      }));
       return;
     }
 
     try {
-      const response = await axios.post('/api/v1/password/reset', {
-        userId: formData.id,
+      setIsLoading(true);
+      const response = await axios.post('/password/reset', {
+        userId: formData.id.trim(),
         newPassword: formData.newPw
       });
       setSuccess(prev => ({ ...prev, submit: response.data }));
+
       setTimeout(() => {
         navigate('/users/login');
       }, 2000);
     } catch (err) {
+      const errorMessage = err.response?.data || "비밀번호 변경에 실패했습니다. 잠시 후 다시 시도해주세요.";
       setError(prev => ({
         ...prev,
-        password: err.response?.data || "비밀번호 변경에 실패했습니다."
+        password: errorMessage
       }));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -214,6 +292,11 @@ function ResetPassword() {
                 className={isFromMyPage ? "disabled-input" : ""}
             />
           </div>
+          {error.id && (
+              <div className="message-container">
+                <div className="error-message">{error.id}</div>
+              </div>
+          )}
         </div>
 
         <div className="form-field">
@@ -226,15 +309,15 @@ function ResetPassword() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="이메일 입력"
-                  disabled={isFromMyPage || emailVerified}
+                  disabled={isFromMyPage || emailVerified || isLoading}
                   className={isFromMyPage ? "disabled-input" : ""}
               />
               <button
                   className="auth-button"
                   onClick={handleRequestAuth}
-                  disabled={!formData.email || emailVerified}
+                  disabled={!formData.email || emailVerified || isLoading}
               >
-                {isEmailSent ? "재전송" : "인증번호 요청"}
+                {isLoading ? "처리중..." : isEmailSent ? "재전송" : "인증번호 요청"}
               </button>
             </div>
           </div>
@@ -256,15 +339,15 @@ function ResetPassword() {
                   value={formData.authCode}
                   onChange={handleChange}
                   placeholder="인증번호 6자리 입력"
-                  disabled={!isEmailSent || emailVerified}
+                  disabled={!isEmailSent || emailVerified || isLoading}
               />
               {timer > 0 && !emailVerified && <span className="timer">{formatTime(timer)}</span>}
               <button
                   className="auth-button"
                   onClick={handleVerifyAuth}
-                  disabled={!formData.authCode || emailVerified || !isEmailSent}
+                  disabled={!formData.authCode || emailVerified || !isEmailSent || isLoading}
               >
-                확인
+                {isLoading ? "처리중..." : "확인"}
               </button>
             </div>
           </div>
@@ -327,11 +410,16 @@ function ResetPassword() {
           <div className="LoginResetBtn">
             <button
                 onClick={handleSubmit}
-                disabled={!emailVerified || !passwordValid || !passwordMatch}
+                disabled={!emailVerified || !passwordValid || !passwordMatch || isLoading}
             >
-              변경 내용 저장
+              {isLoading ? "처리중..." : "변경 내용 저장"}
             </button>
           </div>
+          {success.submit && (
+              <div className="message-container">
+                <div className="success-message">{success.submit}</div>
+              </div>
+          )}
         </div>
       </div>
   );
