@@ -18,7 +18,7 @@ function MyPage() {
   useEffect(() => {
     const fetchUserPosts = async () => {
       try {
-        const response = await axios.get('/api/v1/mypage', {
+        const response = await axios.get('/mypage', {
           withCredentials: true
         });
 
@@ -51,7 +51,7 @@ function MyPage() {
 
   const handleDelete = async (boardId) => {
     try {
-      const response = await axios.delete(`/api/v1/board/${boardId}`, {
+      const response = await axios.delete(`/board/${boardId}`, {
         withCredentials: true
       });
 
