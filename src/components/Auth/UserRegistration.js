@@ -37,6 +37,30 @@ const UserRegistration = ({ onNext, onPrev }) => {
   const [passwordMatch, setPasswordMatch] = useState(false);
   const [verifiedId, setVerifiedId] = useState(""); // Track the last verified ID
 
+  // 타이머 관련 useEffect 추가/수정
+  useEffect(() => {
+    let countdown;
+    if (timer > 0) {
+      countdown = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    } else if (timer === 0 && isEmailSent && !isEmailVerified) {
+      // 타이머 만료 시 처리
+      setIsEmailSent(false);
+      setError(prev => ({
+        ...prev,
+        auth: "인증 시간이 만료되었습니다. 다시 인증번호를 요청해주세요."
+      }));
+    }
+
+    // 컴포넌트 언마운트 시 인터벌 정리
+    return () => {
+      if (countdown) {
+        clearInterval(countdown);
+      }
+    };
+  }, [timer, isEmailSent, isEmailVerified]);
+
   // Effect to check if ID has changed since last verification
   useEffect(() => {
     if (isIdVerified && formData.id !== verifiedId) {
