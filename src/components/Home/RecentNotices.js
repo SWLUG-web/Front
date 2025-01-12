@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import notices from '../../data/notices';
 
-const RecentNotices = () => {
-    const recentNotices = [...notices].reverse().slice(0, 3);
+const RecentNotices = ({ data }) => {
+    const noticesList = data;
 
     return (
         <div className="max-w-6xl mx-auto">
@@ -16,18 +15,16 @@ const RecentNotices = () => {
                 공지사항<span className="ml-2">📌</span>
             </h2>
 
-            {/* 공지사항 리스트 */}
             <div className="notice-list">
-                {/* 공지사항 항목 */}
-                {recentNotices.map((notice) => (
+                {noticesList.map((notice, index) => (
                     <div
-                        key={notice.id}
+                        key={index}
                         className="notice-item flex items-center justify-between py-3 border-b border-gray-300"
                     >
-                        <div className="flex-shrink-0 w-10 text-center">{notice.id}</div>
-                        <div className="flex-grow text-left truncate pl-8">{notice.title}</div>
-                        <div className="flex-shrink-0 w-32 text-center">{notice.date}</div>
-                        <div className="flex-shrink-0 w-20 text-center">{notice.author}</div>
+                        <div className="flex-shrink-0 w-10 text-center">{notice.noticeId}</div>
+                        <div className="flex-grow text-left truncate pl-8">{notice.boardTitle}</div>
+                        <div className="flex-shrink-0 w-32 text-center">{notice.createdAt}</div>
+                        <div className="flex-shrink-0 w-20 text-center">{notice.userId}</div>
                     </div>
                 ))}
             </div>
