@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import PrevNextButtons from "../../components/Auth/PrevNextButtons";
 import "../../styles/UserRegistration.css";
@@ -25,14 +25,26 @@ const UserRegistration = ({ onNext, onPrev }) => {
 
   const [success, setSuccess] = useState({
     email: "",
-    auth: ""
+    auth: "",
+    id: ""
   });
 
   const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState(0);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [isIdVerified, setIsIdVerified] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
+  const [verifiedId, setVerifiedId] = useState(""); // Track the last verified ID
+
+  // Effect to check if ID has changed since last verification
+  useEffect(() => {
+    if (isIdVerified && formData.id !== verifiedId) {
+      setIsIdVerified(false);
+      setSuccess(prev => ({ ...prev, id: "" }));
+      setError(prev => ({ ...prev, id: "아이디가 변경되었습니다. 다시 중복확인을 해주세요." }));
+    }
+  }, [formData.id, verifiedId]);
 
   // 비밀번호 유효성 검사 함수
   const validatePassword = (password) => {
@@ -40,27 +52,53 @@ const UserRegistration = ({ onNext, onPrev }) => {
     return regex.test(password);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const checkDuplicateId = async () => {
+    if (!formData.id) {
+      setError(prev => ({ ...prev, id: "아이디를 입력해주세요." }));
+      return;
+    }
 
-    // 비밀번호 확인 로직
-    if (name === "pw") {
-      const isValidFormat = validatePassword(value);
-      const match = value === formData.pwCheck;
-
-      setPasswordMatch(match);
-      setError(prev => ({
-        ...prev,
-        pw: !isValidFormat ? "10자 이상 영문/숫자/특수문자를 사용하세요." : ""
-      }));
-
-      if (formData.pwCheck) {
+    try {
+      setIsLoading(true);
+      const response = await axios.post('/signup/check-id', { userId: formData.id });
+      if (response.data === "duplicate") {
         setError(prev => ({
           ...prev,
-          confirmPw: !match ? "비밀번호가 일치하지 않습니다." : ""
+          id: "이미 사용중인 아이디입니다."
         }));
+        setIsIdVerified(false);
+        setVerifiedId("");
+      } else {
+        setError(prev => ({ ...prev, id: "" }));
+        setSuccess(prev => ({
+          ...prev,
+          id: "사용 가능한 아이디입니다."
+        }));
+        setIsIdVerified(true);
+        setVerifiedId(formData.id); // Store the verified ID
       }
+    } catch (err) {
+      setError(prev => ({
+        ...prev,
+        id: "아이디 중복 확인에 실패했습니다."
+      }));
+      setIsIdVerified(false);
+      setVerifiedId("");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+
+    if (name === "pw") {
+      const isValid = validatePassword(value);
+      setError(prev => ({
+        ...prev,
+        pw: isValid ? "" : "비밀번호는 10자 이상이며, 영문, 숫자, 특수문자를 포함해야 합니다."
+      }));
     }
 
     if (name === "pwCheck") {
@@ -135,6 +173,11 @@ const UserRegistration = ({ onNext, onPrev }) => {
       return;
     }
 
+    if (!isIdVerified) {
+      setError(prev => ({ ...prev, form: "아이디 중복확인을 완료해주세요." }));
+      return;
+    }
+
     const requestBody = {
       userId: formData.id,
       pw: formData.pw,
@@ -147,10 +190,10 @@ const UserRegistration = ({ onNext, onPrev }) => {
     try {
       setIsLoading(true);
       const response = await axios.post('/signup', requestBody);
-      if (response.data === "success") {  // 백엔드에서 "success" 반환
+      if (response.data === "success") {
         onNext({
           ...formData,
-          roleType: 1  // 기본값으로 1 설정 (일반 사용자)
+          roleType: 2  // 대기 회원으로 설정
         });
       }
     } catch (err) {
@@ -184,68 +227,88 @@ const UserRegistration = ({ onNext, onPrev }) => {
           <h1 className="info-text">입력한 정보를 기반으로 회원가입 요청이 되므로, 정확한 정보를 기입해주세요.</h1>
 
           {/* ID 입력 필드 */}
-          <div className="info-form_field">
+          <div className="form-field">
             <div className="input-wrapper">
               <label>아이디</label>
-              <input
-                  name="id"
-                  value={formData.id}
-                  onChange={handleChange}
-                  placeholder="아이디를 입력하세요"
-                  className="info-form_input"
-              />
+              <div className="input-container">
+                <input
+                    name="id"
+                    value={formData.id}
+                    onChange={handleChange}
+                    placeholder="아이디를 입력하세요"
+                    className="info-form_input"
+                />
+                <button
+                    type="button"
+                    onClick={checkDuplicateId}
+                    disabled={isLoading || !formData.id}
+                    className="auth-button"
+                >
+                  {isLoading ? "처리중..." : isIdVerified ? "확인완료" : "중복확인"}
+                </button>
+              </div>
             </div>
-            {error.id && <div className="info-form_error">{error.id}</div>}
+            {error.id && <div className="error-message">{error.id}</div>}
+            {success.id && <div className="success-message">{success.id}</div>}
           </div>
 
           {/* 비밀번호 입력 필드 */}
-          <div className="info-form_field">
+          <div className="form-field">
             <div className="input-wrapper">
               <label>비밀번호</label>
-              <input
-                  type="password"
-                  name="pw"
-                  value={formData.pw}
-                  onChange={handleChange}
-                  placeholder="비밀번호를 입력하세요"
-                  className="info-form_input"
-              />
+              <div className="input-container">
+                <input
+                    type="password"
+                    name="pw"
+                    value={formData.pw}
+                    onChange={handleChange}
+                    placeholder="비밀번호를 입력하세요"
+                    className="info-form_input"
+                />
+              </div>
             </div>
-            {error.pw && <div className="info-form_error">{error.pw}</div>}
+            {error.pw && <div className="error-message">{error.pw}</div>}
+            {!error.pw && formData.pw && <div className="success-message">사용 가능한 비밀번호입니다.</div>}
           </div>
 
           {/* 비밀번호 확인 필드 */}
-          <div className="info-form_field">
+          <div className="form-field">
             <div className="input-wrapper">
               <label>비밀번호 확인</label>
-              <input
-                  type="password"
-                  name="pwCheck"
-                  value={formData.pwCheck}
-                  onChange={handleChange}
-                  placeholder="비밀번호를 다시 입력하세요"
-                  className="info-form_input"
-              />
+              <div className="input-container">
+                <input
+                    type="password"
+                    name="pwCheck"
+                    value={formData.pwCheck}
+                    onChange={handleChange}
+                    placeholder="비밀번호를 다시 입력하세요"
+                    className="info-form_input"
+                />
+              </div>
             </div>
-            {error.confirmPw && <div className="info-form_error">{error.confirmPw}</div>}
+            {error.confirmPw && <div className="error-message">{error.confirmPw}</div>}
+            {!error.confirmPw && formData.pwCheck && passwordMatch &&
+                <div className="success-message">비밀번호가 일치합니다.</div>}
           </div>
 
           {/* 이름 입력 필드 */}
-          <div className="info-form_field">
+          <div className="form-field">
             <div className="input-wrapper">
               <label>이름</label>
-              <input
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="이름을 입력하세요"
-                  className="info-form_input"
-              />
+              <div className="input-container">
+                <input
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="이름을 입력하세요"
+                    className="info-form_input"
+                />
+              </div>
             </div>
           </div>
 
           {/* 이메일 인증 필드 */}
-          <div className="info-form_field">
+          <div className="form-field">
             <div className="input-wrapper">
               <label>이메일</label>
               <div className="input-container">
@@ -267,12 +330,12 @@ const UserRegistration = ({ onNext, onPrev }) => {
                 </button>
               </div>
             </div>
-            {error.email && <div className="info-form_error">{error.email}</div>}
-            {success.email && <div className="info-form_success">{success.email}</div>}
+            {error.email && <div className="error-message">{error.email}</div>}
+            {success.email && <div className="success-message">{success.email}</div>}
           </div>
 
           {isEmailSent && (
-              <div className="info-form_field">
+              <div className="form-field">
                 <div className="input-wrapper">
                   <label>인증번호</label>
                   <div className="input-container">
@@ -284,6 +347,7 @@ const UserRegistration = ({ onNext, onPrev }) => {
                         placeholder="인증번호 6자리 입력"
                         className="info-form_input"
                     />
+                    {timer > 0 && <span className="timer">{Math.floor(timer/60)}:{String(timer%60).padStart(2, '0')}</span>}
                     <button
                         type="button"
                         onClick={handleVerifyAuth}
@@ -292,29 +356,30 @@ const UserRegistration = ({ onNext, onPrev }) => {
                     >
                       확인
                     </button>
-                    {timer > 0 && <span className="timer">{Math.floor(timer/60)}:{String(timer%60).padStart(2, '0')}</span>}
                   </div>
                 </div>
-                {error.auth && <div className="info-form_error">{error.auth}</div>}
-                {success.auth && <div className="info-form_success">{success.auth}</div>}
+                {error.auth && <div className="error-message">{error.auth}</div>}
+                {success.auth && <div className="success-message">{success.auth}</div>}
               </div>
           )}
 
           {/* 전화번호 입력 필드 */}
-          <div className="info-form_field">
+          <div className="form-field">
             <div className="input-wrapper">
               <label>전화번호</label>
-              <input
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="전화번호를 입력하세요"
-                  className="info-form_input"
-              />
+              <div className="input-container">
+                <input
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="전화번호를 입력하세요"
+                    className="info-form_input"
+                />
+              </div>
             </div>
           </div>
 
-          {error.form && <div className="info-form_error">{error.form}</div>}
+          {error.form && <div className="error-message">{error.form}</div>}
         </div>
 
         <PrevNextButtons
@@ -323,6 +388,7 @@ const UserRegistration = ({ onNext, onPrev }) => {
             disableNext={
                 isLoading ||
                 !isEmailVerified ||
+                !isIdVerified ||
                 !passwordMatch ||
                 !formData.id ||
                 !formData.pw ||

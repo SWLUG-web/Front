@@ -5,6 +5,7 @@
   margin: 0 auto;
   /* 수평으로 중앙 정렬 */
   padding: 20px;
+
   background-color: #ffffff;
 }
 
@@ -20,10 +21,11 @@
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-  margin-top: 30px;
+  margin-top: 50px;
 }
 
 .form_agreement_all [type="checkbox"] {
+
   margin-right: 10px;
 }
 
@@ -64,6 +66,7 @@
   /* 기본 색상 */
   display: flex;
   align-items: center;
+
 }
 
 .form_step::after {
@@ -95,6 +98,13 @@
 .required {
   color: #E71818;
 }
+
+.btn_next:disabled {
+  background-color: #D9D9D9; /* 비활성화 시 연한 회색 */
+  color: #A0A0A0; /* 비활성화 시 글자 연한 회색 */
+  cursor: not-allowed; /* 비활성화 시 커서 금지 표시 */
+}
+
 
 .btn_prev {
   width: 100%;
