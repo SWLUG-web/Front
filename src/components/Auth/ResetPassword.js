@@ -22,6 +22,25 @@ function ResetPassword() {
 
   });
 
+  // 페이지 진입 시 레이아웃 강제 새로고침
+  useEffect(() => {
+    // 스타일 강제 리로드
+    const reloadStyles = () => {
+      const container = document.querySelector('.password-reset');
+      if (container) {
+        container.style.display = 'none';
+        requestAnimationFrame(() => {
+          container.style.display = 'block';
+        });
+      }
+    };
+
+    reloadStyles();
+
+    // 100ms 후 한번 더 실행하여 안정성 보장
+    const timer = setTimeout(reloadStyles, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
 
   const [error, setError] = useState({
@@ -302,7 +321,7 @@ function ResetPassword() {
         <div className="form-field">
           <div className="input-wrapper">
             <label>이메일</label>
-            <div className="input-group">
+            <div className="input-group email-group">
               <input
                   type="email"
                   name="email"
@@ -332,7 +351,7 @@ function ResetPassword() {
         <div className="form-field">
           <div className="input-wrapper">
             <label>인증 번호</label>
-            <div className="input-group">
+            <div className="input-group auth-code-group">
               <input
                   type="text"
                   name="authCode"
