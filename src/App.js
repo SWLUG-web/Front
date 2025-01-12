@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import { Provider } from 'react-redux';
 import store from './store/store';
+import ScrollToTop from './components/ScrollToTop';
 
 import "./styles/common.css";
 
@@ -16,7 +17,9 @@ function App() {
         <main className="min-h-screen">
           <div className="container mx-auto text-center">
             <Suspense fallback={<div>Loading...</div>}>
-              <RouterProvider router={root} />
+              <RouterProvider router={root}
+              children={<ScrollToTop />}
+            />
             </Suspense>
           </div>
         </main>

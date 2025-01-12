@@ -94,9 +94,9 @@ const BlogMain = () => {
     };
 
     // 필터링된 게시물
-    const filteredPosts = posts.filter((post) =>
+    const filteredPosts = (Array.isArray(posts) ? posts : []).filter((post) =>
         (selectedCategory === "" || post.category === selectedCategory) &&
-        (selectedTag === "" || post.tag === selectedTag) &&
+        (selectedTag === "" || post.tag.includes(selectedTag)) && // 태그가 배열인 경우 수정
         (searchQuery === "" || post.title.includes(searchQuery))
     );
 
