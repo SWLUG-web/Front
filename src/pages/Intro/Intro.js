@@ -17,7 +17,7 @@ const Intro = () => {
 
     const [data, setData] = useState('');
     useEffect(() => {
-        axios.get('/intro')
+        axios.get('/api/intro')
             .then(res => setData(res.data))
             .catch(err => console.log(err))
     }, []);
