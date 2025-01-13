@@ -4,6 +4,17 @@ import { Link } from 'react-router-dom';
 const RecentNotices = ({ data }) => {
     const noticesList = data;
 
+    console.log(noticesList);
+
+    const formatDate = (isoString) => {
+        const date = new Date(isoString); // ISO 문자열을 Date 객체로 변환
+        return date.toLocaleDateString("ko-KR", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        }).replace(/-/g, ".").replace(/\.$/, ""); // '-'를 '.'로 변경하고 마지막 '.' 제거
+    };
+
     return (
         <div className="max-w-6xl mx-auto">
 
@@ -16,15 +27,22 @@ const RecentNotices = ({ data }) => {
             </h2>
 
             <div className="notice-list">
+                {/* 헤더 추가 */}
+                <div className="notice-header flex items-center justify-between py-3 border-b-2 border-black font-bold text-center">
+                    <div className="flex-shrink-0 w-20">번호</div>
+                    <div className="flex-grow text-center">제목</div> {/* 가운데 정렬 */}
+                    <div className="flex-shrink-0 w-64">작성일</div>
+                    <div className="flex-shrink-0 w-32">작성자</div>
+                </div>
                 {noticesList.map((notice, index) => (
                     <div
-                        key={index}
+                        key={notice.id}
                         className="notice-item flex items-center justify-between py-3 border-b border-gray-300"
                     >
-                        <div className="flex-shrink-0 w-10 text-center">{notice.noticeId}</div>
-                        <div className="flex-grow text-left truncate pl-8">{notice.boardTitle}</div>
-                        <div className="flex-shrink-0 w-32 text-center">{notice.createdAt}</div>
-                        <div className="flex-shrink-0 w-20 text-center">{notice.userId}</div>
+                        <div className="flex-shrink-0 w-20 text-center">{index+1}</div>
+                        <div className="flex-grow text-center truncate pl-8">{notice.boardTitle}</div>
+                        <div className="flex-shrink-0 w-64 text-center">{formatDate(notice.createdAt)}</div>
+                        <div className="flex-shrink-0 w-32 text-center">{notice.userId}</div>
                     </div>
                 ))}
             </div>
