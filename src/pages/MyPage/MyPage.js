@@ -38,7 +38,7 @@ function MyPage() {
       } catch (error) {
         if (error.response?.status === 401) {
           alert('로그인이 필요합니다.');
-          navigate('/login');
+          navigate('/users/login');
         } else {
           console.error('게시물 불러오기 실패:', error);
           alert('게시물을 불러오는데 실패했습니다.');

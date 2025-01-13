@@ -43,7 +43,7 @@ class UploadAdapter {
 
   _sendRequest(file) {
     const data = new FormData();
-    data.append('upload', file);
+    data.append('image', file);
     this.xhr.send(data);
   }
 }
