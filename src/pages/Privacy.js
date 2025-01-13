@@ -1,8 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import "../styles/common.css";
 import "../styles/Privacy.css";
 
 function Privacy() {
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    // API 호출 함수
+    const fetchPrivacyData = async () => {
+      try {
+        const response = await fetch('/api/privacy');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.text();
+        setMessage(data);
+      } catch (error) {
+        console.error('Error fetching privacy data:', error);
+      }
+    };
+
+    // 컴포넌트가 마운트될 때 API 호출
+    fetchPrivacyData();
+  }, []);
   return (
     <div className="privacy-container text-left">
       <p style={{ fontWeight: "900", fontSize: "40px" }}>SWLUG</p>
