@@ -153,7 +153,7 @@ const History = () => {
             events: [
                 {
                     date: "03.02",
-                    content: "슈러그 창립",
+                    content: "슈러그 설립",
                 },
             ],
         },

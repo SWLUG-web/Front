@@ -9,7 +9,7 @@ const HomeMain = () => {
 
   // 주요 활동 데이터
   const activities = [
-    { id: 1, title: '스터디 📚', image: '/main_study.png', link: '/intro' },
+    { id: 1, title: '스터디 📚', image: '/main_study_2.png', link: '/intro' },
     { id: 2, title: '프로젝트 👩‍💻', image: '/main_project.png', link: '/intro' },
     { id: 3, title: '특강 / 멘토-멘티 👩‍🏫', image: '/main_special.png', link: '/intro' },
     { id: 4, title: '세미나 🔐', image: '/main_seminar.png', link: '/intro' },

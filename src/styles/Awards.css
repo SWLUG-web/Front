@@ -1,63 +1,57 @@
-.awards-history-container {
+.security-awards-container {
     max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px 40px;
+    margin-bottom: 30px;
+    padding: 10px 40px;
     display: flex;
     flex-direction: column;
     gap: 30px;
 }
 
-.awards-history-card {
-    display: flex;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    gap: 40px;
-    border: 1px solid #d9d9d9;
-}
-
-.awards-year {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    min-width: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-right: 2px solid #eaeaea;
-    padding-right: 20px;
-    align-self: stretch;
-}
-
-.awards-events {
-    flex: 1;
+.security-awards-section {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
 }
 
-.awards-events p {
-    margin: 0;
+.security-awards-year {
+    font-size: 30px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.security-awards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eaeaea;
+}
+
+.security-awards-item {
     font-size: 16px;
-    color: #666;
-    line-height: 1.5;
+    color: #4a4a4a;
+    line-height: 1.6;
+    white-space: pre-line;
+    text-indent: -42px;
+    padding-left: 45px;
 }
 
 @media (max-width: 768px) {
-    .awards-history-container {
-        padding: 20px;
+    .security-awards-container {
+        padding: 16px;
+        gap: 40px;
     }
 
-    .awards-history-card {
-        flex-direction: column;
-        gap: 20px;
+    .security-awards-year {
+        font-size: 28px;
     }
 
-    .awards-year {
-        border-right: none;
-        border-bottom: 2px solid #eaeaea;
-        padding: 0 0 10px 0;
-        justify-content: flex-start;
+    .security-awards-list {
+        padding: 16px;
     }
 }

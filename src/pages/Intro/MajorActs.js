@@ -25,7 +25,7 @@ const MajorActs = () => {
                 },
                 {
                     description: "프로젝트를 통해 논문 작성이나 대회, 공모전 등 대외활동에 적극적으로 참여할 수 있어요.",
-                    image: "/project_image_2.png"
+                    image: "/project_image_3.png"
                 }
             ]
         },
