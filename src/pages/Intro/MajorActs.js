@@ -34,10 +34,10 @@ const MajorActs = () => {
             cards: [
                 {
                     description: "선후배간의 친목 및 멘토-멘티 활동을 통해 전공에 대해 \n 보다 전문적인 도움을 받을 수 있어요.",
-                    image: "/mento_image_2.png"
+                    image: "/mento_image_3.png"
                 },
                 {
-                    description: "선배님들이나 교수진, 기업 초청으로 진로, 실무 경험 등에 대한 다양한 특강을 진행해요.",
+                    description: "선배님들이나 교수진, 기업 초청으로 진로, 실무 경험 등에 대해 다양한 특강을 진행해요.",
                     image: "/mento_image_1.png"
                 }
             ]
