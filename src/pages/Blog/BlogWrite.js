@@ -59,6 +59,11 @@ const LICENSE_KEY =
                 formData.append("createAt", new Date().toISOString());
                 if (image) formData.append("image", image);
 
+                console.log("등록 요청 데이터:");
+                    for (let [key, value] of formData.entries()) {
+                        console.log(`${key}:`, value); // FormData의 키-값 출력
+                    }
+                    
                 await writePost(formData);
                 alert("게시물이 등록되었습니다.");
             }
@@ -312,6 +317,12 @@ const LICENSE_KEY =
 		};
 	}, [cloud, isLayoutReady]);
 
+    // CKEditor의 내용이 변경될 때 호출되는 함수
+    const handleEditorChange = (event, editor) => {
+        const data = editor.getData();
+        setContents(data);
+    };
+
     return (
         <div className="blog-write">
             <select
@@ -338,7 +349,16 @@ const LICENSE_KEY =
             <div className="main-container">
                 <div className="editor-container editor-container_classic-editor" ref={editorContainerRef}>
                     <div className="editor-container__editor">
-                        <div ref={editorRef}>{ClassicEditor && editorConfig && <CKEditor editor={ClassicEditor} config={editorConfig} />}</div>
+                        <div ref={editorRef}>
+                            {ClassicEditor && editorConfig && (
+                                <CKEditor 
+                                    editor={ClassicEditor} 
+                                    config={editorConfig}
+                                    data={contents} // 초기 데이터 설정
+                                    onChange={handleEditorChange} // 변경 이벤트 처리
+                                />
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

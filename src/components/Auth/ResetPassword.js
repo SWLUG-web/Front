@@ -321,7 +321,7 @@ function ResetPassword() {
         <div className="form-field">
           <div className="input-wrapper">
             <label>이메일</label>
-            <div className="input-group email-group">
+            <div className="input-group">
               <input
                   type="email"
                   name="email"
@@ -332,7 +332,7 @@ function ResetPassword() {
                   className={isFromMyPage ? "disabled-input" : ""}
               />
               <button
-                  className="auth-button"
+                  className="reset-auth-button"
                   onClick={handleRequestAuth}
                   disabled={!formData.email || emailVerified || isLoading}
               >
@@ -351,7 +351,7 @@ function ResetPassword() {
         <div className="form-field">
           <div className="input-wrapper">
             <label>인증 번호</label>
-            <div className="input-group auth-code-group">
+            <div className="input-group">
               <input
                   type="text"
                   name="authCode"
@@ -362,7 +362,7 @@ function ResetPassword() {
               />
               {timer > 0 && !emailVerified && <span className="timer">{formatTime(timer)}</span>}
               <button
-                  className="auth-button"
+                  className="reset-auth-button"
                   onClick={handleVerifyAuth}
                   disabled={!formData.authCode || emailVerified || !isEmailSent || isLoading}
               >
