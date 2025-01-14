@@ -19,7 +19,6 @@
 
 .faq-filter-button {
   font-size: 18px;
-  /* 크기 수정 */
   color: #333;
   border: none;
   background: none;
@@ -62,15 +61,10 @@
 
 .faq-question span {
   flex-grow: 1;
-  /* 텍스트가 가능한 공간을 차지하도록 설정 */
   text-align: left;
-  /* 텍스트 왼쪽 정렬 */
   font-size: 18px;
-  /* 텍스트 크기 */
   display: flex;
-  /* 아이콘과 텍스트를 같은 줄에 배치 */
   align-items: center;
-  /* 수직 가운데 정렬 */
 }
 
 /* FAQ 답변 스타일 */
@@ -87,46 +81,31 @@
 
 .faq-penguin {
   width: 230px;
-  /* 크기 조정 */
   height: auto;
   margin-right: 15px;
 }
 
 .faq-speech-bubble {
   width: 100%;
-  /* 부모 컨테이너의 100% 너비 */
   max-width: 500px;
-  /* 최대 너비 제한 */
   height: auto;
-  /* 이미지 비율 유지 */
   min-height: 220px;
   background-image: url('/public/bubble.png');
-  /* 말풍선 이미지 경로 */
   background-size: contain;
-  /* 이미지가 컨테이너에 꽉 차도록 */
   background-repeat: no-repeat;
-  /* 이미지 반복 방지 */
   background-position: center;
-  /* 이미지를 중앙 정렬 */
   display: flex;
-  /* 텍스트를 중앙에 배치하기 위한 Flexbox */
   align-items: center;
-  /* 세로 중앙 정렬 */
   justify-content: center;
-  /* 가로 중앙 정렬 */
   padding: 45px;
-  /* 텍스트와 이미지 경계 간 여백 */
   box-sizing: border-box;
-  /* 패딩 포함한 크기 계산 */
 }
 
 .speech-bubble-text {
   font-size: 16px;
   text-align: center;
   padding-left: 35px;
-  /* 텍스트 여백 */
 }
-
 
 .faq-footer-text {
   color: blue;

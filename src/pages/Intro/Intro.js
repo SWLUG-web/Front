@@ -9,15 +9,15 @@ import CIIntro from "./CIIntro";
 
 const Intro = () => {
     const tabs = [
-        { label: "주요 활동", component: MajorActs },
+        { label: "활동 소개", component: MajorActs },
         { label: "연혁", component: History },
-        { label: "수상 경력", component: Awards },
+        { label: "활동 내용", component: Awards },
         { label: "로고 소개", component: CIIntro },
     ];
 
     const [data, setData] = useState('');
     useEffect(() => {
-        axios.get('/intro')
+        axios.get('/api/intro')
             .then(res => setData(res.data))
             .catch(err => console.log(err))
     }, []);

@@ -1,22 +1,33 @@
 .major-acts {
     margin: 20px auto;
     padding: 20px 40px;
-    /* 좌우 여백 추가 */
     display: flex;
     flex-direction: column;
     gap: 40px;
-    /* 각 그룹 간 간격 */
     max-width: 1200px;
-    /* 페이지 중앙 정렬을 위한 최대 너비 설정 */
     box-sizing: border-box;
-    /* 패딩 포함된 박스 크기 설정 */
+}
+
+.intro-activity-card p {
+    width: 100%;
+    text-align: left;
+    padding: 0 15px;
+    box-sizing: border-box;
+    white-space: pre-line;
+}
+
+.card-text {
+    white-space: pre-line;
+    text-align: left;
+    font-size: 16px;
+    color: #000000;
+    border: 1px;
 }
 
 .activity-group {
     display: flex;
     flex-direction: column;
     gap: 30px;
-    /* 그룹 내 제목과 콘텐츠 간 간격 */
 }
 
 .activity-title {
@@ -29,14 +40,10 @@
 .activity-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    /* 최소 300px, 최대 1fr */
     gap: 20px;
-    /* 카드 간 간격 */
     margin: 0 auto;
     width: 100%;
-    /* 컨테이너 너비를 전체로 설정 */
     box-sizing: border-box;
-    /* 패딩 포함된 박스 크기 설정 */
 }
 
 .intro-activity-card {
@@ -46,19 +53,24 @@
     padding: 15px;
     border: 1px solid #d9d9d9;
     border-radius: 10px;
-    /* 둥근 모서리 */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* 그림자 효과 */
     background-color: #ffffff;
     margin-bottom: 20px;
-    /* 마지막 줄 여백 */
 }
 
-.activity-image {
-    width: 100%;
-    height: auto;
-    margin-bottom: 10px;
+.activity-img-container {
+    width: 95%;
+    height: 250px;
+    overflow: hidden;
     border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.activity-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* padding-bottom 제거 */
 }
 
 .activity-card p {
