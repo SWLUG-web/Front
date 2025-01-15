@@ -11,7 +11,7 @@ const ApplyPage = () => {
     const [isApplyPeriod, setIsApplyPeriod] = useState('');
 
     useEffect(() => {
-        axios.get('/apply')
+        axios.get('/api/apply')
             .then(res => setIsApplyPeriod(res.data))
             .catch(err => console.log(err))
     }, []);

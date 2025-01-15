@@ -14,7 +14,7 @@ const Header = () => {
       const userId = localStorage.getItem('userId');
       if (userId && !isAuthenticated) {
         try {
-          const userInfoResponse = await axios.get('/mypage');
+          const userInfoResponse = await axios.get('/api/mypage');
           if (userInfoResponse.status === 200) {
             dispatch(loginSuccess({
               user: {
