@@ -18,7 +18,7 @@ function MyPage() {
   useEffect(() => {
     const fetchUserPosts = async () => {
       try {
-        const response = await axios.get('/mypage', {
+        const response = await axios.get('/api/mypage', {
           withCredentials: true
         });
 
