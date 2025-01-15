@@ -1,8 +1,78 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../../styles/BlogMain.css";
-import { fetchPosts } from "../../services/blogAPI"; // API 호출 함수 import
+import { fetchPosts } from "../../services/blogAPI";
 import TagFilter from "../../components/Blog/TagFilter";
+
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+    const getPageNumbers = () => {
+        const groupSize = 3; // 한 그룹당 보여줄 페이지 수
+        const currentGroup = Math.ceil(currentPage / groupSize); // 현재 페이지 그룹
+        const startPage = (currentGroup - 1) * groupSize + 1; // 현재 그룹의 시작 페이지
+        const endPage = Math.min(startPage + groupSize - 1, totalPages); // 현재 그룹의 마지막 페이지
+
+        const pages = [];
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(i);
+        }
+        return pages;
+    };
+
+    // 다음/이전 그룹의 첫 페이지 계산
+    const getNextGroupFirstPage = () => {
+        const groupSize = 3;
+        return Math.min(Math.ceil(currentPage / groupSize) * groupSize + 1, totalPages);
+    };
+
+    const getPrevGroupFirstPage = () => {
+        const groupSize = 3;
+        return Math.max(Math.floor((currentPage - 1) / groupSize) * groupSize - 2, 1);
+    };
+
+    return (
+        <div className="pagination">
+            <button
+                className="pagination-arrow"
+                onClick={() => onPageChange(getPrevGroupFirstPage())}
+                disabled={currentPage <= 3}
+            >
+                &lt;&lt;
+            </button>
+            <button
+                className="pagination-arrow"
+                onClick={() => onPageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+            >
+                &lt;
+            </button>
+
+            {getPageNumbers().map((pageNum) => (
+                <button
+                    key={pageNum}
+                    className={`page-button ${currentPage === pageNum ? "active" : ""}`}
+                    onClick={() => onPageChange(pageNum)}
+                >
+                    {pageNum}
+                </button>
+            ))}
+
+            <button
+                className="pagination-arrow"
+                onClick={() => onPageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+            >
+                &gt;
+            </button>
+            <button
+                className="pagination-arrow"
+                onClick={() => onPageChange(getNextGroupFirstPage())}
+                disabled={currentPage > Math.floor(totalPages / 3) * 3}
+            >
+                &gt;&gt;
+            </button>
+        </div>
+    );
+};
 
 const BlogMain = () => {
     const [posts, setPosts] = useState([]); // 게시물 데이터
@@ -22,17 +92,26 @@ const BlogMain = () => {
 
     // 임시 데이터 설정
     useEffect(() => {
-        const dummyPosts = Array.from({ length: 20 }, (_, index) => ({
+        const dummyPosts = Array.from({ length: 100 }, (_, index) => ({
             boardId: index + 1,
-            category: index % 3 === 0 ? 2 : 1, // 카테고리를 숫자로 변경
-            title: `게시물 제목 ${index + 1}`,
-            tag: [`${index % 2 === 0 ? "인턴" : "채용"}`], // 태그를 배열로 변경
+            category: index % 3 === 0 ? 2 : (index % 3 === 1 ? 1 : 3), // 3가지 카테고리
+            title: `[${index % 2 === 0 ? '모집' : '안내'}] ${['스터디', '프로젝트', '세미나', '특강'][index % 4]} ${index + 1}`,
+            tag: [
+                `${['인턴', '채용', 'BOB', 'BoB'][index % 4]}`,
+                `${index % 5 === 0 ? 'KUCIS' : ''}`
+            ].filter(tag => tag !== ''), // 빈 태그 제거
             roleType: null,
-            id: 123,
-            createAt: `2024-01-${String(index + 1).padStart(2, "0")} 14:00:00`,
-            updateAt: `2024-01-${String(index + 1).padStart(2, "0")} 14:00:00`,
-            contents: `게시물 ${index + 1}의 내용입니다.`,
-            imageUrl: "http://example.com/updated-image.jpg"
+            id: Math.floor(Math.random() * 1000) + 100, // 100~1099 사이의 랜덤 ID
+            createAt: new Date(2024, 0, 1 + Math.floor(index / 3))
+                .toISOString()
+                .replace('T', ' ')
+                .slice(0, 19), // 날짜를 3개 게시물마다 하루씩 증가
+            updateAt: new Date(2024, 0, 1 + Math.floor(index / 3))
+                .toISOString()
+                .replace('T', ' ')
+                .slice(0, 19),
+            contents: `${['스터디', '프로젝트', '세미나', '특강'][index % 4]} ${index + 1}에 대한 상세 내용입니다. 많은 참여 부탁드립니다.`,
+            imageUrl: `/dummy_image_${(index % 5) + 1}.jpg` // 5개의 더미 이미지 순환
         }));
 
         setPosts(dummyPosts);
@@ -83,6 +162,12 @@ const BlogMain = () => {
         setCurrentPage(pageNumber);
     };
 
+    // 태그 선택 핸들러
+    const handleTagSelect = (tag) => {
+        setSelectedTag(tag);
+        setCurrentPage(1); // 태그 선택 시 첫 페이지로 이동
+    };
+
     const handleCategoryChange = (category) => {
         setSelectedCategory(category); // 선택된 카테고리 변경
         setCurrentPage(1); // 페이지를 1로 리셋
@@ -96,8 +181,10 @@ const BlogMain = () => {
     // 필터링된 게시물
     const filteredPosts = (Array.isArray(posts) ? posts : []).filter((post) =>
         (selectedCategory === "" || post.category === selectedCategory) &&
-        (selectedTag === "" || post.tag.includes(selectedTag)) && // 태그가 배열인 경우 수정
-        (searchQuery === "" || post.title.includes(searchQuery))
+        (selectedTag === "" || post.tag.includes(selectedTag)) &&
+        (searchQuery === "" ||
+            post.title.replace(/\s+/g, '').toLowerCase()
+                .includes(searchQuery.replace(/\s+/g, '').toLowerCase()))
     );
 
     // 현재 페이지에 해당하는 게시물만 추출
@@ -105,7 +192,6 @@ const BlogMain = () => {
         (currentPage - 1) * postsPerPage,
         currentPage * postsPerPage
     );
-
 
     return (
         <div className="container mx-auto px-4 py-8 bg-white">
@@ -118,7 +204,7 @@ const BlogMain = () => {
                     <TagFilter
                         tags={tags}
                         selectedTag={selectedTag}
-                        setSelectedTag={setSelectedTag}
+                        setSelectedTag={handleTagSelect}
                     />
                 </div>
                 <div className="search-bar">
@@ -135,33 +221,33 @@ const BlogMain = () => {
             {/* 게시물 리스트 */}
             <h3 className="posts-title">Posts</h3>
             <div className="posts-container">
-            <div className="posts">
-                {filteredPosts.length > 0 ? (
-                    paginatedPosts.map((post) => (
-                        <div
-                            key={post.boardId}
-                            className="post-card"
-                            onClick={() => handlePostClick(post.boardId)}
-                        >
-                            <div className="post-card-image-container">
-                                <img src="/apply_swlug.png" alt="Default Logo" />
+                <div className="posts">
+                    {filteredPosts.length > 0 ? (
+                        paginatedPosts.map((post) => (
+                            <div
+                                key={post.boardId}
+                                className="post-card"
+                                onClick={() => handlePostClick(post.boardId)}
+                            >
+                                <div className="post-card-image-container">
+                                    <img src="/apply_swlug.png" alt="Default Logo" />
+                                </div>
+                                <p className="post-tag">{post.tag}</p>
+                                <p className="post-title">{post.title}</p>
+                                <div className="post-info">
+                                    <p className="post-id">{post.id}</p>
+                                    <p className="post-date">{formatDate(post.createAt)}</p>
+                                </div>
                             </div>
-                            <p className="post-tag">{post.tag}</p>
-                            <p className="post-title">{post.title}</p>
-                            <div className="post-info">
-                                <p className="post-id">{post.id}</p>
-                                <p className="post-date">{formatDate(post.createAt)}</p>
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <p className="no-posts">등록된 글이 없습니다.</p>
-                )}
+                        ))
+                    ) : (
+                        <p className="no-posts">등록된 글이 없습니다.</p>
+                    )}
+                </div>
             </div>
-        </div>
 
-        {/* 글쓰기 버튼 */}
-        <div className="write-button-container">
+            {/* 글쓰기 버튼 */}
+            <div className="write-button-container">
                 <button className="write-button" onClick={() => navigate("/board/write")}>
                     글쓰기
                 </button>
@@ -169,47 +255,12 @@ const BlogMain = () => {
 
             {/* 페이지네이션 */}
             {totalPages > 1 && (
-                <div className="pagination">
-                    <button
-                        className="pagination-arrow"
-                        onClick={() => handlePageChange(1)}
-                        disabled={currentPage === 1}
-                    >
-                        &lt;&lt;
-                    </button>
-                    <button
-                        className="pagination-arrow"
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                    >
-                        &lt;
-                    </button>
-                    {Array.from({length: totalPages}, (_, index) => (
-                        <button
-                            key={index + 1}
-                            className={`page-button ${currentPage === index + 1 ? "active" : ""}`}
-                            onClick={() => handlePageChange(index + 1)}
-                        >
-                            {index + 1}
-                        </button>
-                    ))}
-                    <button
-                        className="pagination-arrow"
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                    >
-                        &gt;
-                    </button>
-                    <button
-                        className="pagination-arrow"
-                        onClick={() => handlePageChange(totalPages)}
-                        disabled={currentPage === totalPages}
-                    >
-                        &gt;&gt;
-                    </button>
-                </div>
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
             )}
-
         </div>
     );
 };
