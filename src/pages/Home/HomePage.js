@@ -12,7 +12,7 @@ const HomePage = () => {
         const fetchData = async () => {
             try {
                 // 하나의 API 호출 (예: `/main`)
-                const response = await axios.get('/main');
+                const response = await axios.get('/api/main');
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -25,14 +25,14 @@ const HomePage = () => {
     console.log(data);
 
     return (
-    <div className="container mx-auto px-4 py-8 bg-white">
-      <HomeMain />
-      {/* 공지사항 추가 */}
-      <div className="mt-12">
-        <RecentNotices data={data} />
-      </div>
-    </div>
-  );
+        <div className="container mx-auto px-4 py-8 bg-white">
+            <HomeMain />
+            {/* 공지사항 추가 */}
+            <div className="mt-12">
+                <RecentNotices data={data} />
+            </div>
+        </div>
+    );
 };
 
 export default HomePage;
