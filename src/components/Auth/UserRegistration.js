@@ -35,17 +35,15 @@ const UserRegistration = ({ onNext, onPrev }) => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isIdVerified, setIsIdVerified] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
-  const [verifiedId, setVerifiedId] = useState(""); // Track the last verified ID
+  const [verifiedId, setVerifiedId] = useState("");
 
-  // 타이머 관련 useEffect 추가/수정
   useEffect(() => {
     let countdown;
-    if (timer > 0) {
+    if (timer > 0 && !isEmailVerified) {
       countdown = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
     } else if (timer === 0 && isEmailSent && !isEmailVerified) {
-      // 타이머 만료 시 처리
       setIsEmailSent(false);
       setError(prev => ({
         ...prev,
@@ -53,7 +51,6 @@ const UserRegistration = ({ onNext, onPrev }) => {
       }));
     }
 
-    // 컴포넌트 언마운트 시 인터벌 정리
     return () => {
       if (countdown) {
         clearInterval(countdown);
@@ -61,7 +58,6 @@ const UserRegistration = ({ onNext, onPrev }) => {
     };
   }, [timer, isEmailSent, isEmailVerified]);
 
-  // Effect to check if ID has changed since last verification
   useEffect(() => {
     if (isIdVerified && formData.id !== verifiedId) {
       setIsIdVerified(false);
@@ -70,7 +66,6 @@ const UserRegistration = ({ onNext, onPrev }) => {
     }
   }, [formData.id, verifiedId]);
 
-  // 비밀번호 유효성 검사 함수
   const validatePassword = (password) => {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{10,}$/;
     return regex.test(password);
@@ -99,7 +94,7 @@ const UserRegistration = ({ onNext, onPrev }) => {
           id: "사용 가능한 아이디입니다."
         }));
         setIsIdVerified(true);
-        setVerifiedId(formData.id); // Store the verified ID
+        setVerifiedId(formData.id);
       }
     } catch (err) {
       setError(prev => ({
@@ -144,7 +139,7 @@ const UserRegistration = ({ onNext, onPrev }) => {
     try {
       setIsLoading(true);
       await axios.post('/mailSend', { email: formData.email });
-      setTimer(300); // 5분
+      setTimer(300);
       setIsEmailSent(true);
       setSuccess(prev => ({ ...prev, email: "인증번호가 발송되었습니다." }));
       setError(prev => ({ ...prev, email: "" }));
@@ -178,6 +173,7 @@ const UserRegistration = ({ onNext, onPrev }) => {
         setIsEmailVerified(true);
         setSuccess(prev => ({ ...prev, auth: "인증이 완료되었습니다." }));
         setError(prev => ({ ...prev, auth: "" }));
+        setTimer(0);
       } else {
         setError(prev => ({ ...prev, auth: "인증번호가 일치하지 않습니다." }));
       }
@@ -217,7 +213,7 @@ const UserRegistration = ({ onNext, onPrev }) => {
       if (response.data === "success") {
         onNext({
           ...formData,
-          roleType: 2  // 대기 회원으로 설정
+          roleType: 2
         });
       }
     } catch (err) {
