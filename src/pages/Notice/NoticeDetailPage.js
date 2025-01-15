@@ -10,6 +10,11 @@ const NoticeDetail = () => {
     const [loading, setLoading] = useState(true);
     const [adjacentNotice, setAdjacentNotice] = useState({ previous: null, next: null }); // 이전/다음 글 데이터
 
+    useEffect(() => {
+        // noticeId가 변경되면 스크롤 상단으로 이동
+        window.scrollTo(0, 0);
+    }, [noticeId]);
+
     const handleDelete = async () => {
         if (window.confirm("정말 삭제하시겠습니까?")) {
             try {
@@ -25,11 +30,11 @@ const NoticeDetail = () => {
 
     const handleEdit = () => {
         navigate("/board/write", { state: { notice } }); // 게시물 데이터를 전달하며 글쓰기 페이지로 이동
+        window.scrollTo(0, 0);
     };
 
     const handleNavigate = (id) => {
         navigate(`/notice/${id}`);
-        window.scrollTo(0, 0); // 페이지 상단으로 스크롤
     };
 
     useEffect(() => {

@@ -86,6 +86,7 @@ const BlogPost = () => {
 
     const handleNavigate = (id) => {
         navigate(`/board/post/${id}`);
+        window.scrollTo(0, 0);
     };
 
     const handleDelete = async () => {
