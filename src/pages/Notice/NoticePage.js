@@ -24,6 +24,14 @@ const NoticePage = () => {
     setCurrentPage(1); // 검색어가 변경될 때 페이지를 1로 초기화
   };
 
+  // 페이지 변경 핸들러
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber !== currentPage) { // 페이지가 변경될 때만 실행
+      setCurrentPage(pageNumber);
+      window.scrollTo(0, 0); // 스크롤 상단 이동
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
       <h1 className="apply-title text-3xl font-bold text-center mb-6" style={{ fontSize: '24px' }}>공지사항</h1>
@@ -52,7 +60,7 @@ const NoticePage = () => {
       {/* 페이지네이션 */}
       <div className="flex justify-center mt-6 space-x-3 text-gray-700">
         <button
-          onClick={() => setCurrentPage(1)}
+          onClick={() => handlePageChange(1)}
           disabled={currentPage === 1}
           className={`text-xl hover:text-black ${
             currentPage === 1 && "text-gray-400 cursor-not-allowed"
@@ -61,7 +69,7 @@ const NoticePage = () => {
           &lt;&lt;
         </button>
         <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
           disabled={currentPage === 1}
           className={`text-xl hover:text-black ${
             currentPage === 1 && "text-gray-400 cursor-not-allowed"
@@ -72,7 +80,7 @@ const NoticePage = () => {
         {Array.from({ length: totalPages }, (_, i) => (
           <button
             key={i}
-            onClick={() => setCurrentPage(i + 1)}
+            onClick={() => handlePageChange(i + 1)}
             className={`text-xl ${
               currentPage === i + 1
                 ? "font-extrabold text-black"
@@ -83,7 +91,7 @@ const NoticePage = () => {
           </button>
         ))}
         <button
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
           disabled={currentPage === totalPages}
           className={`text-xl hover:text-black ${
             currentPage === totalPages && "text-gray-400 cursor-not-allowed"
@@ -92,7 +100,7 @@ const NoticePage = () => {
           &gt;
         </button>
         <button
-          onClick={() => setCurrentPage(totalPages)}
+          onClick={() => handlePageChange(totalPages)}
           disabled={currentPage === totalPages}
           className={`text-xl hover:text-black ${
             currentPage === totalPages && "text-gray-400 cursor-not-allowed"

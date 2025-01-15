@@ -15,6 +15,10 @@ const RecentNotices = ({ data }) => {
         }).replace(/-/g, ".").replace(/\.$/, ""); // '-'를 '.'로 변경하고 마지막 '.' 제거
     };
 
+    const handleMoreClick = () => {
+        window.scrollTo(0, 0); // 스크롤 상단으로 이동
+    };
+
     return (
         <div className="max-w-6xl mx-auto">
 
@@ -51,6 +55,7 @@ const RecentNotices = ({ data }) => {
             <div className="flex justify-end mt-4">
                 <Link
                     to="/notice"
+                    onClick={handleMoreClick}
                     className="flex items-center justify-center text-sm px-4 py-2 border border-gray-500 rounded-full hover:bg-gray-100 transition"
                     style={{
                         borderRadius: '9999px',

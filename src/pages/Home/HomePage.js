@@ -12,7 +12,7 @@ const HomePage = () => {
         const fetchData = async () => {
             try {
                 // 하나의 API 호출 (예: `/main`)
-                const response = await axios.get('/main');
+                const response = await axios.get('/api/main');
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);

@@ -252,7 +252,13 @@ const BlogMain = () => {
 
             {/* 글쓰기 버튼 */}
             <div className="write-button-container">
-                <button className="write-button" onClick={() => navigate("/board/write")}>
+                <button
+                    className="write-button"
+                    onClick={() => {
+                        navigate("/board/write"); // 페이지 이동
+                        window.scrollTo(0, 0); // 스크롤 상단으로 이동
+                    }}
+                >
                     글쓰기
                 </button>
             </div>
