@@ -1,18 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { loginSuccess, loginFailure, setLoading } from '../../slices/authSlice';
 import "../../styles/LoginComponent.css";
 import "../../styles/common.css";
 
 function LoginComponent() {
   const dispatch = useDispatch();
-  const { loading, error } = useSelector(state => state.auth);
+  const navigate = useNavigate();
+  const { loading, error, isAuthenticated } = useSelector(state => state.auth);
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    // 폼 유효성 검사
+    setIsFormValid(id.trim() !== '' && password.trim() !== '');
+  }, [id, password]);
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      const userId = localStorage.getItem('userId');
+      if (userId || isAuthenticated) {
+        try {
+          const response = await axios.get('/mypage');
+          if (response.data.userId) {
+            dispatch(loginSuccess({
+              user: {
+                id: response.data.userId,
+                nickname: response.data.nickname
+              }
+            }));
+            navigate('/main', { replace: true });
+          }
+        } catch (error) {
+          localStorage.removeItem('userId');
+        }
+      }
+    };
+
+    checkAuthStatus();
+  }, [dispatch, navigate, isAuthenticated]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isFormValid) return;
+
     dispatch(setLoading());
 
     try {
@@ -31,7 +65,7 @@ function LoginComponent() {
           }
         }));
         localStorage.setItem('userId', response.data.userId);
-        window.location.href = '/main';
+        navigate('/main', { replace: true });
       } else {
         dispatch(loginFailure(response.data.message));
       }
@@ -41,7 +75,7 @@ function LoginComponent() {
   };
 
   const handleLogoClick = () => {
-    window.location.href = '/main';
+    navigate('/main', { replace: true });
   };
 
   return (
@@ -58,20 +92,23 @@ function LoginComponent() {
               placeholder=" 아이디(학번)를 입력해주세요"
               value={id}
               onChange={(e) => setId(e.target.value)}
+              className="info-form_input"
           />
           <input
               type="password"
               placeholder=" 비밀번호를 입력해주세요"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className="info-form_input"
           />
           {error && <p className="error-message">{error}</p>}
           <div className="links">
             <a href="/users/update">비밀번호 재설정</a> | <a href="/users/join">회원가입</a>
           </div>
-          <button type="submit"
-                  className='hover:bg-customHover hover:text-customHoverText duration-200'
-                  disabled={loading}
+          <button
+              type="submit"
+              className={`btn_next ${isFormValid ? 'active' : ''}`}
+              disabled={loading || !isFormValid}
           >
             {loading ? '로그인 중...' : '로그인'}
           </button>

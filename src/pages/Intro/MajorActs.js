@@ -8,7 +8,7 @@ const MajorActs = () => {
             cards: [
                 {
                     description: "리버싱, 시스템 해킹, 웹해킹, 포렌식 등 다양한 분야의 \n 심화 스터디를 운영하고 있어요.",
-                    image: "/study_image_1.png"
+                    image: "/study_image_8.png"
                 },
                 {
                     description: "스터디에 필요한 책, 강의 등은 동아리 자료를 대여해주며, 스터디에 필요한 운영비를 지원하고 있어요.",
