@@ -24,7 +24,7 @@ function LoginComponent() {
       const userId = localStorage.getItem('userId');
       if (userId || isAuthenticated) {
         try {
-          const response = await axios.get('/mypage');
+          const response = await axios.get('/api/mypage');
           if (response.data.userId) {
             dispatch(loginSuccess({
               user: {
@@ -32,7 +32,7 @@ function LoginComponent() {
                 nickname: response.data.nickname
               }
             }));
-            navigate('/main', { replace: true });
+            navigate('/main', { replace: true }); // /api 제거
           }
         } catch (error) {
           localStorage.removeItem('userId');
@@ -50,13 +50,13 @@ function LoginComponent() {
     dispatch(setLoading());
 
     try {
-      const response = await axios.post('/login', {
+      const response = await axios.post('/api/login', {
         userId: id,
         password: password
       });
 
       if (response.data.success) {
-        const userInfoResponse = await axios.get('/mypage');
+        const userInfoResponse = await axios.get('/api/mypage');
 
         dispatch(loginSuccess({
           user: {
@@ -65,7 +65,7 @@ function LoginComponent() {
           }
         }));
         localStorage.setItem('userId', response.data.userId);
-        navigate('/main', { replace: true });
+        navigate('/main', { replace: true }); // /api 제거
       } else {
         dispatch(loginFailure(response.data.message));
       }
