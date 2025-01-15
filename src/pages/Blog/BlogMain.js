@@ -115,7 +115,6 @@ const BlogMain = () => {
         }));
 
         setPosts(dummyPosts);
-        setTotalPages(Math.ceil(dummyPosts.length / postsPerPage));
     }, []);
 
     // 게시물 필터링
@@ -186,6 +185,11 @@ const BlogMain = () => {
             post.title.replace(/\s+/g, '').toLowerCase()
                 .includes(searchQuery.replace(/\s+/g, '').toLowerCase()))
     );
+
+    // filteredPosts가 변경될 때마다 totalPages 업데이트
+    useEffect(() => {
+        setTotalPages(Math.ceil(filteredPosts.length / postsPerPage));
+    }, [filteredPosts.length, postsPerPage]);
 
     // 현재 페이지에 해당하는 게시물만 추출
     const paginatedPosts = filteredPosts.slice(
