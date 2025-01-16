@@ -22,11 +22,56 @@ const LICENSE_KEY =
     const isMyPageEdit = location.state?.isMyPageEdit || false;  // 마이페이지에서 수정 여부
 
     // 상태 초기화
+    const [posts, setPosts] = useState([]);
+
+	// 태그 중복 입력
+	const [tags, setTags] = useState([]);
+	const MAX_TAGS = 10; // 최대 10개 태그 제한
+
     const [title, setTitle] = useState(postToEdit?.title || "");
     const [contents, setContents] = useState(postToEdit?.contents || "");
     const [tag, setTag] = useState(postToEdit?.tag || "");
     const [category, setCategory] = useState(postToEdit?.category || "");
     const [image, setImage] = useState(null);
+    
+	// 태그 추가 로직
+	const handleTagInput = (e) => {
+		if ((e.key === 'Enter' || e.key === ',') && e.target.value.trim() !== '') {
+			e.preventDefault(); // 기본 동작 방지
+			const newTag = e.target.value.trim();
+			if (tags.length >= MAX_TAGS) {
+				return;
+			}
+			if (!tags.includes(newTag)) { // 중복 방지
+				setTags((prevTags) => [...prevTags, newTag]);
+			}
+			e.target.value = ''; // 입력 필드 초기화
+		}
+	};
+
+	// 태그 삭제 로직
+	const handleTagRemove = (tagToRemove) => {
+		setTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
+	};
+
+    // 게시글 목록을 서버에서 가져오는 함수
+    const fetchPosts = async (url = "/api/blog") => {
+        try {
+            const response = await fetch(url); // 서버에서 데이터 요청
+            if (!response.ok) {
+                throw new Error("게시글 데이터를 가져오지 못했습니다.");
+            }
+            const data = await response.json();
+            setPosts(data); // 게시글 데이터 상태 갱신
+        } catch (error) {
+            console.error("게시글 목록을 가져오는 중 오류 발생:", error);
+        }
+    };
+
+    useEffect(() => {
+        // 컴포넌트가 마운트될 때 게시글 목록을 가져옴
+        fetchPosts();
+    }, []);
 
     // 폼 제출 핸들러
     const handleSubmit = async () => {
@@ -54,17 +99,18 @@ const LICENSE_KEY =
                 formData.append("category", category);
                 formData.append("title", title);
                 formData.append("contents", contents);
-                formData.append("tag", tag);
+                formData.append("tag", tags.join(','));
                 formData.append("roleType", "USER");
                 formData.append("createAt", new Date().toISOString());
                 if (image) formData.append("image", image);
 
-                console.log("등록 요청 데이터:");
-                    for (let [key, value] of formData.entries()) {
-                        console.log(`${key}:`, value); // FormData의 키-값 출력
-                    }
-                    
-                await writePost(formData);
+                const response = await writePost(formData);
+                const responseData = await response.json();
+
+                if (responseData.redirect) {
+                    // 새 데이터 가져오기
+                    await fetchPosts(responseData.redirect);
+                }
                 alert("게시물이 등록되었습니다.");
             }
 
@@ -333,11 +379,10 @@ const LICENSE_KEY =
                 <option value="" disabled hidden>
                     게시판 선택
                 </option>
-                <option value="0">공지사항</option>
-                <option value="1">성과</option>
-                <option value="2">정보</option>
-                <option value="3">후기</option>
-                <option value="4">활동</option>
+                <option value="0">성과</option>
+                <option value="1">정보</option>
+                <option value="2">후기</option>
+                <option value="3">활동</option>
             </select>
             <input
                 type="text"
@@ -362,14 +407,26 @@ const LICENSE_KEY =
                     </div>
                 </div>
             </div>
-            <div className="tag-input">
-                <input
-                    type="text"
-                    placeholder="#태그 입력"
-                    value={tag}
-                    onChange={(e) => setTag(e.target.value)}
-                />
-            </div>
+			<div className="tag-input">
+				<div className="tag-list">
+					{tags.map((tag, index) => (
+						<span key={index} className="tag">
+							#{tag}
+							<button className="remove-tag-button" onClick={() => handleTagRemove(tag)}>
+								×
+							</button>
+						</span>
+					))}
+					{tags.length < MAX_TAGS && ( // 조건부 렌더링
+						<input
+							type="text"
+							placeholder="#태그 입력"
+							onKeyDown={handleTagInput}
+							className="tag-input-field"
+						/>
+					)}
+				</div>
+			</div>
             <div className="buttons-container">
                 <button className="submit-button" onClick={handleSubmit}>
                     {postToEdit 
