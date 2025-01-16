@@ -379,10 +379,10 @@ const LICENSE_KEY =
                 <option value="" disabled hidden>
                     게시판 선택
                 </option>
-                <option value="0">성과</option>
-                <option value="1">정보</option>
-                <option value="2">후기</option>
-                <option value="3">활동</option>
+                <option value="1">후기</option>
+                <option value="2">활동</option>
+                <option value="3">정보</option>
+                <option value="4">성과물</option>
             </select>
             <input
                 type="text"
