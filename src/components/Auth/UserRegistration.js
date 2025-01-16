@@ -79,7 +79,7 @@ const UserRegistration = ({ onNext, onPrev }) => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post('/signup/check-id', { userId: formData.id });
+      const response = await axios.post('/api/signup/check-id', { userId: formData.id });
       if (response.data === "duplicate") {
         setError(prev => ({
           ...prev,
@@ -138,7 +138,7 @@ const UserRegistration = ({ onNext, onPrev }) => {
 
     try {
       setIsLoading(true);
-      await axios.post('/mailSend', { email: formData.email });
+      await axios.post('/api/email/mailSend', { email: formData.email });
       setTimer(300);
       setIsEmailSent(true);
       setSuccess(prev => ({ ...prev, email: "인증번호가 발송되었습니다." }));
@@ -164,7 +164,7 @@ const UserRegistration = ({ onNext, onPrev }) => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post('/mailAuthCheck', {
+      const response = await axios.post('/api/email/mailAuthCheck', {
         email: formData.email,
         authNum: parseInt(formData.emailAuth)
       });
@@ -209,7 +209,7 @@ const UserRegistration = ({ onNext, onPrev }) => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post('/signup', requestBody);
+      const response = await axios.post('/api/signup', requestBody);
       if (response.data === "success") {
         onNext({
           ...formData,
