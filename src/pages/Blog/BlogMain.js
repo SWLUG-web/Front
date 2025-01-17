@@ -77,7 +77,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 const BlogMain = () => {
     const [posts, setPosts] = useState([]); // 게시물 데이터
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-    const [tags, setTags] = useState(["인턴", "채용", "BOB"]); // 태그 목록
+    const [tags, setTags] = useState(["인턴", "채용", "BOB","등록X"]); // 태그 목록
     const [selectedTag, setSelectedTag] = useState(""); // 선택된 태그
     const [searchQuery, setSearchQuery] = useState(""); // 검색어
     const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
@@ -126,10 +126,10 @@ const BlogMain = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetchPosts(currentPage, postsPerPage, selectedTag, searchQuery, selectedCategory); // 서버에서 게시물 가져오기
-                const { board, totalPage } = response; // API 응답 데이터 구조에 따라
-                setPosts(board); // 게시물 데이터 설정
-                setTotalPages(totalPage); // 총 페이지 수 설정
+                const response = await fetchPosts(currentPage, postsPerPage, selectedTag, searchQuery, selectedCategory);
+                const { board, totalPage } = response;
+                setPosts(board);
+                setTotalPages(totalPage);
             } catch (error) {
                 console.error("게시물을 가져오는 중 오류 발생:", error);
             }
@@ -140,13 +140,13 @@ const BlogMain = () => {
 
     // 게시물 클릭 시 상세 페이지로 이동
     const handlePostClick = (boardId) => {
-        navigate(`/board/post/${boardId}`); // 게시물 상세 페이지로 이동
+        navigate(`/board/post/${boardId}`);
     };
 
     // 게시물 필터링 및 검색
     const handleSearch = async () => {
         try {
-            const response = await fetchPosts(1, postsPerPage, selectedTag, searchQuery, selectedCategory); // 검색/필터링된 게시물 가져오기
+            const response = await fetchPosts(1, postsPerPage, selectedTag, searchQuery, selectedCategory);
             const { board, totalPage } = response;
             setPosts(board);
             setTotalPages(totalPage);
@@ -168,13 +168,13 @@ const BlogMain = () => {
     };
 
     const handleCategoryChange = (category) => {
-        setSelectedCategory(category); // 선택된 카테고리 변경
-        setCurrentPage(1); // 페이지를 1로 리셋
+        setSelectedCategory(category);
+        setCurrentPage(1);
     };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return date.toLocaleDateString("ko-KR"); // 한국어 형식으로 날짜 변환
+        return date.toLocaleDateString("ko-KR");
     };
 
     // 필터링된 게시물
@@ -186,10 +186,16 @@ const BlogMain = () => {
                 .includes(searchQuery.replace(/\s+/g, '').toLowerCase()))
     );
 
-    // filteredPosts가 변경될 때마다 totalPages 업데이트
+    // filteredPosts가 변경될 때마다 totalPages 업데이트하고 현재 페이지 확인
     useEffect(() => {
-        setTotalPages(Math.ceil(filteredPosts.length / postsPerPage));
-    }, [filteredPosts.length, postsPerPage]);
+        const newTotalPages = Math.ceil(filteredPosts.length / postsPerPage);
+        setTotalPages(newTotalPages);
+
+        // 현재 페이지가 새로운 전체 페이지 수보다 크면 마지막 페이지로 이동
+        if (currentPage > newTotalPages) {
+            setCurrentPage(newTotalPages || 1); // 결과가 0일 경우 1페이지로 설정
+        }
+    }, [filteredPosts.length, postsPerPage, currentPage]);
 
     // 현재 페이지에 해당하는 게시물만 추출
     const paginatedPosts = filteredPosts.slice(
@@ -225,9 +231,9 @@ const BlogMain = () => {
             {/* 게시물 리스트 */}
             <h3 className="posts-title">Posts</h3>
             <div className="posts-container">
-                <div className="posts">
-                    {filteredPosts.length > 0 ? (
-                        paginatedPosts.map((post) => (
+                {filteredPosts.length > 0 ? (
+                    <div className="posts">
+                        {paginatedPosts.map((post) => (
                             <div
                                 key={post.boardId}
                                 className="post-card"
@@ -243,11 +249,13 @@ const BlogMain = () => {
                                     <p className="post-date">{formatDate(post.createAt)}</p>
                                 </div>
                             </div>
-                        ))
-                    ) : (
+                        ))}
+                    </div>
+                ) : (
+                    <div className="no-posts-container">
                         <p className="no-posts">등록된 글이 없습니다.</p>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
 
             {/* 글쓰기 버튼 */}
@@ -255,8 +263,8 @@ const BlogMain = () => {
                 <button
                     className="write-button"
                     onClick={() => {
-                        navigate("/board/write"); // 페이지 이동
-                        window.scrollTo(0, 0); // 스크롤 상단으로 이동
+                        navigate("/board/write");
+                        window.scrollTo(0, 0);
                     }}
                 >
                     글쓰기
