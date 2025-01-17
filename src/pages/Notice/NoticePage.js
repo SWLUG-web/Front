@@ -1,11 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NoticeList from "../../components/Notice/NoticeList";
 import notices from "../../data/notices"; // 공지사항 데이터 import
+import "../../styles/Notice.css"
 
 const NoticePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-
+  const navigate = useNavigate(); // 페이지 이동을 위한 hook
   const noticesPerPage = 10; // 페이지당 공지사항 수
 
   // 페이지 그룹 관련 함수들
@@ -57,6 +59,10 @@ const NoticePage = () => {
     }
   };
 
+  const goToWritePage = (boardType) => {
+    navigate("/board/write", { state: { boardType } });
+  };
+
   return (
       <div className="container mx-auto px-4 py-8 bg-white">
         <h1 className="apply-title text-3xl font-bold text-center mb-6" style={{ fontSize: '24px' }}>공지사항</h1>
@@ -81,6 +87,18 @@ const NoticePage = () => {
 
         {/* 공지사항 리스트 */}
         <NoticeList notices={currentNotices} />
+
+        <div className="write-button-container">
+              <button
+                  className="write-button"
+                  onClick={() => {
+                      goToWritePage("notice")
+                      window.scrollTo(0, 0); // 스크롤 상단으로 이동
+                  }}
+              >
+                  글쓰기
+              </button>
+          </div>
 
         {/* 페이지네이션 */}
         {totalPages > 1 && (
