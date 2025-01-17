@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from 'react-redux'; // 추가됨
 import "../../styles/BlogMain.css";
 import { fetchPosts } from "../../services/blogAPI";
 import TagFilter from "../../components/Blog/TagFilter";
@@ -75,6 +76,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 };
 
 const BlogMain = () => {
+    const { isAuthenticated } = useSelector(state => state.auth); // 추가됨
     const [posts, setPosts] = useState([]); // 게시물 데이터
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
     const [tags, setTags] = useState(["인턴", "채용", "BOB","등록X"]); // 태그 목록
@@ -258,17 +260,19 @@ const BlogMain = () => {
                 )}
             </div>
 
-            {/* 글쓰기 버튼 */}
+            {/* 글쓰기 버튼 컨테이너는 항상 존재하고, 버튼만 조건부 표시 */}
             <div className="write-button-container">
-                <button
-                    className="write-button"
-                    onClick={() => {
-                        navigate("/board/write");
-                        window.scrollTo(0, 0);
-                    }}
-                >
-                    글쓰기
-                </button>
+                {isAuthenticated && (
+                    <button
+                        className="write-button"
+                        onClick={() => {
+                            navigate("/board/write");
+                            window.scrollTo(0, 0);
+                        }}
+                    >
+                        글쓰기
+                    </button>
+                )}
             </div>
 
             {/* 페이지네이션 */}
