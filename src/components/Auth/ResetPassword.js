@@ -5,6 +5,7 @@ import "../../styles/ResetPassword.css";
 
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{10,}$/;
 
+//비밀번호 재설정
 function ResetPassword() {
   const location = useLocation();
   const navigate = useNavigate();
