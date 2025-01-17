@@ -35,10 +35,12 @@ const NoticePage = () => {
     return Math.max(Math.floor((currentPage - 1) / groupSize) * groupSize - 2, 1);
   };
 
-  // 필터링된 공지사항
-  const filteredNotices = notices.filter((notice) =>
-      notice.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // 띄어쓰기를 제거한 검색어로 필터링
+  const filteredNotices = notices.filter((notice) => {
+    const normalizedTitle = notice.title.replace(/\s+/g, '').toLowerCase();
+    const normalizedSearch = searchTerm.replace(/\s+/g, '').toLowerCase();
+    return normalizedTitle.includes(normalizedSearch);
+  });
 
   // 페이지네이션 처리
   const totalPages = Math.ceil(filteredNotices.length / noticesPerPage);
@@ -86,7 +88,13 @@ const NoticePage = () => {
         </div>
 
         {/* 공지사항 리스트 */}
-        <NoticeList notices={currentNotices} />
+        {filteredNotices.length > 0 ? (
+            <NoticeList notices={currentNotices} />
+        ) : (
+            <div className="flex justify-center items-center py-20 text-gray-500 border-t border-b">
+              등록된 공지사항이 없습니다.
+            </div>
+        )}
 
         <div className="write-button-container">
               <button
@@ -102,7 +110,7 @@ const NoticePage = () => {
 
         {/* 페이지네이션 */}
         {totalPages > 1 && (
-            <div className="flex justify-center mt-10 space-x-2 text-gray-700"> {}
+            <div className="flex justify-center mt-10 space-x-2 text-gray-700">
               <button
                   onClick={() => handlePageChange(getPrevGroupFirstPage())}
                   disabled={currentPage <= 3}
