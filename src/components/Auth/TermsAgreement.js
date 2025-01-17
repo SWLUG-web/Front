@@ -8,6 +8,7 @@ function TermsAgreement({ onNext, onPrev }) {
   const [firstCheck, setFirstCheck] = useState(false);
   const [secondCheck, setSecondCheck] = useState(false);
 
+  //약관
   const allBtnEvent = () => {
     const newCheckStatus = !allCheck;
     setAllCheck(newCheckStatus);

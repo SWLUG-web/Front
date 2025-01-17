@@ -4,6 +4,7 @@ import PrevNextButtons from "../../components/Auth/PrevNextButtons";
 import "../../styles/UserRegistration.css";
 import "../../styles/input.css"
 
+//회원가입
 const UserRegistration = ({ onNext, onPrev }) => {
   const [formData, setFormData] = useState({
     id: "",

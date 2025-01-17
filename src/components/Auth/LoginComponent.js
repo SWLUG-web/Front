@@ -14,6 +14,7 @@ function LoginComponent() {
   const [password, setPassword] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
 
+  //로그인 수정
   useEffect(() => {
     // 폼 유효성 검사
     setIsFormValid(id.trim() !== '' && password.trim() !== '');
