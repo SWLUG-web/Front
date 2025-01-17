@@ -142,7 +142,7 @@ const BlogMain = () => {
 
     // 게시물 클릭 시 상세 페이지로 이동
     const handlePostClick = (boardId) => {
-        navigate(`/api/board/post/${boardId}`);
+        navigate(`/board/post/${boardId}`);
     };
 
     // 게시물 필터링 및 검색
