@@ -226,7 +226,23 @@
     margin: 0;
     /* 기본 여백 제거 */
 }
+.no-posts-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+}
 
+.no-posts {
+    text-align: center;
+    color: #555;
+    font-size: 16px;
+    padding: 5px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+}
 
 .no-posts {
     text-align: center;
