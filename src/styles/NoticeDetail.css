@@ -24,6 +24,8 @@
     font-size: 16px;
     line-height: 1.6;
     color: #000000;
+    padding-top: 20px;
+    padding-bottom: 50px;
 }
 
 .notice-content p {
@@ -57,3 +59,35 @@
     justify-content: space-between;
     margin: 40px auto;
 }
+
+/* 네비게이션 레이블 (< 이전글, 다음글 >) 스타일 */
+.notice-navigation .nav-label {
+    font-size: 15px;
+    color: #202123; /* 회색 */
+    font-weight: bold;
+
+}
+
+/* 글 제목 스타일 */
+.notice-navigation .nav-title {
+    font-size: 15px;
+    color: #202123;
+    font-weight: normal;
+    padding-left: 8px;
+    padding-right: 8px;
+
+}
+
+.notice-navigation .nav-title:hover {
+    color: #202123;
+    text-decoration: none;
+}
+
+/* 버튼 비활성화 스타일 */
+.notice-navigation button:disabled .nav-label,
+.notice-navigation button:disabled .nav-title {
+    color: #ccc; /* 비활성화된 텍스트 색상 */
+    text-decoration: none;
+    cursor: not-allowed;
+}
+

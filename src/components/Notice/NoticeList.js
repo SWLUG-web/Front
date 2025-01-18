@@ -26,13 +26,13 @@ const NoticeList = ({ notices }) => {
           <div className="flex-shrink-0 w-64">작성일</div>
           <div className="flex-shrink-0 w-32">작성자</div>
         </div>
-        {notices.map((notice, index) => (
+        {notices.map((notice) => (
             <div
                 key={notice.id}
-                className="notice-item flex items-center justify-between py-3 border-b border-gray-300"
+                className="notice-item flex items-center justify-between py-3 border-b border-gray-300 hover:bg-gray-50 cursor-pointer"
                 onClick={() => handleNoticeClick(notice.id)}
             >
-              <div className="flex-shrink-0 w-20 text-center">{index + 1}</div>
+              <div className="flex-shrink-0 w-20 text-center">{notice.displayNumber}</div>
               <div className="flex-grow text-center truncate">{notice.boardTitle}</div>
               <div className="flex-shrink-0 w-64 text-center">{formatDate(notice.createAt)}</div>
               <div className="flex-shrink-0 w-32 text-center">{notice.userId}</div>
