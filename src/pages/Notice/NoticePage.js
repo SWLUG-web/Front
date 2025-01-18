@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NoticeList from "../../components/Notice/NoticeList";
 import axios from "axios";
-
+//
 const NoticePage = () => {
   const [notices, setNotices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
