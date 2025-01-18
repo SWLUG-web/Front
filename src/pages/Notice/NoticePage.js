@@ -1,19 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NoticeList from "../../components/Notice/NoticeList";
-import notices from "../../data/notices"; // 공지사항 데이터 import
+import axios from "axios";
 
 const NoticePage = () => {
+  const [notices, setNotices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
-  const noticesPerPage = 10; // 페이지당 공지사항 수
+  const noticesPerPage = 10;
 
-  // 페이지 그룹 관련 함수들
+  useEffect(() => {
+    fetchNotices(currentPage);
+  }, [currentPage]);
+
+  const fetchNotices = async (page) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`/api/notice?page=${page}`);
+      setNotices(response.data);
+    } catch (error) {
+      console.error("Error fetching notices:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getPageNumbers = () => {
-    const groupSize = 3; // 한 그룹당 보여줄 페이지 수
-    const currentGroup = Math.ceil(currentPage / groupSize); // 현재 페이지 그룹
-    const startPage = (currentGroup - 1) * groupSize + 1; // 현재 그룹의 시작 페이지
-    const endPage = Math.min(startPage + groupSize - 1, totalPages); // 현재 그룹의 마지막 페이지
+    const groupSize = 3;
+    const currentGroup = Math.ceil(currentPage / groupSize);
+    const startPage = (currentGroup - 1) * groupSize + 1;
+    const endPage = Math.min(startPage + groupSize - 1, totalPages);
 
     const pages = [];
     for (let i = startPage; i <= endPage; i++) {
@@ -22,7 +39,6 @@ const NoticePage = () => {
     return pages;
   };
 
-  // 다음/이전 그룹의 첫 페이지 계산
   const getNextGroupFirstPage = () => {
     const groupSize = 3;
     return Math.min(Math.ceil(currentPage / groupSize) * groupSize + 1, totalPages);
@@ -33,32 +49,27 @@ const NoticePage = () => {
     return Math.max(Math.floor((currentPage - 1) / groupSize) * groupSize - 2, 1);
   };
 
-  // 띄어쓰기를 제거한 검색어로 필터링
   const filteredNotices = notices.filter((notice) => {
-    const normalizedTitle = notice.title.replace(/\s+/g, '').toLowerCase();
+    const normalizedTitle = notice.boardTitle.replace(/\s+/g, '').toLowerCase();
     const normalizedSearch = searchTerm.replace(/\s+/g, '').toLowerCase();
     return normalizedTitle.includes(normalizedSearch);
   });
 
-  // 페이지네이션 처리
   const totalPages = Math.ceil(filteredNotices.length / noticesPerPage);
   const startIndex = (currentPage - 1) * noticesPerPage;
   const currentNotices = filteredNotices.slice(startIndex, startIndex + noticesPerPage);
 
-  // 검색어 변경 시 페이지 초기화
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색어가 변경될 때 페이지를 1로 초기화
+    setCurrentPage(1);
   };
 
-  // 페이지 변경 핸들러
   const handlePageChange = (pageNumber) => {
-    if (pageNumber !== currentPage) { // 페이지가 변경될 때만 실행
+    if (pageNumber !== currentPage) {
       setCurrentPage(pageNumber);
-      window.scrollTo(0, 0); // 스크롤 상단 이동
+      window.scrollTo(0, 0);
     }
   };
-
   return (
       <div className="container mx-auto px-4 py-8 bg-white">
         <h1 className="apply-title text-3xl font-bold text-center mb-6" style={{ fontSize: '24px' }}>공지사항</h1>
@@ -67,7 +78,7 @@ const NoticePage = () => {
         <div className="flex justify-end mb-6">
           <div className="search-bar flex items-center border rounded-full shadow-sm px-4 py-2">
             <span className="text-sm text-gray-700 mr-2">제목</span>
-            <div className="border-r border-gray-400 h-4 mx-2"></div> {/* 구분선 */}
+            <div className="border-r border-gray-400 h-4 mx-2"></div>
             <input
                 type="text"
                 placeholder="검색어를 입력하세요"
@@ -82,7 +93,9 @@ const NoticePage = () => {
         </div>
 
         {/* 공지사항 리스트 */}
-        {filteredNotices.length > 0 ? (
+        {loading ? (
+            <div className="flex justify-center items-center py-20">Loading...</div>
+        ) : filteredNotices.length > 0 ? (
             <NoticeList notices={currentNotices} />
         ) : (
             <div className="flex justify-center items-center py-20 text-gray-500 border-t border-b">
