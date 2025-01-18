@@ -113,9 +113,11 @@ const NoticePage = () => {
             <button
                 type="button"
                 onClick={handleSearchClick}
+                className="flex items-center justify-center text-gray-700 hover:text-black"
             >
-              <img src="/notice.png" alt="검색 아이콘" className="h-5 w-5" />
+              🔍
             </button>
+
           </div>
         </div>
 
