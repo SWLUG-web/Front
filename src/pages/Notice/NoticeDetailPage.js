@@ -1,35 +1,48 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { deletePost } from "../../services/blogAPI";
+import axios from "axios";
 import "../../styles/NoticeDetail.css";
 
 const NoticeDetail = () => {
-    const { noticeId } = useParams(); // URL에서 공지사항 ID 추출
+    const { noticeId } = useParams();
     const navigate = useNavigate();
-    const [notice, setNotice] = useState(null); // 공지사항 데이터
+    const [notice, setNotice] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [adjacentNotice, setAdjacentNotice] = useState({ previous: null, next: null }); // 이전/다음 글 데이터
+    const [adjacentNotice, setAdjacentNotice] = useState({ previous: null, next: null });
 
     useEffect(() => {
-        // noticeId가 변경되면 스크롤 상단으로 이동
         window.scrollTo(0, 0);
     }, [noticeId]);
 
     const handleDelete = async () => {
         if (window.confirm("정말 삭제하시겠습니까?")) {
             try {
-                await deletePost(noticeId); // 게시물 삭제 요청
-                alert("게시물이 삭제되었습니다.");
-                navigate("/notice");
+                const response = await axios.post("/api/notice/delete", { id: noticeId });
+
+                if (response.status === 401) {
+                    alert("삭제 권한이 없습니다.");
+                    return;
+                }
+
+                if (response.data?.redirect) {
+                    alert("게시물이 삭제되었습니다.");
+                    navigate("/notice");
+                } else {
+                    throw new Error("Unexpected response format");
+                }
             } catch (error) {
                 console.error("게시물 삭제 실패:", error);
-                alert("게시물 삭제에 실패했습니다. 다시 시도해주세요.");
+                if (error.response?.status === 401) {
+                    alert("로그인이 필요하거나 삭제 권한이 없습니다.");
+                } else {
+                    alert("게시물 삭제에 실패했습니다. 다시 시도해주세요.");
+                }
             }
         }
     };
 
     const handleEdit = () => {
-        navigate("/board/write", { state: { notice } }); // 게시물 데이터를 전달하며 글쓰기 페이지로 이동
+        navigate("/notice/write", { state: { notice } });
         window.scrollTo(0, 0);
     };
 
@@ -41,38 +54,24 @@ const NoticeDetail = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                // 더미 데이터
-                const dummyNotice = {
-                    id: noticeId,
-                    title: `공지사항 ${noticeId}`,
-                    date: "2024-11-03",
-                    author: "관리자",
-                    content: `공지사항 ${noticeId}의 상세 내용입니다.\n이곳에 공지사항 본문 내용을 입력하세요.`,
-                };
+                const [noticeResponse, adjacentResponse] = await Promise.all([
+                    axios.post("/api/notice/detail", { id: noticeId }),
+                    axios.post("/api/notice/adjacent", { id: noticeId })
+                ]);
 
-                // adjacentData 생성
-                const dummyAdjacentData = {
-                    previous: noticeId > 1 ? {
-                        id: parseInt(noticeId) - 1,
-                        title: `공지사항 ${parseInt(noticeId) - 1}`
-                    } : null,
-                    next: {
-                        id: parseInt(noticeId) + 1,
-                        title: `공지사항 ${parseInt(noticeId) + 1}`
-                    }
-                };
-
-                setNotice(dummyNotice);
-                setAdjacentNotice({
-                    previous: dummyAdjacentData.previous ? {
-                        id: dummyAdjacentData.previous.id,
-                        title: dummyAdjacentData.previous.title
-                    } : null,
-                    next: dummyAdjacentData.next ? {
-                        id: dummyAdjacentData.next.id,
-                        title: dummyAdjacentData.next.title
-                    } : null
+                setNotice({
+                    id: noticeResponse.data.id,
+                    title: noticeResponse.data.noticeTitle,
+                    date: noticeResponse.data.createAt,
+                    author: noticeResponse.data.userId,
+                    content: noticeResponse.data.noticeContents
                 });
+
+                setAdjacentNotice({
+                    previous: adjacentResponse.data.previous || null,
+                    next: adjacentResponse.data.next || null
+                });
+
                 setLoading(false);
             } catch (error) {
                 console.error("데이터 로딩 실패:", error);
@@ -82,26 +81,6 @@ const NoticeDetail = () => {
 
         fetchData();
     }, [noticeId]);
-    
-    // 백엔드 연결 후 사용할 코드
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             setLoading(true);
-    //             const [noticeData, adjacentData] = await Promise.all([
-    //                 fetchNoticeDetail(noticeId),
-    //                 fetchAdjacentNotices(noticeId)
-    //             ]);
-    //             setNotice(noticeData);
-    //             setAdjacentNotice(adjacentData);
-    //             setLoading(false);
-    //         } catch (error) {
-    //             console.error("데이터 로딩 실패:", error);
-    //             setLoading(false);
-    //         }
-    //     };
-    //     fetchData();
-    // }, [noticeId]);
 
     if (loading) return <p>Loading...</p>;
 
@@ -131,15 +110,30 @@ const NoticeDetail = () => {
                     onClick={() => adjacentNotice.previous && handleNavigate(adjacentNotice.previous.id)}
                     disabled={!adjacentNotice.previous}
                 >
-                    {adjacentNotice.previous ? `< 이전글 ${adjacentNotice.previous.title}` : "글이 없습니다"}
+                    {adjacentNotice.previous ? (
+                        <>
+                            <span className="nav-label">&lt;&nbsp;&nbsp;이전글</span>
+                            <span className="nav-title">{adjacentNotice.previous.noticeTitle}</span>
+                        </>
+                    ) : (
+                        "<  글이 없습니다"
+                    )}
                 </button>
                 <button
                     onClick={() => adjacentNotice.next && handleNavigate(adjacentNotice.next.id)}
                     disabled={!adjacentNotice.next}
                 >
-                    {adjacentNotice.next ? `${adjacentNotice.next.title} 다음글 >` : "글이 없습니다"}
+                    {adjacentNotice.next ? (
+                        <>
+                            <span className="nav-title">{adjacentNotice.next.noticeTitle}</span>
+                            <span className="nav-label">다음글&nbsp;&nbsp;&gt;</span>
+                        </>
+                    ) : (
+                        "글이 없습니다  >"
+                    )}
                 </button>
             </div>
+
         </div>
     );
 };

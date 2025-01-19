@@ -1,21 +1,75 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import NoticeList from "../../components/Notice/NoticeList";
-import notices from "../../data/notices"; // 공지사항 데이터 import
+import axios from "axios";
+import { debounce } from 'lodash';
+import { useNavigate } from "react-router-dom";
 import "../../styles/Notice.css"
 
 const NoticePage = () => {
+  const [notices, setNotices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const navigate = useNavigate(); // 페이지 이동을 위한 hook
-  const noticesPerPage = 10; // 페이지당 공지사항 수
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
 
-  // 페이지 그룹 관련 함수들
+  const noticesPerPage = 10;
+
+  const fetchNotices = async (page, search) => {
+    try {
+      setError(null);
+      setLoading(true);
+      // 검색어 전처리 제거 - 서버에서 처리하도록 변경
+      const response = await axios.get(
+          `/api/notice?page=${page}&searchTerm=${search}&size=${noticesPerPage}`
+      );
+
+      setNotices(response.data.notices);
+      setTotalPages(response.data.totalPages);
+      setTotalElements(response.data.totalElements);
+    } catch (error) {
+      setError('공지사항을 불러오는데 실패했습니다.');
+      console.error("Error fetching notices:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // 검색어가 없을 때만 currentPage 변경으로 API 호출
+    if (!searchTerm) {
+      fetchNotices(currentPage, searchTerm);
+    }
+  }, [currentPage]);
+
+  const handleSearch = (term) => {
+    setCurrentPage(1);
+    fetchNotices(1, term);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // 엔터 키 이벤트 처리
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(searchTerm);
+    }
+  };
+
+  const handleSearchClick = () => {
+    handleSearch(searchTerm);
+  };
+  
+  const navigate = useNavigate(); // 페이지 이동을 위한 hook
+
   const getPageNumbers = () => {
-    const groupSize = 3; // 한 그룹당 보여줄 페이지 수
-    const currentGroup = Math.ceil(currentPage / groupSize); // 현재 페이지 그룹
-    const startPage = (currentGroup - 1) * groupSize + 1; // 현재 그룹의 시작 페이지
-    const endPage = Math.min(startPage + groupSize - 1, totalPages); // 현재 그룹의 마지막 페이지
+    const groupSize = 3;
+    const currentGroup = Math.ceil(currentPage / groupSize);
+    const startPage = (currentGroup - 1) * groupSize + 1;
+    const endPage = Math.min(startPage + groupSize - 1, totalPages);
 
     const pages = [];
     for (let i = startPage; i <= endPage; i++) {
@@ -24,7 +78,6 @@ const NoticePage = () => {
     return pages;
   };
 
-  // 다음/이전 그룹의 첫 페이지 계산
   const getNextGroupFirstPage = () => {
     const groupSize = 3;
     return Math.min(Math.ceil(currentPage / groupSize) * groupSize + 1, totalPages);
@@ -35,29 +88,10 @@ const NoticePage = () => {
     return Math.max(Math.floor((currentPage - 1) / groupSize) * groupSize - 2, 1);
   };
 
-  // 띄어쓰기를 제거한 검색어로 필터링
-  const filteredNotices = notices.filter((notice) => {
-    const normalizedTitle = notice.title.replace(/\s+/g, '').toLowerCase();
-    const normalizedSearch = searchTerm.replace(/\s+/g, '').toLowerCase();
-    return normalizedTitle.includes(normalizedSearch);
-  });
-
-  // 페이지네이션 처리
-  const totalPages = Math.ceil(filteredNotices.length / noticesPerPage);
-  const startIndex = (currentPage - 1) * noticesPerPage;
-  const currentNotices = filteredNotices.slice(startIndex, startIndex + noticesPerPage);
-
-  // 검색어 변경 시 페이지 초기화
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // 검색어가 변경될 때 페이지를 1로 초기화
-  };
-
-  // 페이지 변경 핸들러
   const handlePageChange = (pageNumber) => {
-    if (pageNumber !== currentPage) { // 페이지가 변경될 때만 실행
+    if (pageNumber !== currentPage) {
       setCurrentPage(pageNumber);
-      window.scrollTo(0, 0); // 스크롤 상단 이동
+      window.scrollTo(0, 0);
     }
   };
 
@@ -67,29 +101,43 @@ const NoticePage = () => {
 
   return (
       <div className="container mx-auto px-4 py-8 bg-white">
-        <h1 className="apply-title text-3xl font-bold text-center mb-6" style={{ fontSize: '24px' }}>공지사항</h1>
+        <h1 className="apply-title text-3xl font-bold text-center mb-6">
+          공지사항
+        </h1>
 
         {/* 검색 입력란 */}
         <div className="flex justify-end mb-6">
           <div className="search-bar flex items-center border rounded-full shadow-sm px-4 py-2">
             <span className="text-sm text-gray-700 mr-2">제목</span>
-            <div className="border-r border-gray-400 h-4 mx-2"></div> {/* 구분선 */}
+            <div className="border-r border-gray-400 h-4 mx-2"></div>
             <input
                 type="text"
                 placeholder="검색어를 입력하세요"
                 value={searchTerm}
                 onChange={handleSearchChange}
+                onKeyPress={handleKeyPress}
                 className="flex-grow border-none focus:outline-none text-sm text-gray-700"
             />
-            <button type="button">
-              <img src="/notice.png" alt="검색 아이콘" className="h-5 w-5" />
+            <button
+                type="button"
+                onClick={handleSearchClick}
+                className="flex items-center justify-center text-gray-700 hover:text-black"
+            >
+              🔍
             </button>
+
           </div>
         </div>
 
         {/* 공지사항 리스트 */}
-        {filteredNotices.length > 0 ? (
-            <NoticeList notices={currentNotices} />
+        {error ? (
+            <div className="flex justify-center items-center py-20 text-red-500">
+              {error}
+            </div>
+        ) : loading ? (
+            <div className="flex justify-center items-center py-20">Loading...</div>
+        ) : notices.length > 0 ? (
+            <NoticeList notices={notices} />
         ) : (
             <div className="flex justify-center items-center py-20 text-gray-500 border-t border-b">
               등록된 공지사항이 없습니다.
@@ -155,7 +203,8 @@ const NoticePage = () => {
                   onClick={() => handlePageChange(getNextGroupFirstPage())}
                   disabled={currentPage > Math.floor(totalPages / 3) * 3}
                   className={`text-base px-2 hover:text-black ${
-                      currentPage > Math.floor(totalPages / 3) * 3 && "text-gray-400 cursor-not-allowed"
+                      currentPage > Math.floor(totalPages / 3) * 3 &&
+                      "text-gray-400 cursor-not-allowed"
                   }`}
               >
                 &gt;&gt;
