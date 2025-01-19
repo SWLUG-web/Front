@@ -3,9 +3,12 @@ import NoticeList from "../../components/Notice/NoticeList";
 import axios from "axios";
 import { debounce } from 'lodash';
 import { useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux'; // Redux 추가
 import "../../styles/Notice.css"
 
+
 const NoticePage = () => {
+  const { isAuthenticated } = useSelector(state => state.auth); // 로그인 상태 가져오기
   const [notices, setNotices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -62,7 +65,7 @@ const NoticePage = () => {
   const handleSearchClick = () => {
     handleSearch(searchTerm);
   };
-  
+
   const navigate = useNavigate(); // 페이지 이동을 위한 hook
 
   const getPageNumbers = () => {
@@ -125,7 +128,6 @@ const NoticePage = () => {
             >
               🔍
             </button>
-
           </div>
         </div>
 
@@ -144,21 +146,24 @@ const NoticePage = () => {
             </div>
         )}
 
+        {/* 글쓰기 버튼 컨테이너는 항상 존재하고, 버튼만 조건부 표시 */}
         <div className="write-button-container">
+          {isAuthenticated && (
               <button
                   className="write-button"
                   onClick={() => {
-                      goToWritePage("notice")
-                      window.scrollTo(0, 0); // 스크롤 상단으로 이동
+                    goToWritePage("notice")
+                    window.scrollTo(0, 0);
                   }}
               >
-                  글쓰기
+                글쓰기
               </button>
-          </div>
+          )}
+        </div>
 
         {/* 페이지네이션 */}
         {totalPages > 1 && (
-            <div className="flex justify-center mt-10 space-x-2 text-gray-700">
+            <div className="flex justify-center space-x-2 text-gray-700">
               <button
                   onClick={() => handlePageChange(getPrevGroupFirstPage())}
                   disabled={currentPage <= 3}
