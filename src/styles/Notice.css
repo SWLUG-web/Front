@@ -6,6 +6,12 @@
   outline: 2px dashed red;
 }
 
+.search-bar {
+  width: 300px; /* 너비 증가 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+}
+
 table {
   border-spacing: 0;
   border-collapse: collapse;
@@ -28,6 +34,7 @@ tbody tr:nth-child(even) {
   outline: 2px dashed purple;
 }
 
+
 tbody tr:nth-child(odd) {
   background-color: #ffffff;
   outline: 2px dashed orange;
@@ -41,6 +48,8 @@ td {
   overflow: hidden;
   white-space: nowrap;
 }
+
+
 
 /* 페이지네이션 여백 수정 */
 .pagination {
@@ -81,3 +90,4 @@ td {
 .apply-title {
   font-size: 26px;
 }
+
