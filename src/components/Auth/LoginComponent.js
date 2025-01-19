@@ -67,6 +67,7 @@ function LoginComponent() {
         }));
         localStorage.setItem('userId', response.data.userId);
         navigate('/main', { replace: true }); // /api 제거
+        window.scrollTo(0, 0); 
       } else {
         dispatch(loginFailure(response.data.message));
       }
