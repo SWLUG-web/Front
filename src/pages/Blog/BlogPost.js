@@ -10,6 +10,9 @@ const BlogPost = () => {
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [adjacentPosts, setAdjacentPosts] = useState({ previous: null, next: null }); // 이전/다음 글 데이터
 
+    // 현재 사용자 ID (로그인 정보에서 가져오기)
+    const currentUserId = localStorage.getItem("userId");
+
     useEffect(() => {
         window.scrollTo(0,0);
     }, [boardId]);
@@ -105,15 +108,19 @@ const BlogPost = () => {
             <div className="post-category">{categoryMapping[post.category]}</div>
             <h1>{post.title}</h1>
             <div className="post-id">{post.author}</div>
-            <div className="post-actions">
-                <button className="edit-button" onClick={handleEdit}>
-                    수정
-                </button>
-                <span className="divider">|</span>
-                <button className="delete-button" onClick={handleDelete}>
-                    삭제
-                </button>
-            </div>
+
+            {/* 작성자만 수정/삭제 버튼 보이기 */}
+            {currentUserId === post.author && (
+                <div className="post-actions">
+                    <button className="edit-button" onClick={handleEdit}>
+                        수정
+                    </button>
+                    <span className="divider">|</span>
+                    <button className="delete-button" onClick={handleDelete}>
+                        삭제
+                    </button>
+                </div>
+            )}
             
             {/* 이미지 표시 */}
             <img 
