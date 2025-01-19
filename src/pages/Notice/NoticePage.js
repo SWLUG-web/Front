@@ -2,8 +2,13 @@ import React, { useState, useEffect } from "react";
 import NoticeList from "../../components/Notice/NoticeList";
 import axios from "axios";
 import { debounce } from 'lodash';
+import { useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux'; // Redux 추가
+import "../../styles/Notice.css"
+
 
 const NoticePage = () => {
+  const { isAuthenticated } = useSelector(state => state.auth); // 로그인 상태 가져오기
   const [notices, setNotices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -61,6 +66,8 @@ const NoticePage = () => {
     handleSearch(searchTerm);
   };
 
+  const navigate = useNavigate(); // 페이지 이동을 위한 hook
+
   const getPageNumbers = () => {
     const groupSize = 3;
     const currentGroup = Math.ceil(currentPage / groupSize);
@@ -91,6 +98,10 @@ const NoticePage = () => {
     }
   };
 
+  const goToWritePage = (boardType) => {
+    navigate("/board/write", { state: { boardType } });
+  };
+
   return (
       <div className="container mx-auto px-4 py-8 bg-white">
         <h1 className="apply-title text-3xl font-bold text-center mb-6">
@@ -117,7 +128,6 @@ const NoticePage = () => {
             >
               🔍
             </button>
-
           </div>
         </div>
 
@@ -135,6 +145,21 @@ const NoticePage = () => {
               등록된 공지사항이 없습니다.
             </div>
         )}
+
+        {/* 글쓰기 버튼 컨테이너는 항상 존재하고, 버튼만 조건부 표시 */}
+        <div className="write-button-container">
+          {isAuthenticated && (
+              <button
+                  className="write-button"
+                  onClick={() => {
+                    goToWritePage("notice")
+                    window.scrollTo(0, 0);
+                  }}
+              >
+                글쓰기
+              </button>
+          )}
+        </div>
 
         {/* 페이지네이션 */}
         {totalPages > 1 && (
