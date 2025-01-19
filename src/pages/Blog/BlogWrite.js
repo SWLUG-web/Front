@@ -21,9 +21,6 @@ const LICENSE_KEY =
     const postToEdit = location.state?.post || null; // 수정할 게시물 정보
     const isMyPageEdit = location.state?.isMyPageEdit || false;  // 마이페이지에서 수정 여부
 
-    // 상태 초기화
-    const [posts, setPosts] = useState([]);
-
 	// 태그 중복 입력
 	const [tags, setTags] = useState([]);
 	const MAX_TAGS = 10; // 최대 10개 태그 제한
@@ -72,25 +69,6 @@ const LICENSE_KEY =
 		return [];
 	}, [boardType]);
 
-    // 게시글 목록을 서버에서 가져오는 함수
-    const fetchPosts = async (url = "/api/blog") => {
-        try {
-            const response = await fetch(url); // 서버에서 데이터 요청
-            if (!response.ok) {
-                throw new Error("게시글 데이터를 가져오지 못했습니다.");
-            }
-            const data = await response.json();
-            setPosts(data); // 게시글 데이터 상태 갱신
-        } catch (error) {
-            console.error("게시글 목록을 가져오는 중 오류 발생:", error);
-        }
-    };
-
-    useEffect(() => {
-        // 컴포넌트가 마운트될 때 게시글 목록을 가져옴
-        fetchPosts();
-    }, []);
-
     // 폼 제출 핸들러
     const handleSubmit = async () => {
         if (!category) {
@@ -122,18 +100,20 @@ const LICENSE_KEY =
                 formData.append("createAt", new Date().toISOString());
                 if (image) formData.append("image", image);
 
-                const response = await writePost(formData);
-                const responseData = await response.json();
+                console.log("등록 요청 데이터:");
+                    for (let [key, value] of formData.entries()) {
+                        console.log(`${key}:`, value); // FormData의 키-값 출력
+                    }
+                    
+                await writePost(formData);
 
-                if (responseData.redirect) {
-                    // 새 데이터 가져오기
-                    await fetchPosts(responseData.redirect);
-                }
                 alert("게시물이 등록되었습니다.");
             }
 
             // 페이지 이동
             navigate(isMyPageEdit ? "/mypage" : "/blog");
+			window.scrollTo(0, 0); 
+            window.location.reload(); //새로고침
         } catch (error) {
             console.error("글 등록/수정 실패:", error);
             alert("글 등록/수정에 실패했습니다. 다시 시도해주세요.");

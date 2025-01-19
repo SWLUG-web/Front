@@ -61,6 +61,7 @@ const BlogMain = () => {
     // 게시물 클릭 시 상세 페이지로 이동
     const handlePostClick = (boardId) => {
         navigate(`/board/${boardId}`);
+        window.scrollTo(0, 0);
     };
 
     const formatDate = (dateString) => {
@@ -87,8 +88,10 @@ const BlogMain = () => {
         }
     };
 
+    // 페이지 변경 핸들러
     const handleSearchClick = () => {
         handleSearch(searchTerm);
+        window.scrollTo(0, 0);
     };
 
     // 태그 선택 핸들러

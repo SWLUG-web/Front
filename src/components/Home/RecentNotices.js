@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const RecentNotices = ({ data }) => {
     const noticesList = data;
+    const navigate = useNavigate();
 
     console.log(noticesList);
 
@@ -17,6 +18,10 @@ const RecentNotices = ({ data }) => {
 
     const handleMoreClick = () => {
         window.scrollTo(0, 0); // 스크롤 상단으로 이동
+    };
+
+    const handleNoticeClick = (noticeId) => {
+        navigate(`/notice/${noticeId}`);
     };
 
     return (
@@ -42,6 +47,7 @@ const RecentNotices = ({ data }) => {
                     <div
                         key={notice.id}
                         className="notice-item flex items-center justify-between py-3 border-b border-gray-300"
+                        onClick={() => handleNoticeClick(notice.id)}
                     >
                         <div className="flex-shrink-0 w-20 text-center">{index+1}</div>
                         <div className="flex-grow text-center truncate pl-8">{notice.boardTitle}</div>
