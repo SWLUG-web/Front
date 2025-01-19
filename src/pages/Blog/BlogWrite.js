@@ -31,7 +31,8 @@ const LICENSE_KEY =
     const [title, setTitle] = useState(postToEdit?.title || "");
     const [contents, setContents] = useState(postToEdit?.contents || "");
     const [tag, setTag] = useState(postToEdit?.tag || "");
-    const [category, setCategory] = useState(postToEdit?.category || "");
+	const boardType = location.state?.boardType || ""; // "blog" 또는 "notice"
+    const [category, setCategory] = useState(boardType === "notice" ? "0" : "");
     const [image, setImage] = useState(null);
     
 	// 태그 추가 로직
@@ -53,6 +54,23 @@ const LICENSE_KEY =
 	const handleTagRemove = (tagToRemove) => {
 		setTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
 	};
+
+
+	// 게시판 옵션 설정
+    const boardOptions = useMemo(() => {
+		if (boardType === "notice") {
+			return [<option value="0" key="0">공지사항</option>];
+		}
+		if (boardType === "blog") {
+			return [
+				<option value="1" key="1">후기</option>,
+				<option value="2" key="2">활동</option>,
+				<option value="3" key="3">정보</option>,
+				<option value="4" key="4">성과물</option>
+			];
+		}
+		return [];
+	}, [boardType]);
 
     // 게시글 목록을 서버에서 가져오는 함수
     const fetchPosts = async (url = "/api/blog") => {
@@ -379,10 +397,7 @@ const LICENSE_KEY =
                 <option value="" disabled hidden>
                     게시판 선택
                 </option>
-                <option value="1">후기</option>
-                <option value="2">활동</option>
-                <option value="3">정보</option>
-                <option value="4">성과물</option>
+                {boardOptions}
             </select>
             <input
                 type="text"
