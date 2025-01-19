@@ -33,7 +33,7 @@ const root = createBrowserRouter([
   { path: "/apply", element: <ApplyPage /> },
   { path: "/intro", element: <Intro /> },
   { path: "/blog", element: <BlogMain /> },
-  { path: "/board/post/:boardId", element: <BlogPost /> },
+  { path: "/board/:boardId", element: <BlogPost /> },
   { path: "/board/write", element: <BlogWrite /> },
   { path: "/privacy", element: <Privacy /> },
   { path: "/", element: <HomePage /> }, // 기본 경로
