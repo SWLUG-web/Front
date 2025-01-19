@@ -1,88 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from 'react-redux'; // 추가됨
+import axios from 'axios';
 import "../../styles/BlogMain.css";
-import { fetchPosts } from "../../services/blogAPI";
 import TagFilter from "../../components/Blog/TagFilter";
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-    const getPageNumbers = () => {
-        const groupSize = 3; // 한 그룹당 보여줄 페이지 수
-        const currentGroup = Math.ceil(currentPage / groupSize); // 현재 페이지 그룹
-        const startPage = (currentGroup - 1) * groupSize + 1; // 현재 그룹의 시작 페이지
-        const endPage = Math.min(startPage + groupSize - 1, totalPages); // 현재 그룹의 마지막 페이지
-
-        const pages = [];
-        for (let i = startPage; i <= endPage; i++) {
-            pages.push(i);
-        }
-        return pages;
-    };
-
-    // 다음/이전 그룹의 첫 페이지 계산
-    const getNextGroupFirstPage = () => {
-        const groupSize = 3;
-        return Math.min(Math.ceil(currentPage / groupSize) * groupSize + 1, totalPages);
-    };
-
-    const getPrevGroupFirstPage = () => {
-        const groupSize = 3;
-        return Math.max(Math.floor((currentPage - 1) / groupSize) * groupSize - 2, 1);
-    };
-
-    return (
-        <div className="pagination">
-            <button
-                className="pagination-arrow"
-                onClick={() => onPageChange(getPrevGroupFirstPage())}
-                disabled={currentPage <= 3}
-            >
-                &lt;&lt;
-            </button>
-            <button
-                className="pagination-arrow"
-                onClick={() => onPageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-            >
-                &lt;
-            </button>
-
-            {getPageNumbers().map((pageNum) => (
-                <button
-                    key={pageNum}
-                    className={`page-button ${currentPage === pageNum ? "active" : ""}`}
-                    onClick={() => onPageChange(pageNum)}
-                >
-                    {pageNum}
-                </button>
-            ))}
-
-            <button
-                className="pagination-arrow"
-                onClick={() => onPageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-            >
-                &gt;
-            </button>
-            <button
-                className="pagination-arrow"
-                onClick={() => onPageChange(getNextGroupFirstPage())}
-                disabled={currentPage > Math.floor(totalPages / 3) * 3}
-            >
-                &gt;&gt;
-            </button>
-        </div>
-    );
-};
-
 const BlogMain = () => {
-    const { isAuthenticated } = useSelector(state => state.auth); // 추가됨
+    const {isAuthenticated} = useSelector(state => state.auth); // 추가됨
     const [posts, setPosts] = useState([]); // 게시물 데이터
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-    const [tags, setTags] = useState(["인턴", "채용", "BOB","등록X"]); // 태그 목록
+    const [tags, setTags] = useState(["인턴", "채용", "BOB", "등록X"]); // 태그 목록
     const [selectedTag, setSelectedTag] = useState(""); // 선택된 태그
-    const [searchQuery, setSearchQuery] = useState(""); // 검색어
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
     const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
+    const [totalElements, setTotalElements] = useState(0);
+
     const postsPerPage = 9; // 한 페이지에 표시할 게시물 수
     const navigate = useNavigate(); // 페이지 이동을 위한 hook
 
@@ -92,75 +26,69 @@ const BlogMain = () => {
     const initialCategory = searchParams.get("category") || "";
     const [selectedCategory, setSelectedCategory] = useState(initialCategory);
 
-    // 임시 데이터 설정
-    useEffect(() => {
-        const dummyPosts = Array.from({ length: 100 }, (_, index) => ({
-            boardId: index + 1,
-            category: index % 3 === 0 ? 2 : (index % 3 === 1 ? 1 : 3), // 3가지 카테고리
-            title: `[${index % 2 === 0 ? '모집' : '안내'}] ${['스터디', '프로젝트', '세미나', '특강'][index % 4]} ${index + 1}`,
-            tag: [
-                `${['인턴', '채용', 'BOB', 'BoB'][index % 4]}`,
-                `${index % 5 === 0 ? 'KUCIS' : ''}`
-            ].filter(tag => tag !== ''), // 빈 태그 제거
-            roleType: null,
-            id: Math.floor(Math.random() * 1000) + 100, // 100~1099 사이의 랜덤 ID
-            createAt: new Date(2024, 0, 1 + Math.floor(index / 3))
-                .toISOString()
-                .replace('T', ' ')
-                .slice(0, 19), // 날짜를 3개 게시물마다 하루씩 증가
-            updateAt: new Date(2024, 0, 1 + Math.floor(index / 3))
-                .toISOString()
-                .replace('T', ' ')
-                .slice(0, 19),
-            contents: `${['스터디', '프로젝트', '세미나', '특강'][index % 4]} ${index + 1}에 대한 상세 내용입니다. 많은 참여 부탁드립니다.`,
-            imageUrl: `/dummy_image_${(index % 5) + 1}.jpg` // 5개의 더미 이미지 순환
-        }));
+    const fetchBlogs = async (page, search) => {
+        try {
+            setError(null);
+            setLoading(true);
+            // 검색어 전처리 제거 - 서버에서 처리
+            const response = await axios.get(
+                `/api/blog?page=${page}&searchTerm=${search}&size=${postsPerPage}`
+            );
 
-        setPosts(dummyPosts);
-    }, []);
+            setPosts(response.data.blogs);
+            setTotalPages(response.data.totalPages);
+            setTotalElements(response.data.totalElements);
+        } catch (error) {
+            setError('블로그를 불러오는데 실패했습니다.');
+            console.error("Error fetching blogs:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        // 검색어 없을 때만 currentPage 변경으로 API 호출
+        if (!searchTerm) {
+            fetchBlogs(currentPage, searchTerm);
+        }
+    }, [currentPage]);
 
     // 게시물 필터링
     useEffect(() => {
         setSelectedCategory(initialCategory); // URL 파라미터 기반으로 상태 초기화
     }, [initialCategory]);
 
-    // 게시물 데이터 가져오기
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetchPosts(currentPage, postsPerPage, selectedTag, searchQuery, selectedCategory);
-                const { board, totalPage } = response;
-                setPosts(board);
-                setTotalPages(totalPage);
-            } catch (error) {
-                console.error("게시물을 가져오는 중 오류 발생:", error);
-            }
-        };
-
-        fetchData();
-    }, [currentPage, selectedTag, searchQuery, selectedCategory]);
-
     // 게시물 클릭 시 상세 페이지로 이동
     const handlePostClick = (boardId) => {
-        navigate(`/board/post/${boardId}`);
+        navigate(`/board/${boardId}`);
     };
 
-    // 게시물 필터링 및 검색
-    const handleSearch = async () => {
-        try {
-            const response = await fetchPosts(1, postsPerPage, selectedTag, searchQuery, selectedCategory);
-            const { board, totalPage } = response;
-            setPosts(board);
-            setTotalPages(totalPage);
-            setCurrentPage(1); // 검색 시 첫 페이지로 이동
-        } catch (error) {
-            console.error("검색 중 오류 발생:", error);
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+    };
+
+    const handleSearch = (term) => {
+        setCurrentPage(1);
+        fetchBlogs(1, term);
+    };
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleSearch(searchTerm);
         }
     };
 
-    // 페이지 변경 핸들러
-    const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);
+    const handleSearchClick = () => {
+        handleSearch(searchTerm);
     };
 
     // 태그 선택 핸들러
@@ -174,40 +102,39 @@ const BlogMain = () => {
         setCurrentPage(1);
     };
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString("ko-KR");
+    const getPageNumbers = () => {
+        const groupSize = 3;
+        const currentGroup = Math.ceil(currentPage / groupSize);
+        const startPage = (currentGroup - 1) * groupSize + 1;
+        const endPage = Math.min(startPage + groupSize - 1, totalPages);
+
+        const pages = [];
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(i);
+        }
+        return pages;
     };
 
-    // 필터링된 게시물
-    const filteredPosts = (Array.isArray(posts) ? posts : []).filter((post) =>
-        (selectedCategory === "" || post.category === selectedCategory) &&
-        (selectedTag === "" || post.tag.includes(selectedTag)) &&
-        (searchQuery === "" ||
-            post.title.replace(/\s+/g, '').toLowerCase()
-                .includes(searchQuery.replace(/\s+/g, '').toLowerCase()))
-    );
+    const getNextGroupFirstPage = () => {
+        const groupSize = 3;
+        return Math.min(Math.ceil(currentPage / groupSize) * groupSize + 1, totalPages);
+    };
 
-    // filteredPosts가 변경될 때마다 totalPages 업데이트하고 현재 페이지 확인
-    useEffect(() => {
-        const newTotalPages = Math.ceil(filteredPosts.length / postsPerPage);
-        setTotalPages(newTotalPages);
+    const getPrevGroupFirstPage = () => {
+        const groupSize = 3;
+        return Math.max(Math.floor((currentPage - 1) / groupSize) * groupSize - 2, 1);
+    };
 
-        // 현재 페이지가 새로운 전체 페이지 수보다 크면 마지막 페이지로 이동
-        if (currentPage > newTotalPages) {
-            setCurrentPage(newTotalPages || 1); // 결과가 0일 경우 1페이지로 설정
+    const handlePageChange = (pageNumber) => {
+        if (pageNumber !== currentPage) {
+            setCurrentPage(pageNumber);
+            window.scrollTo(0, 0);
         }
-    }, [filteredPosts.length, postsPerPage, currentPage]);
-
-    // 현재 페이지에 해당하는 게시물만 추출
-    const paginatedPosts = filteredPosts.slice(
-        (currentPage - 1) * postsPerPage,
-        currentPage * postsPerPage
-    );
+    };
 
     // 글 작성 페이지로 이동
     const goToWritePage = (boardType) => {
-        navigate("/board/write", { state: { boardType } });
+        navigate("/board/write", {state: {boardType}});
     };
 
     return (
@@ -227,43 +154,51 @@ const BlogMain = () => {
                 <div className="search-bar">
                     <input
                         type="text"
-                        placeholder="검색"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="검색어를 입력하세요"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        onKeyPress={handleKeyPress}
                     />
-                    <button onClick={handleSearch}>🔍</button>
+                    <button onClick={handleSearchClick}>🔍</button>
                 </div>
             </div>
 
             {/* 게시물 리스트 */}
             <h3 className="posts-title">Posts</h3>
-            <div className="posts-container">
-                {filteredPosts.length > 0 ? (
+
+            {error ? (
+                <div className="flex justify-center items-center py-20 text-red-500">
+                    {error}
+                </div>
+            ) : loading ? (
+                <div className="flex justify-center items-center py-20">Loading...</div>
+            ) : posts.length > 0 ? (
+                <div className="posts-container">
                     <div className="posts">
-                        {paginatedPosts.map((post) => (
+                        {posts.map((post) => (
                             <div
-                                key={post.boardId}
+                                key={post.id}
                                 className="post-card"
-                                onClick={() => handlePostClick(post.boardId)}
+                                onClick={() => handlePostClick(post.id)}
                             >
                                 <div className="post-card-image-container">
-                                    <img src="/apply_swlug.png" alt="Default Logo" />
+                                    <img src="/apply_swlug.png" alt="Default Logo"/>
                                 </div>
                                 <p className="post-tag">{post.tag}</p>
-                                <p className="post-title">{post.title}</p>
+                                <p className="post-title">{post.boardTitle}</p>
                                 <div className="post-info">
-                                    <p className="post-id">{post.id}</p>
+                                    <p className="post-id">{post.displayNumber}</p>
                                     <p className="post-date">{formatDate(post.createAt)}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
-                ) : (
-                    <div className="no-posts-container">
-                        <p className="no-posts">등록된 글이 없습니다.</p>
-                    </div>
-                )}
-            </div>
+                </div>
+            ) : (
+                <div className="no-posts-container">
+                    <p className="no-posts">등록된 글이 없습니다.</p>
+                </div>
+            )}
 
             {/* 글쓰기 버튼 컨테이너는 항상 존재하고, 버튼만 조건부 표시 */}
             <div className="write-button-container">
@@ -282,11 +217,58 @@ const BlogMain = () => {
 
             {/* 페이지네이션 */}
             {totalPages > 1 && (
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                />
+                <div className="flex justify-center space-x-2 text-gray-700">
+                    <button
+                        onClick={() => handlePageChange(getPrevGroupFirstPage())}
+                        disabled={currentPage <= 3}
+                        className={`text-base px-2 hover:text-black ${
+                            currentPage <= 3 && "text-gray-400 cursor-not-allowed"
+                        }`}
+                    >
+                        &lt;&lt;
+                    </button>
+                    <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`text-base px-2 hover:text-black ${
+                            currentPage === 1 && "text-gray-400 cursor-not-allowed"
+                        }`}
+                    >
+                        &lt;
+                    </button>
+                    {getPageNumbers().map((pageNum) => (
+                        <button
+                            key={pageNum}
+                            onClick={() => handlePageChange(pageNum)}
+                            className={`text-base px-3 ${
+                                currentPage === pageNum
+                                    ? "font-extrabold text-black"
+                                    : "text-gray-700 hover:text-black"
+                            }`}
+                        >
+                            {pageNum}
+                        </button>
+                    ))}
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className={`text-base px-2 hover:text-black ${
+                            currentPage === totalPages && "text-gray-400 cursor-not-allowed"
+                        }`}
+                    >
+                        &gt;
+                    </button>
+                    <button
+                        onClick={() => handlePageChange(getNextGroupFirstPage())}
+                        disabled={currentPage > Math.floor(totalPages / 3) * 3}
+                        className={`text-base px-2 hover:text-black ${
+                            currentPage > Math.floor(totalPages / 3) * 3 &&
+                            "text-gray-400 cursor-not-allowed"
+                        }`}
+                    >
+                        &gt;&gt;
+                    </button>
+                </div>
             )}
         </div>
     );
