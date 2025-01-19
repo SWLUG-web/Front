@@ -8,6 +8,8 @@
 
 .search-bar {
   width: 300px; /* 너비 증가 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
 }
 
 table {

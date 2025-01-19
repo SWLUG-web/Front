@@ -154,8 +154,8 @@ const BlogMain = () => {
                         setSelectedTag={handleTagSelect}
                     />
                 </div>
-                <div className="search-bar flex items-center border rounded-full shadow-sm px-4 py-2 gap-0">
-                    <span className="text-sm text-gray-700 min-w-fit">제목</span>
+                <div className="search-bar flex items-center border rounded-full shadow-sm px-4 py-2">
+                    <span className="text-sm text-gray-700 mr-2">제목</span>
                     <div className="border-r border-gray-400 h-4 mx-2"></div>
                     <input
                         type="text"
