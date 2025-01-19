@@ -163,7 +163,7 @@ const NoticePage = () => {
 
         {/* 페이지네이션 */}
         {totalPages > 1 && (
-            <div className="flex justify-center mt-10 space-x-2 text-gray-700">
+            <div className="flex justify-center space-x-2 text-gray-700">
               <button
                   onClick={() => handlePageChange(getPrevGroupFirstPage())}
                   disabled={currentPage <= 3}
