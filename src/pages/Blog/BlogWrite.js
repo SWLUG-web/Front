@@ -28,9 +28,7 @@ const LICENSE_KEY =
     const [title, setTitle] = useState(postToEdit?.title || "");
     const [contents, setContents] = useState(postToEdit?.contents || "");
     const [tag, setTag] = useState(postToEdit?.tag || "");
-	const boardType = location.state?.boardType || ""; // "blog" 또는 "notice"
-    const [category, setCategory] = useState(boardType === "notice" ? "0" : "");
-    const [image, setImage] = useState(null);
+	const [image, setImage] = useState(null);
     
 	// 태그 추가 로직
 	const handleTagInput = (e) => {
@@ -52,6 +50,24 @@ const LICENSE_KEY =
 		setTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
 	};
 
+	// URL에서 boardType 설정
+    const boardType = useMemo(() => {
+		// state에 `boardType`이 존재하면 우선 사용, 없으면 pathname으로 판별
+		if (location.state?.boardType) {
+			return location.state.boardType;
+		}
+		if (location.pathname.includes("/notice")) {
+			return "notice";
+		} else if (location.pathname.includes("/board")) {
+			return "blog";
+		}
+		return ""; // 기본값
+	}, [location.pathname, location.state]);
+
+	// 카테고리 초기화 (기존 게시물에 따라 초기화)
+    const [category, setCategory] = useState(
+        postToEdit?.boardCategory?.toString() || (boardType === "notice" ? "0" : "")
+    );
 
 	// 게시판 옵션 설정
     const boardOptions = useMemo(() => {
@@ -81,10 +97,10 @@ const LICENSE_KEY =
                 // 수정 요청
                 await updatePost({
                     boardId: postToEdit.boardId,
-                    category,
-                    title,
-                    contents,
-                    tag,
+                    category: parseInt(category, 10),
+                    title: postToEdit.title, 
+                    contents: postToEdit.contents, 
+                    tag: tags,
                     createAt: new Date().toISOString(),
                     image,
                 });
@@ -130,6 +146,11 @@ const LICENSE_KEY =
 
 		return () => setIsLayoutReady(false);
 	}, []);
+	useEffect(() => {
+		console.log("boardType:", boardType);
+		console.log("category:", category);
+		console.log("boardOptions:", boardOptions);
+	}, [boardType, category, boardOptions]);
 
 	const { ClassicEditor, editorConfig } = useMemo(() => {
 		if (cloud.status !== 'success' || !isLayoutReady) {
