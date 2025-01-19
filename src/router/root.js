@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Privacy from "../pages/Privacy";
+import ProtectedRoute from "../ProtectedRoute"
 
 // Lazy-loaded components
 const Login = lazy(() => import("../pages/Auth/LoginPage"));
@@ -19,6 +20,14 @@ const BlogWrite = lazy(() => import("../pages/Blog/BlogWrite"));
 const NotFound = lazy(() => import("../components/NotFound"))
 
 const root = createBrowserRouter([
+  {
+    path: "/board/write",
+    element: (
+      <ProtectedRoute>
+        <BlogWrite />
+      </ProtectedRoute>
+    ),
+  },
   // /users 경로
   { path: "/users/login", element: <Login /> },
   { path: "/users/join", element: <Join /> },

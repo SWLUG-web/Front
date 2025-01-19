@@ -16,7 +16,7 @@ function App() {
         <Header />
         <main className="min-h-screen">
           <div className="container mx-auto text-center">
-          <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>Loading...</div>}>
               <RouterProvider router={root}>
                 <ScrollToTop /> 
               </RouterProvider>

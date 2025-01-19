@@ -143,6 +143,7 @@ const BlogMain = () => {
     // 게시물 클릭 시 상세 페이지로 이동
     const handlePostClick = (boardId) => {
         navigate(`/board/post/${boardId}`);
+        window.scrollTo(0, 0);
     };
 
     // 게시물 필터링 및 검색
@@ -161,6 +162,7 @@ const BlogMain = () => {
     // 페이지 변경 핸들러
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
+        window.scrollTo(0, 0);
     };
 
     // 태그 선택 핸들러
