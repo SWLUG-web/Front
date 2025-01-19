@@ -38,3 +38,25 @@ td {
 .pagination {
   margin-top: 5rem;
 }
+
+.write-button-container {
+  display: flex;
+  justify-content: flex-end;
+  height: 35px;
+  /* 오른쪽 정렬 */
+  margin: 50px auto;
+  /* 위와의 간격 조절 */
+}
+
+.write-button {
+  background-color: #202123;
+  color: #F9F9F9;
+  padding: 5px 20px;
+  border: black solid 1px;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+}

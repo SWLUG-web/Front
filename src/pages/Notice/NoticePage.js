@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import NoticeList from "../../components/Notice/NoticeList";
 import axios from "axios";
 import { debounce } from 'lodash';
+import { useNavigate } from "react-router-dom";
+import "../../styles/Notice.css"
 
 const NoticePage = () => {
   const [notices, setNotices] = useState([]);
@@ -60,6 +62,8 @@ const NoticePage = () => {
   const handleSearchClick = () => {
     handleSearch(searchTerm);
   };
+  
+  const navigate = useNavigate(); // 페이지 이동을 위한 hook
 
   const getPageNumbers = () => {
     const groupSize = 3;
@@ -89,6 +93,10 @@ const NoticePage = () => {
       setCurrentPage(pageNumber);
       window.scrollTo(0, 0);
     }
+  };
+
+  const goToWritePage = (boardType) => {
+    navigate("/board/write", { state: { boardType } });
   };
 
   return (
@@ -135,6 +143,18 @@ const NoticePage = () => {
               등록된 공지사항이 없습니다.
             </div>
         )}
+
+        <div className="write-button-container">
+              <button
+                  className="write-button"
+                  onClick={() => {
+                      goToWritePage("notice")
+                      window.scrollTo(0, 0); // 스크롤 상단으로 이동
+                  }}
+              >
+                  글쓰기
+              </button>
+          </div>
 
         {/* 페이지네이션 */}
         {totalPages > 1 && (

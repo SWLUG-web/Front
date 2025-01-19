@@ -205,6 +205,11 @@ const BlogMain = () => {
         currentPage * postsPerPage
     );
 
+    // 글 작성 페이지로 이동
+    const goToWritePage = (boardType) => {
+        navigate("/board/write", { state: { boardType } });
+    };
+
     return (
         <div className="container mx-auto px-4 py-8 bg-white">
             <h1 className="apply-title font-bold text-center mb-6">Blog</h1>
@@ -266,7 +271,7 @@ const BlogMain = () => {
                     <button
                         className="write-button"
                         onClick={() => {
-                            navigate("/board/write");
+                            goToWritePage("blog")
                             window.scrollTo(0, 0);
                         }}
                     >
