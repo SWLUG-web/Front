@@ -29,7 +29,8 @@ const LICENSE_KEY =
     const [contents, setContents] = useState(postToEdit?.contents || "");
     const [tag, setTag] = useState(postToEdit?.tag || "");
 	const [image, setImage] = useState(null);
-    
+
+	console.log(postToEdit);
 	// 태그 추가 로직
 	const handleTagInput = (e) => {
 		if ((e.key === 'Enter' || e.key === ',') && e.target.value.trim() !== '') {
@@ -62,11 +63,11 @@ const LICENSE_KEY =
 			return "blog";
 		}
 		return ""; // 기본값
-	}, [location.pathname, location.state]);
+	}, [location.pathname, location.state?.boardType]);
 
 	// 카테고리 초기화 (기존 게시물에 따라 초기화)
     const [category, setCategory] = useState(
-        postToEdit?.boardCategory?.toString() || (boardType === "notice" ? "0" : "")
+        postToEdit?.category?.toString() || (boardType === "notice" ? "0" : "")
     );
 
 	// 게시판 옵션 설정
@@ -96,39 +97,30 @@ const LICENSE_KEY =
             if (postToEdit) {
                 // 수정 요청
                 await updatePost({
-                    boardId: postToEdit.boardId,
-                    category: parseInt(category, 10),
-                    title: postToEdit.title, 
-                    contents: postToEdit.contents, 
+                    id: postToEdit.id,
+                    boardCategory: category,
+					boardTitle: title,
+					boardContent: contents,
                     tag: tags,
-                    createAt: new Date().toISOString(),
-                    image,
+                    imageUrl: image,
                 });
                 alert("게시물이 수정되었습니다.");
             } else {
                 // 등록 요청
-                const formData = new FormData();
-                formData.append("category", category);
-                formData.append("title", title);
-                formData.append("contents", contents);
-                formData.append("tag", tags.join(','));
-                formData.append("roleType", "USER");
-                formData.append("createAt", new Date().toISOString());
-                if (image) formData.append("image", image);
-
-                console.log("등록 요청 데이터:");
-                    for (let [key, value] of formData.entries()) {
-                        console.log(`${key}:`, value); // FormData의 키-값 출력
-                    }
-                    
-                await writePost(formData);
+				await writePost({
+					boardCategory: category,
+					boardTitle: title,
+					boardContent: contents,
+					tag: tags,
+					imageUrl: image,
+				});
 
                 alert("게시물이 등록되었습니다.");
             }
 
             // 페이지 이동
-            navigate(isMyPageEdit ? "/mypage" : "/blog");
-			window.scrollTo(0, 0); 
+            navigate(isMyPageEdit ? "/mypage" : `/${boardType}`);
+			window.scrollTo(0, 0);
             window.location.reload(); //새로고침
         } catch (error) {
             console.error("글 등록/수정 실패:", error);

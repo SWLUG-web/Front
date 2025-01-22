@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const fetchPosts = async (page, size, tag = "", query = "", category = "") => {
     let url = `/blog?page=${page}&size=${size}`;
 
@@ -6,7 +8,7 @@ export const fetchPosts = async (page, size, tag = "", query = "", category = ""
     if (query) url += `&query=${query}`;
     if (category) url += `&category=${category}`;
 
-    const response = await fetch(url);
+    const response = await axios(url);
 
     if (!response.ok) {
         throw new Error("게시물 데이터를 가져오는 데 실패했습니다.");
@@ -16,7 +18,7 @@ export const fetchPosts = async (page, size, tag = "", query = "", category = ""
 };
 
 export const fetchPostDetail = async (boardId) => {
-    const response = await fetch(`/board/view/${boardId}`);
+    const response = await axios(`/board/view/${boardId}`);
     if (!response.ok) {
         throw new Error("게시물 상세 데이터를 가져오는 데 실패했습니다.");
     }
@@ -24,7 +26,7 @@ export const fetchPostDetail = async (boardId) => {
 };
 
 export const fetchAdjacentPosts = async (boardId) => {
-    const response = await fetch(`/board/adjacent/${boardId}`);
+    const response = await axios(`/board/adjacent/${boardId}`);
     if (!response.ok) {
         throw new Error("이전/다음 글 데이터를 가져오는 데 실패했습니다.");
     }
@@ -33,56 +35,53 @@ export const fetchAdjacentPosts = async (boardId) => {
 
 
 export const writePost = async (formData) => {
-    const response = await fetch("/board/save", {
-        method: "POST",
-        body: formData, // FormData 객체 전달
-    });
+    try {
+        const response = await axios.post("/api/blog/save", formData, {
+            headers: {
+                "Content-Type": "application/json",  // JSON 형식으로 전송
+            }
+        });
 
-    if (!response.ok) {
-        throw new Error("글 등록 실패");
+        return response.data;  // 서버 응답 반환
+    } catch (error) {
+        throw new Error("글 등록 실패: " + error.message);
     }
-
-    return response.json();
 };
 
 
 export const searchPosts = async (searchQuery, tag) => {
-    const response = await fetch(`/board/search?search=${searchQuery}&tag=${tag}`);
+    const response = await axios(`/api/blog/search?search=${searchQuery}&tag=${tag}`);
     if (!response.ok) {
         throw new Error("검색 결과를 가져오는 데 실패했습니다.");
     }
     return response.json();
 };
 
-export const updatePost = async (post) => {
-    const response = await fetch("/board/update", {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(post),
-    });
+export const updatePost = async (formData) => {
+    try {
+        const response = await axios.post("/api/blog/update", formData, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
 
-    if (!response.ok) {
-        throw new Error("게시물 수정 실패");
+        return response.data;
+    } catch (error) {
+        throw new Error("글 수정 실패: " + error.message);
     }
-
-    return response.json();
 };
 
 
 export const deletePost = async (boardId) => {
-    const response = await fetch(`/board/delete`, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ boardId }),
-    });
+    try {
+        const response = await axios.post(`/api/blog/delete`, boardId, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
 
-    if (!response.ok) {
-        throw new Error("게시물 삭제 실패");
+        return response.data;
+    } catch (error) {
+        throw new Error("글 삭제 실패: " + error.message);
     }
-
-    return response.json();
 };

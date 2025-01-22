@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import {useParams, useNavigate, useLocation} from "react-router-dom";
 import "../../styles/BlogPost.css";
+import "../../services/blogAPI"
 import axios from "axios";
+import {deletePost} from "../../services/blogAPI";
 
 const BlogPost = () => {
     const { boardId } = useParams(); // URL에서 게시물 ID 추출
     const navigate = useNavigate();
+    const location = useLocation();
     const [post, setPost] = useState(null); // 게시물 데이터 저장
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [adjacentPosts, setAdjacentPosts] = useState({ previous: null, next: null }); // 이전/다음 글 데이터
+    const isMyPageEdit = location.state?.isMyPageEdit || false;
 
     // 현재 사용자 ID (로그인 정보에서 가져오기)
     const currentUserId = localStorage.getItem("userId");
@@ -25,19 +29,9 @@ const BlogPost = () => {
     const handleDelete = async () => {
         if (window.confirm("정말 삭제하시겠습니까?")) {
             try {
-                const response = await axios.post("/api/blog/delete", {id: boardId});
-
-                if (response.status === 401) {
-                    alert("삭제 권한이 없습니다.");
-                    return;
-                }
-
-                if (response.data?.redirect) {
-                    alert("게시물이 삭제되었습니다.");
-                    navigate("/board");
-                } else {
-                    throw new Error("Unexpected response format");
-                }
+                await deletePost({id: boardId});
+                alert("게시물이 삭제되었습니다.");
+                navigate(isMyPageEdit ? "/mypage" : "/blog");
             } catch (error) {
                 console.error("게시물 삭제 실패: ", error);
                 if (error.response?.status === 401) {
