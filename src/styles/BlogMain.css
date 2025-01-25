@@ -99,6 +99,7 @@
     border: none;
     text-align: center;
     /* 카드 내부 텍스트 중앙 정렬 */
+    cursor: pointer;
 }
 
 .post-card-image-container {
@@ -308,5 +309,3 @@
     margin: 0 0.5rem;
     color: #666;
 }
-
-
