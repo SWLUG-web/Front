@@ -35,11 +35,44 @@
     text-align: justify;
 }
 
+/* 제목 스타일 추가 */
+.notice-content h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+.notice-content h2 {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.notice-content h3 {
+    font-size: 1.75em;
+    font-weight: bold;
+}
+
+.notice-content h4 {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.notice-content h5 {
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
+.notice-content h6 {
+    font-size: 1em;
+    font-weight: bold;
+}
+
 .notice-actions {
     display: flex;
-    justify-content: center; /* 버튼 중앙 정렬 */
+    justify-content: center;
+    /* 버튼 중앙 정렬 */
     align-items: center;
-    gap: 10px; /* 버튼 사이 간격 */
+    gap: 10px;
+    /* 버튼 사이 간격 */
     font-size: 14px;
     color: #555;
     margin-bottom: 20px;
@@ -63,7 +96,8 @@
 /* 네비게이션 레이블 (< 이전글, 다음글 >) 스타일 */
 .notice-navigation .nav-label {
     font-size: 15px;
-    color: #202123; /* 회색 */
+    color: #202123;
+    /* 회색 */
     font-weight: bold;
 
 }
@@ -86,8 +120,8 @@
 /* 버튼 비활성화 스타일 */
 .notice-navigation button:disabled .nav-label,
 .notice-navigation button:disabled .nav-title {
-    color: #ccc; /* 비활성화된 텍스트 색상 */
+    color: #ccc;
+    /* 비활성화된 텍스트 색상 */
     text-decoration: none;
     cursor: not-allowed;
 }
-
