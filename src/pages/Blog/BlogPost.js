@@ -63,6 +63,7 @@ const BlogPost = () => {
                     title: blogResponse.data.boardTitle,
                     date: blogResponse.data.createAt,
                     author: blogResponse.data.userId,
+                    nickname: blogResponse.data.nickname, // nickname 추가
                     contents: blogResponse.data.boardContents,
                     tag: blogResponse.data.tag,
                     image: blogResponse.data.image,
@@ -122,11 +123,8 @@ const BlogPost = () => {
                 className="post-image" 
             />
 
-            <div className="post-content">
-                {post.contents?.split("\n").map((line, index) => (
-                    <p key={index}>{line}</p>
-                ))}
-            </div>
+            <div className="post-content" dangerouslySetInnerHTML={{ __html: post.contents }} />
+
             <div className="post-tags">
                 {post.tag && post.tag.map((tag, index) => (
                     <span key={index} className="tag">
