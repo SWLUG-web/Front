@@ -89,9 +89,15 @@ const NoticeDetailPage = () => {
 
     return (
         <div className="notice-detail">
-            <div className="notice-category">공지사항</div>
+            <div
+                className="notice-category"
+                onClick={() => navigate('/notice')}
+                style={{cursor: 'pointer'}}
+            >
+                공지사항
+            </div>
             <h1 className="notice-title">{notice.noticeTitle}</h1>
-            <div className="notice-info" style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <div className="notice-info" style={{textAlign: 'center', marginBottom: '20px'}}>
                 <span className="notice-date">
                     {new Date(notice.createAt).toLocaleDateString('ko-KR', {
                         year: 'numeric',
@@ -105,7 +111,7 @@ const NoticeDetailPage = () => {
                     <button onClick={handleEdit}>
                         수정
                     </button>
-                    <span style={{ margin: '0 10px', color: '#ddd' }}>|</span>
+                    <span style={{margin: '0 10px', color: '#ddd'}}>|</span>
                     <button onClick={handleDelete}>
                         삭제
                     </button>
@@ -113,14 +119,18 @@ const NoticeDetailPage = () => {
             )}
             <div
                 className="notice-content"
-                dangerouslySetInnerHTML={{ __html: notice.noticeContents }}
+                dangerouslySetInnerHTML={{__html: notice.noticeContents}}
             />
 
             <div className="notice-navigation">
                 <button
                     onClick={() => adjacentNotice.previous && handleNavigate(adjacentNotice.previous.id)}
                     disabled={!adjacentNotice.previous}
-                    style={{ background: 'none', border: 'none', cursor: adjacentNotice.previous ? 'pointer' : 'not-allowed' }}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: adjacentNotice.previous ? 'pointer' : 'not-allowed'
+                    }}
                 >
                     {adjacentNotice.previous ? (
                         <>
@@ -134,7 +144,11 @@ const NoticeDetailPage = () => {
                 <button
                     onClick={() => adjacentNotice.next && handleNavigate(adjacentNotice.next.id)}
                     disabled={!adjacentNotice.next}
-                    style={{ background: 'none', border: 'none', cursor: adjacentNotice.next ? 'pointer' : 'not-allowed' }}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: adjacentNotice.next ? 'pointer' : 'not-allowed'
+                    }}
                 >
                     {adjacentNotice.next ? (
                         <>
