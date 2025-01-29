@@ -11,6 +11,7 @@ const ResetPasswordPage = lazy(() => import("../pages/Auth/ResetPasswordPage"));
 const HomePage = lazy(() => import("../pages/Home/HomePage"));
 const NoticePage = lazy(() => import("../pages/Notice/NoticePage"));
 const NoticeDetailPage = lazy(() => import("../pages/Notice/NoticeDetailPage"));
+const NoticeWrite = lazy(() => import("../pages/Notice/NoticeWrite")); // 추가
 const FAQPage = lazy(() => import("../pages/FAQ/FAQPage"));
 const ApplyPage = lazy(() => import("../pages/Apply/ApplyPage"));
 const Intro = lazy(() => import("../pages/Intro/Intro"));
@@ -20,12 +21,22 @@ const BlogWrite = lazy(() => import("../pages/Blog/BlogWrite"));
 const NotFound = lazy(() => import("../components/NotFound"))
 
 const root = createBrowserRouter([
+  // 게시판 작성 경로
   {
     path: "/board/write",
     element: (
-      <ProtectedRoute>
-        <BlogWrite />
-      </ProtectedRoute>
+        <ProtectedRoute>
+          <BlogWrite />
+        </ProtectedRoute>
+    ),
+  },
+  // 공지사항 작성 경로 추가
+  {
+    path: "/notice/write",
+    element: (
+        <ProtectedRoute>
+          <NoticeWrite />
+        </ProtectedRoute>
     ),
   },
   // /users 경로
@@ -43,7 +54,6 @@ const root = createBrowserRouter([
   { path: "/intro", element: <Intro /> },
   { path: "/blog", element: <BlogMain /> },
   { path: "/board/:boardId", element: <BlogPost /> },
-  { path: "/board/write", element: <BlogWrite /> },
   { path: "/privacy", element: <Privacy /> },
   { path: "/", element: <HomePage /> }, // 기본 경로
 ]);

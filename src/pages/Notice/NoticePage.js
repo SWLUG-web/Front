@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import NoticeList from "../../components/Notice/NoticeList";
 import axios from "axios";
-import { debounce } from 'lodash';
 import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux'; // Redux 추가
 import "../../styles/Notice.css"

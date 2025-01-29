@@ -34,7 +34,7 @@ const NoticeList = ({ notices }) => {
                 onClick={() => handleNoticeClick(notice.id)}
             >
               <div className="flex-shrink-0 w-20 text-center">{notice.displayNumber}</div>
-              <div className="flex-grow text-center truncate">{notice.boardTitle}</div>
+              <div className="flex-grow text-left pl-12">{notice.noticeTitle}</div>
               <div className="flex-shrink-0 w-64 text-center">{formatDate(notice.createAt)}</div>
               <div className="flex-shrink-0 w-32 text-center">{(notice.nickname)? notice.nickname: notice.userId}</div>
             </div>
