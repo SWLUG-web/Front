@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Info from "../../components/MyPage/MyPageInfo";
+import "../../services/blogAPI"
 import "../../styles/MyPage.css";
 import { useNavigate } from "react-router-dom";
+import {deletePost} from "../../services/blogAPI";
 
 function MyPage() {
   const [posts, setPosts] = useState([]);
@@ -23,10 +25,12 @@ function MyPage() {
         });
 
         if (response.status === 200) {
+          console.log(response.data.blogInfo);
           const blogPosts = response.data.blogInfo || [];
           setPosts(blogPosts.map(post => ({
             boardId: post.id,
             title: post.boardTitle,
+            contents: post.boardContents,
             date: new Date(post.createAt).toLocaleDateString(),
             category: post.boardCategory,
             isPin: post.isPin,
@@ -50,20 +54,20 @@ function MyPage() {
   }, [navigate]);
 
   const handleDelete = async (boardId) => {
-    try {
-      const response = await axios.delete(`/board/${boardId}`, {
-        withCredentials: true
-      });
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      try {
 
-      if (response.status === 200) {
-        const updatedPosts = posts.filter((post) => post.boardId !== boardId);
-        setPosts(updatedPosts);
-        setTotalPage(Math.ceil(updatedPosts.length / postsPerPage));
-        alert('게시물이 성공적으로 삭제되었습니다.');
+        const response = await deletePost({id: boardId});
+        if (response.status === 200) {
+          const updatedPosts = posts.filter((post) => post.boardId !== boardId);
+          setPosts(updatedPosts);
+          setTotalPage(Math.ceil(updatedPosts.length / postsPerPage));
+          alert('게시물이 성공적으로 삭제되었습니다.');
+        }
+      } catch (error) {
+        console.error("게시물 삭제 실패: ", error);
+        alert("게시물 삭제에 실패했습니다. 다시 시도해주세요.");
       }
-    } catch (error) {
-      console.error('게시물 삭제 중 오류 발생:', error);
-      alert('게시물 삭제에 실패했습니다.');
     }
   };
 
@@ -157,6 +161,6 @@ function MyPage() {
         </section>
       </div>
   );
-}
+};
 
 export default MyPage;
