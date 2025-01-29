@@ -122,11 +122,8 @@ const BlogPost = () => {
                 className="post-image" 
             />
 
-            <div className="post-content">
-                {post.contents?.split("\n").map((line, index) => (
-                    <p key={index}>{line}</p>
-                ))}
-            </div>
+            <div className="post-content" dangerouslySetInnerHTML={{ __html: post.contents }} />
+
             <div className="post-tags">
                 {post.tag && post.tag.map((tag, index) => (
                     <span key={index} className="tag">

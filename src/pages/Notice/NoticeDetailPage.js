@@ -99,11 +99,7 @@ const NoticeDetail = () => {
                     삭제
                 </button>
             </div>
-            <div className="notice-content">
-                {notice.content.split("\n").map((line, index) => (
-                    <p key={index}>{line}</p>
-                ))}
-            </div>
+            <div className="notice-content" dangerouslySetInnerHTML={{ __html: notice.content }} />
             {/* 이전 글/다음 글 네비게이션 */}
             <div className="notice-navigation">
                 <button

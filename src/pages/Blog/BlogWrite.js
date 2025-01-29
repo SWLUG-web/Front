@@ -30,7 +30,7 @@ const LICENSE_KEY =
     const [tag, setTag] = useState(postToEdit?.tag || "");
 	const [image, setImage] = useState(null);
 
-	console.log(postToEdit);
+	//console.log(postToEdit);
 	// 태그 추가 로직
 	const handleTagInput = (e) => {
 		if ((e.key === 'Enter' || e.key === ',') && e.target.value.trim() !== '') {
@@ -364,7 +364,7 @@ const LICENSE_KEY =
 					}
 				},
                 simpleUpload: {
-                    uploadUrl: 'http://localhost:8000/image/upload',
+                    uploadUrl: '/image/upload',
                 },
 				placeholder: '내용을 입력하세요',
 				table: {
@@ -376,9 +376,16 @@ const LICENSE_KEY =
 
     // CKEditor의 내용이 변경될 때 호출되는 함수
     const handleEditorChange = (event, editor) => {
-        const data = editor.getData();
-        setContents(data);
-    };
+		const data = editor.getData();
+		setContents(data); // 상태에는 HTML 데이터 저장
+	};
+	
+	// HTML을 텍스트로 변환하는 함수
+	const convertToPlainText = (html) => {
+		const tempElement = document.createElement("div");
+		tempElement.innerHTML = html;
+		return tempElement.textContent || tempElement.innerText || "";
+	};
 
     return (
         <div className="blog-write">
