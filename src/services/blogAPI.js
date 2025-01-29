@@ -80,7 +80,7 @@ export const deletePost = async (boardId) => {
             },
         });
 
-        return response.data;
+        return response;
     } catch (error) {
         throw new Error("글 삭제 실패: " + error.message);
     }
