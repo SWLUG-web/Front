@@ -5,6 +5,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { CKEditor, useCKEditorCloud } from '@ckeditor/ckeditor5-react';
 import UploadAdapter from './UploadAdapter';
+import {post} from "axios";
 
 function MyCustomUploadAdapterPlugin(editor) {
     editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
@@ -92,6 +93,8 @@ const LICENSE_KEY =
             alert("게시판을 선택해주세요."); // 카테고리가 선택되지 않으면 알림 표시
             return;
         }
+		console.log(isMyPageEdit);
+		console.log(postToEdit);
 
         try {
             if (postToEdit) {
@@ -117,7 +120,7 @@ const LICENSE_KEY =
             }
 
             // 페이지 이동
-            navigate(isMyPageEdit ? "/users/mypage" : `/${boardType}`);
+            navigate(isMyPageEdit ? `/users/mypage` : `/${boardType}`);
 			window.scrollTo(0, 0);
             window.location.reload(); //새로고침
         } catch (error) {
