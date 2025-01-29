@@ -28,7 +28,7 @@ function MyPage() {
           console.log(response.data.blogInfo);
           const blogPosts = response.data.blogInfo || [];
           setPosts(blogPosts.map(post => ({
-            boardId: post.id,
+            id: post.id,
             title: post.boardTitle,
             contents: post.boardContents,
             date: new Date(post.createAt).toLocaleDateString(),
@@ -103,7 +103,7 @@ function MyPage() {
                 currentPosts.map((post, index) => {
                   const displayNumber = posts.length - ((currentPage - 1) * postsPerPage + index);
                   return (
-                      <div className="post-item" key={post.boardId}>
+                      <div className="post-item" key={post.id}>
                         <span className="post-number">{displayNumber}</span>
                         <div className="post-title">
                           <span className="title-text">{post.title}</span>
