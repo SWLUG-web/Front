@@ -1,0 +1,105 @@
+.notice-write {
+    max-width: 860px;
+    margin: 50px auto;
+    padding: 20px;
+    font-family: 'Pretendard-Regular', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.title-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #6A6A6A;
+    font-size: 24px;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    outline: none;
+}
+
+.editor-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.ck-editor__editable {
+    min-height: 400px;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.cancel-button {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.submit-button {
+    background-color: #000;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.cancel-button:hover {
+    background-color: #5a6268;
+}
+
+.submit-button:hover {
+    background-color: #333;
+}
+
+.ck-content {
+    font-family: 'Pretendard-Regular', sans-serif;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.ck-editor__editable {
+    min-height: 400px;
+}
+
+/* CKEditor 관련 스타일 */
+.ck-content h1 {
+    font-size: 2em;
+    margin: 1em 0;
+}
+
+.ck-content h2 {
+    font-size: 1.5em;
+    margin: 0.83em 0;
+}
+
+.ck-content p {
+    margin: 1em 0;
+}
+
+.ck-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+.ck-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+}
+
+.ck-content td,
+.ck-content th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}

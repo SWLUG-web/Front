@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux';
 import axios from "axios";
 import "../../styles/NoticeDetail.css";
 
-const NoticeDetail = () => {
+const NoticeDetailPage = () => {
     const { noticeId } = useParams();
     const navigate = useNavigate();
+    const { isAuthenticated } = useSelector(state => state.auth);
     const [notice, setNotice] = useState(null);
     const [loading, setLoading] = useState(true);
     const [adjacentNotice, setAdjacentNotice] = useState({ previous: null, next: null });
@@ -42,7 +44,13 @@ const NoticeDetail = () => {
     };
 
     const handleEdit = () => {
-        navigate("/notice/write", { state: { notice } });
+        const editNotice = {
+            id: notice.id,
+            noticeTitle: notice.noticeTitle,
+            noticeContents: notice.noticeContents,
+            imageUrl: notice.image
+        };
+        navigate("/notice/write", { state: { notice: editNotice } });
         window.scrollTo(0, 0);
     };
 
@@ -59,14 +67,7 @@ const NoticeDetail = () => {
                     axios.post("/api/notice/adjacent", { id: noticeId })
                 ]);
 
-                setNotice({
-                    id: noticeResponse.data.id,
-                    title: noticeResponse.data.noticeTitle,
-                    date: noticeResponse.data.createAt,
-                    author: noticeResponse.data.userId,
-                    content: noticeResponse.data.noticeContents
-                });
-
+                setNotice(noticeResponse.data);
                 setAdjacentNotice({
                     previous: adjacentResponse.data.previous || null,
                     next: adjacentResponse.data.next || null
@@ -89,49 +90,64 @@ const NoticeDetail = () => {
     return (
         <div className="notice-detail">
             <div className="notice-category">공지사항</div>
-            <h1 className="notice-title">{notice.title}</h1>
-            <div className="notice-actions">
-                <button className="edit-button" onClick={handleEdit}>
-                    수정
-                </button>
-                <span className="divider">|</span>
-                <button className="delete-button" onClick={handleDelete}>
-                    삭제
-                </button>
+            <h1 className="notice-title">{notice.noticeTitle}</h1>
+            <div className="notice-info" style={{ textAlign: 'center', marginBottom: '20px' }}>
+                <span className="notice-date">
+                    {new Date(notice.createAt).toLocaleDateString('ko-KR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    })}
+                </span>
             </div>
-            <div className="notice-content" dangerouslySetInnerHTML={{ __html: notice.content }} />
-            {/* 이전 글/다음 글 네비게이션 */}
+            {isAuthenticated && (
+                <div className="notice-actions">
+                    <button onClick={handleEdit}>
+                        수정
+                    </button>
+                    <span style={{ margin: '0 10px', color: '#ddd' }}>|</span>
+                    <button onClick={handleDelete}>
+                        삭제
+                    </button>
+                </div>
+            )}
+            <div
+                className="notice-content"
+                dangerouslySetInnerHTML={{ __html: notice.noticeContents }}
+            />
+
             <div className="notice-navigation">
                 <button
                     onClick={() => adjacentNotice.previous && handleNavigate(adjacentNotice.previous.id)}
                     disabled={!adjacentNotice.previous}
+                    style={{ background: 'none', border: 'none', cursor: adjacentNotice.previous ? 'pointer' : 'not-allowed' }}
                 >
                     {adjacentNotice.previous ? (
                         <>
-                            <span className="nav-label">&lt;&nbsp;&nbsp;이전글</span>
+                            <span className="nav-label">&lt; 이전글</span>
                             <span className="nav-title">{adjacentNotice.previous.noticeTitle}</span>
                         </>
                     ) : (
-                        "<  글이 없습니다"
+                        <span className="nav-label">&lt; 글이 없습니다</span>
                     )}
                 </button>
                 <button
                     onClick={() => adjacentNotice.next && handleNavigate(adjacentNotice.next.id)}
                     disabled={!adjacentNotice.next}
+                    style={{ background: 'none', border: 'none', cursor: adjacentNotice.next ? 'pointer' : 'not-allowed' }}
                 >
                     {adjacentNotice.next ? (
                         <>
                             <span className="nav-title">{adjacentNotice.next.noticeTitle}</span>
-                            <span className="nav-label">다음글&nbsp;&nbsp;&gt;</span>
+                            <span className="nav-label">다음글 &gt;</span>
                         </>
                     ) : (
-                        "글이 없습니다  >"
+                        <span className="nav-label">글이 없습니다 &gt;</span>
                     )}
                 </button>
             </div>
-
         </div>
     );
 };
 
-export default NoticeDetail;
+export default NoticeDetailPage;
