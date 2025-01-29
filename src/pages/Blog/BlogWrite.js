@@ -102,8 +102,7 @@ const LICENSE_KEY =
 					boardTitle: title,
 					boardContent: contents,
                     tag: tags,
-					imageFiles: image,
-                });
+                }, image);
                 alert("게시물이 수정되었습니다.");
             } else {
                 // 등록 요청
@@ -112,14 +111,13 @@ const LICENSE_KEY =
 					boardTitle: title,
 					boardContent: contents,
 					tag: tags,
-					imageFiles: image,
-				});
+				}, image);
 
                 alert("게시물이 등록되었습니다.");
             }
 
             // 페이지 이동
-            navigate(isMyPageEdit ? "/mypage" : `/${boardType}`);
+            navigate(isMyPageEdit ? "/users/mypage" : `/${boardType}`);
 			window.scrollTo(0, 0);
             window.location.reload(); //새로고침
         } catch (error) {

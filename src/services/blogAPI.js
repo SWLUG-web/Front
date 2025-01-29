@@ -33,22 +33,6 @@ export const fetchAdjacentPosts = async (boardId) => {
     return response.json();
 };
 
-
-export const writePost = async (formData) => {
-    try {
-        const response = await axios.post("/api/blog/save", formData, {
-            headers: {
-                "Content-Type": "application/json",  // JSON 형식으로 전송
-            }
-        });
-
-        return response.data;  // 서버 응답 반환
-    } catch (error) {
-        throw new Error("글 등록 실패: " + error.message);
-    }
-};
-
-
 export const searchPosts = async (searchQuery, tag) => {
     const response = await axios(`/api/blog/search?search=${searchQuery}&tag=${tag}`);
     if (!response.ok) {
@@ -57,20 +41,87 @@ export const searchPosts = async (searchQuery, tag) => {
     return response.json();
 };
 
-export const updatePost = async (formData) => {
+// export const writePost = async (formData) => {
+//     try {
+//         const response = await axios.post("/api/blog/save", formData, {
+//             headers: {
+//                 // "Content-Type": "application/json",  // JSON 형식으로 전송
+//                 "Content-Type": "multipart/form-data",
+//             }
+//         });
+//
+//         return response.data;  // 서버 응답 반환
+//     } catch (error) {
+//         throw new Error("글 등록 실패: " + error.message);
+//     }
+// };
+
+export const writePost = async (blogData, imageFiles) => {
     try {
-        const response = await axios.post("/api/blog/update", formData, {
+        const formData = new FormData();
+
+        // 1️⃣ DTO 데이터를 JSON 문자열로 변환하여 추가
+        formData.append("blogCreateDto", new Blob([JSON.stringify(blogData)], { type: "application/json" }));
+
+        // 2️⃣ 파일이 있을 경우 FormData에 추가
+        if (imageFiles && imageFiles.length > 0) {
+            imageFiles.forEach((file) => {
+                formData.append("imageFiles", file);
+            });
+        }
+
+        const response = await axios.post("/api/blog/save", formData, {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "multipart/form-data",
             },
         });
 
         return response.data;
     } catch (error) {
-        throw new Error("글 수정 실패: " + error.message);
+        throw new Error("글 등록 실패: " + error.message);
     }
 };
 
+// export const updatePost = async (formData) => {
+//     try {
+//         const response = await axios.post("/api/blog/update", formData, {
+//             headers: {
+//                 // "Content-Type": "application/json",
+//                 "Content-Type": "multipart/form-data",
+//             },
+//         });
+//
+//         return response.data;
+//     } catch (error) {
+//         throw new Error("글 수정 실패: " + error.message);
+//     }
+// };
+
+export const updatePost = async (blogData, imageFiles) => {
+    try {
+        const formData = new FormData();
+
+        // 1️⃣ DTO 데이터를 JSON 문자열로 변환하여 추가
+        formData.append("blogUpdateRequestDto", new Blob([JSON.stringify(blogData)], { type: "application/json" }));
+
+        // 2️⃣ 파일이 있을 경우 FormData에 추가
+        if (imageFiles && imageFiles.length > 0) {
+            imageFiles.forEach((file) => {
+                formData.append("imageFiles", file);
+            });
+        }
+
+        const response = await axios.post("/api/blog/update", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        throw new Error("글 등록 실패: " + error.message);
+    }
+};
 
 export const deletePost = async (boardId) => {
     try {

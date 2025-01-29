@@ -59,14 +59,15 @@ const BlogPost = () => {
                 console.log(blogResponse.data);
 
                 setPost({
-                    id: blogResponse.data.blogs.id,
-                    title: blogResponse.data.blogs.boardTitle,
-                    date: blogResponse.data.blogs.createAt,
-                    author: blogResponse.data.nickname || blogResponse.data.blogs.userId,
-                    contents: blogResponse.data.blogs.boardContents,
-                    tag: blogResponse.data.blogs.tag,
-                    image: blogResponse.data.blogs.imageFiles,
-                    category: blogResponse.data.blogs.boardCategory
+                    id: blogResponse.data.id,
+                    userId: blogResponse.data.userId,
+                    title: blogResponse.data.boardTitle,
+                    date: blogResponse.data.createAt,
+                    author: blogResponse.data.nickname,
+                    contents: blogResponse.data.boardContents,
+                    tag: blogResponse.data.tag,
+                    image: blogResponse.data.imageFiles,
+                    category: blogResponse.data.boardCategory
                 });
 
                 setAdjacentPosts({
@@ -104,7 +105,7 @@ const BlogPost = () => {
             <div className="post-id">{post.author}</div>
 
             {/* 작성자만 수정/삭제 버튼 보이기 */}
-            {currentUserId === post.author && (
+            {currentUserId === post.userId && (
                 <div className="post-actions">
                     <button className="edit-button" onClick={handleEdit}>
                         수정
