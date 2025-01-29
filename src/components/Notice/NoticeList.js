@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const NoticeList = ({ notices }) => {
   const navigate = useNavigate();
+  console.log(notices);
 
   const handleNoticeClick = (noticeId) => {
     navigate(`/notice/${noticeId}`);
@@ -35,7 +36,7 @@ const NoticeList = ({ notices }) => {
               <div className="flex-shrink-0 w-20 text-center">{notice.displayNumber}</div>
               <div className="flex-grow text-center truncate">{notice.boardTitle}</div>
               <div className="flex-shrink-0 w-64 text-center">{formatDate(notice.createAt)}</div>
-              <div className="flex-shrink-0 w-32 text-center">{notice.userId}</div>
+              <div className="flex-shrink-0 w-32 text-center">{(notice.nickname)? notice.nickname: notice.userId}</div>
             </div>
         ))}
       </div>
