@@ -102,7 +102,7 @@ const LICENSE_KEY =
 					boardTitle: title,
 					boardContent: contents,
                     tag: tags,
-                    imageUrl: image,
+					imageFiles: image,
                 });
                 alert("게시물이 수정되었습니다.");
             } else {
@@ -112,7 +112,7 @@ const LICENSE_KEY =
 					boardTitle: title,
 					boardContent: contents,
 					tag: tags,
-					imageUrl: image,
+					imageFiles: image,
 				});
 
                 alert("게시물이 등록되었습니다.");

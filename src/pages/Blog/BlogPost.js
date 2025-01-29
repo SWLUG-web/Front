@@ -31,7 +31,7 @@ const BlogPost = () => {
             try {
                 await deletePost({id: boardId});
                 alert("게시물이 삭제되었습니다.");
-                navigate(isMyPageEdit ? "/mypage" : "/blog");
+                navigate(isMyPageEdit ? "/users/mypage" : "/blog");
             } catch (error) {
                 console.error("게시물 삭제 실패: ", error);
                 if (error.response?.status === 401) {
@@ -59,14 +59,14 @@ const BlogPost = () => {
                 console.log(blogResponse.data);
 
                 setPost({
-                    id: blogResponse.data.id,
-                    title: blogResponse.data.boardTitle,
-                    date: blogResponse.data.createAt,
-                    author: blogResponse.data.userId,
-                    contents: blogResponse.data.boardContents,
-                    tag: blogResponse.data.tag,
-                    image: blogResponse.data.image,
-                    category: blogResponse.data.boardCategory
+                    id: blogResponse.data.blogs.id,
+                    title: blogResponse.data.blogs.boardTitle,
+                    date: blogResponse.data.blogs.createAt,
+                    author: blogResponse.data.nickname || blogResponse.data.blogs.userId,
+                    contents: blogResponse.data.blogs.boardContents,
+                    tag: blogResponse.data.blogs.tag,
+                    image: blogResponse.data.blogs.imageFiles,
+                    category: blogResponse.data.blogs.boardCategory
                 });
 
                 setAdjacentPosts({
