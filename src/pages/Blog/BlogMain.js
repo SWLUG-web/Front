@@ -1,36 +1,48 @@
+// BlogMain.js
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useSelector } from 'react-redux'; // 추가됨
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import "../../styles/BlogMain.css";
 import TagFilter from "../../components/Blog/TagFilter";
 
 const BlogMain = () => {
-    const {isAuthenticated} = useSelector(state => state.auth); // 추가됨
-    const [posts, setPosts] = useState([]); // 게시물 데이터
-    const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-    const [tags, setTags] = useState(["인턴", "채용", "BOB", "등록X"]); // 태그 목록
-    const [selectedTag, setSelectedTag] = useState(""); // 선택된 태그
+    const {isAuthenticated} = useSelector(state => state.auth);
+    const [posts, setPosts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [tags, setTags] = useState(["인턴", "채용", "BOB", "등록X"]);
+    const [selectedTag, setSelectedTag] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
+    const [totalPages, setTotalPages] = useState(1);
     const [totalElements, setTotalElements] = useState(0);
 
-    const postsPerPage = 9; // 한 페이지에 표시할 게시물 수
-    const navigate = useNavigate(); // 페이지 이동을 위한 hook
+    const postsPerPage = 9;
+    const navigate = useNavigate();
 
-    // URL 파라미터 읽기
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const initialCategory = searchParams.get("category") || "";
     const [selectedCategory, setSelectedCategory] = useState(initialCategory);
 
+    const getCategoryName = (categoryId) => {
+        switch(categoryId) {
+            case 1:
+                return "성과";
+            case 2:
+                return "정보";
+            case 3:
+                return "후기";
+            default:
+                return "활동";
+        }
+    };
+
     const fetchBlogs = async (page, search) => {
         try {
             setError(null);
             setLoading(true);
-            // 검색어 전처리 제거 - 서버에서 처리
             const response = await axios.get(
                 `/api/blog?page=${page}&category=${selectedCategory}&searchTerm=${search}&size=${postsPerPage}`
             );
@@ -47,18 +59,15 @@ const BlogMain = () => {
     };
 
     useEffect(() => {
-        // 검색어 없을 때만 currentPage 변경으로 API 호출
         if (!searchTerm) {
             fetchBlogs(currentPage, searchTerm);
         }
     }, [currentPage]);
 
-    // 게시물 필터링
     useEffect(() => {
-        setSelectedCategory(initialCategory); // URL 파라미터 기반으로 상태 초기화
+        setSelectedCategory(initialCategory);
     }, [initialCategory]);
 
-    // 게시물 클릭 시 상세 페이지로 이동
     const handlePostClick = (boardId) => {
         navigate(`/board/${boardId}`);
         window.scrollTo(0, 0);
@@ -88,16 +97,14 @@ const BlogMain = () => {
         }
     };
 
-    // 페이지 변경 핸들러
     const handleSearchClick = () => {
         handleSearch(searchTerm);
         window.scrollTo(0, 0);
     };
 
-    // 태그 선택 핸들러
     const handleTagSelect = (tag) => {
         setSelectedTag(tag);
-        setCurrentPage(1); // 태그 선택 시 첫 페이지로 이동
+        setCurrentPage(1);
     };
 
     const handleCategoryChange = (category) => {
@@ -135,7 +142,6 @@ const BlogMain = () => {
         }
     };
 
-    // 글 작성 페이지로 이동
     const goToWritePage = (boardType) => {
         navigate("/board/write", {state: {boardType}});
     };
@@ -195,8 +201,9 @@ const BlogMain = () => {
                                 <div className="post-card-image-container">
                                     <img src="/apply_swlug.png" alt="Default Logo"/>
                                 </div>
-                                <p className="post-tag">{post.tag}</p>
-                                <p className="post-title">{post.boardTitle}</p>
+                                {post.boardCategory && (  // boardCategory가 있을 때만 표시
+                                    <p className="post-category">{getCategoryName(post.boardCategory)}</p>
+                                )}                                <p className="post-title">{post.boardTitle}</p>
                                 <div className="post-info">
                                     <p className="post-author">{post.nickname || '익명'}</p>
                                     <p className="post-date">{formatDate(post.createAt)}</p>
@@ -211,7 +218,7 @@ const BlogMain = () => {
                 </div>
             )}
 
-            {/* 글쓰기 버튼 컨테이너는 항상 존재하고, 버튼만 조건부 표시 */}
+            {/* 글쓰기 버튼 */}
             <div className="write-button-container">
                 {isAuthenticated && (
                     <button
