@@ -32,7 +32,7 @@ const BlogMain = () => {
             setLoading(true);
             // 검색어 전처리 제거 - 서버에서 처리
             const response = await axios.get(
-                `/api/blog?page=${page}&searchTerm=${search}&size=${postsPerPage}`
+                `/api/blog?page=${page}&category=${selectedCategory}&searchTerm=${search}&size=${postsPerPage}`
             );
 
             setPosts(response.data.blogs);
