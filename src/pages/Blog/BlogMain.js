@@ -198,7 +198,7 @@ const BlogMain = () => {
                                 <p className="post-tag">{post.tag}</p>
                                 <p className="post-title">{post.boardTitle}</p>
                                 <div className="post-info">
-                                    <p className="post-id">{post.displayNumber}</p>
+                                    <p className="post-author">{post.nickname || '익명'}</p>
                                     <p className="post-date">{formatDate(post.createAt)}</p>
                                 </div>
                             </div>
