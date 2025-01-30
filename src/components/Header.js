@@ -80,10 +80,10 @@ const Header = () => {
                           background: "#f3f3f3",
                         }}
                     >
-                      <a href="/blog?category=성과" className="hover:underline hover:font-bold">성과</a>
-                      <a href="/blog?category=정보" className="hover:underline hover:font-bold">정보</a>
-                      <a href="/blog?category=후기" className="hover:underline hover:font-bold">후기</a>
-                      <a href="/blog?category=활동" className="hover:underline hover:font-bold">활동</a>
+                      <a href="/blog?category=1" className="hover:underline hover:font-bold">성과</a>
+                      <a href="/blog?category=2" className="hover:underline hover:font-bold">정보</a>
+                      <a href="/blog?category=3" className="hover:underline hover:font-bold">후기</a>
+                      <a href="/blog?category=4" className="hover:underline hover:font-bold">활동</a>
                     </div>
                 )}
               </li>
