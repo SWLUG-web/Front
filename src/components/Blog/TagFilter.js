@@ -10,6 +10,16 @@ const TagFilter = ({ tags, selectedTag, setSelectedTag }) => {
         }
     };
 
+    // const handleTagClick = (tag) => {
+    //     setSelectedTag((prevSelected) => {
+    //         if (prevSelected.includes(tag)) {
+    //             return prevSelected.filter(t => t !== tag); // 선택 해제
+    //         } else {
+    //             return [...prevSelected, tag]; // 선택 추가
+    //         }
+    //     });
+    // };
+
     return (
         <div className="tag-list">
             {tags.map((tag) => (

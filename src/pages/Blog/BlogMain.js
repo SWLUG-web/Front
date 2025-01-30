@@ -4,13 +4,15 @@ import { useSelector } from 'react-redux'; // 추가됨
 import axios from 'axios';
 import "../../styles/BlogMain.css";
 import TagFilter from "../../components/Blog/TagFilter";
+import { getAllTags } from "../../services/blogAPI";
 
 const BlogMain = () => {
     const {isAuthenticated} = useSelector(state => state.auth); // 추가됨
     const [posts, setPosts] = useState([]); // 게시물 데이터
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-    const [tags, setTags] = useState(["인턴", "채용", "BOB", "등록X"]); // 태그 목록
+    // const [tags, setTags] = useState(["인턴", "채용", "BOB", "등록X"]); // 태그 목록
     const [selectedTag, setSelectedTag] = useState(""); // 선택된 태그
+    const [tags, setTags] = useState([]); // 선택된 태그들을 배열로 관리
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -26,13 +28,14 @@ const BlogMain = () => {
     const initialCategory = searchParams.get("category") || "";
     const [selectedCategory, setSelectedCategory] = useState(initialCategory);
 
-    const fetchBlogs = async (page, search) => {
+    const fetchBlogs = async (page, search, tags) => {
         try {
             setError(null);
             setLoading(true);
+
             // 검색어 전처리 제거 - 서버에서 처리
             const response = await axios.get(
-                `/api/blog?page=${page}&category=${selectedCategory}&searchTerm=${search}&size=${postsPerPage}`
+                `/api/blog?page=${page}&category=${selectedCategory}&searchTerm=${search}&size=${postsPerPage}&tags=${tags}`
             );
 
             setPosts(response.data.blogs);
@@ -47,9 +50,28 @@ const BlogMain = () => {
     };
 
     useEffect(() => {
+        const setAllTags = async () => {
+            try {
+                const allTags = await getAllTags(); // ✅ 비동기 호출이므로 await 추가
+                setTags(allTags); // ✅ allTags.data가 정상적으로 들어오도록 변경
+            } catch (error) {
+                setError('모든 태그를 불러오는데 실패했습니다.');
+                console.error("Error fetching tags:", error);
+            }
+        };
+
+        setAllTags();
+
+        if (!selectedTag) {
+            fetchBlogs(currentPage, searchTerm);
+        }
+    }, [currentPage]);
+
+
+    useEffect(() => {
         // 검색어 없을 때만 currentPage 변경으로 API 호출
         if (!searchTerm) {
-            fetchBlogs(currentPage, searchTerm);
+            fetchBlogs(currentPage, searchTerm, selectedTag);
         }
     }, [currentPage]);
 
@@ -75,7 +97,7 @@ const BlogMain = () => {
 
     const handleSearch = (term) => {
         setCurrentPage(1);
-        fetchBlogs(1, term);
+        fetchBlogs(1, term, selectedTag);
     };
 
     const handleSearchChange = (e) => {
@@ -98,7 +120,39 @@ const BlogMain = () => {
     const handleTagSelect = (tag) => {
         setSelectedTag(tag);
         setCurrentPage(1); // 태그 선택 시 첫 페이지로 이동
+        fetchBlogs(currentPage, searchTerm, tag);
     };
+
+    // const handleTagSelect = (tag) => {
+    //     setSelectedTag(tag);
+    //     if (tags.includes(tag)) {
+    //         setTags(tags.filter(t => t !== tag)); // 이미 선택된 태그는 제거
+    //     } else {
+    //         setTags([...tags, tag]); // 새 태그는 배열에 추가
+    //     }
+    //     setCurrentPage(1); // 태그가 바뀌면 첫 페이지로 이동
+    // };
+
+    // const handleTagSelect = (tag) => {
+    //     setSelectedTag((prevSelected) => {
+    //         if (prevSelected.includes(tag)) {
+    //             return prevSelected.filter(t => t !== tag); // 이미 선택된 태그 제거
+    //         } else {
+    //             return [...prevSelected, tag]; // 새 태그 추가
+    //         }
+    //     });
+    //
+    //     setTags((prevTags) => {
+    //         if (prevTags.includes(tag)) {
+    //             return prevTags.filter(t => t !== tag);
+    //         } else {
+    //             return [...prevTags, tag];
+    //         }
+    //     });
+    //
+    //     setCurrentPage(1); // 태그 변경 시 첫 페이지로 이동
+    // };
+
 
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
@@ -154,6 +208,7 @@ const BlogMain = () => {
                         setSelectedTag={handleTagSelect}
                     />
                 </div>
+
                 <div className="search-bar flex items-center border rounded-full shadow-sm px-4 py-2">
                     <span className="text-sm text-gray-700 mr-2">제목</span>
                     <div className="border-r border-gray-400 h-4 mx-2"></div>

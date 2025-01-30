@@ -41,6 +41,16 @@ export const searchPosts = async (searchQuery, tag) => {
     return response.json();
 };
 
+export const getAllTags = async () => {
+    try {
+        const response = await axios.get(`/api/blog/tags`);
+
+        return response.data;
+    } catch (error) {
+        throw new Error("글 등록 실패: " + error.message);
+    }
+};
+
 // export const writePost = async (formData) => {
 //     try {
 //         const response = await axios.post("/api/blog/save", formData, {
