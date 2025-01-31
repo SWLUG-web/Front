@@ -250,10 +250,12 @@ const BlogMain = () => {
                                 <div className="post-card-image-container">
                                     <img src="/apply_swlug.png" alt="Default Logo"/>
                                 </div>
-                                <p className="post-tag">{post.tag}</p>
-                                <p className="post-title">{post.boardTitle}</p>
+                                <p className="post-category">{post.categoryName}</p>
+                                <div className="post-title-container">
+                                    <p className="post-title">{post.boardTitle}</p>
+                                </div>
                                 <div className="post-info">
-                                    <p className="post-id">{post.displayNumber}</p>
+                                    <p className="post-writer">{post.nickname}</p>
                                     <p className="post-date">{formatDate(post.createAt)}</p>
                                 </div>
                             </div>
@@ -282,8 +284,9 @@ const BlogMain = () => {
             </div>
 
             {/* 페이지네이션 */}
+
             {totalPages > 1 && (
-                <div className="flex justify-center space-x-2 text-gray-700">
+                <div className="pagination flex justify-center space-x-2 text-gray-700">
                     <button
                         onClick={() => handlePageChange(getPrevGroupFirstPage())}
                         disabled={currentPage <= 3}

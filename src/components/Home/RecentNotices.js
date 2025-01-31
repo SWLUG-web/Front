@@ -8,16 +8,16 @@ const RecentNotices = ({ data }) => {
     console.log(noticesList);
 
     const formatDate = (isoString) => {
-        const date = new Date(isoString); // ISO 문자열을 Date 객체로 변환
+        const date = new Date(isoString);
         return date.toLocaleDateString("ko-KR", {
             year: "numeric",
             month: "2-digit",
             day: "2-digit",
-        }).replace(/-/g, ".").replace(/\.$/, ""); // '-'를 '.'로 변경하고 마지막 '.' 제거
+        }).replace(/-/g, ".").replace(/\.$/, "");
     };
 
     const handleMoreClick = () => {
-        window.scrollTo(0, 0); // 스크롤 상단으로 이동
+        window.scrollTo(0, 0);
     };
 
     const handleNoticeClick = (noticeId) => {
@@ -26,8 +26,6 @@ const RecentNotices = ({ data }) => {
 
     return (
         <div className="max-w-6xl mx-auto">
-
-            {/* 제목 */}
             <h2
                 className="font-bold text-center mb-8"
                 style={{fontSize: '20px'}}
@@ -36,28 +34,24 @@ const RecentNotices = ({ data }) => {
             </h2>
 
             <div className="notice-list">
-                {/* 헤더 추가 */}
                 <div className="notice-header flex items-center justify-between py-3 border-b-2 border-black font-bold text-center">
-                    <div className="flex-shrink-0 w-20">번호</div>
-                    <div className="flex-grow text-center">제목</div> {/* 가운데 정렬 */}
+                    <div className="flex-grow text-center">제목</div>
                     <div className="flex-shrink-0 w-64">작성일</div>
                     <div className="flex-shrink-0 w-32">작성자</div>
                 </div>
-                {noticesList.map((notice, index) => (
+                {noticesList.map((notice) => (
                     <div
                         key={notice.id}
-                        className="notice-item flex items-center justify-between py-3 border-b border-gray-300"
+                        className="notice-item flex items-center justify-between py-3 border-b border-gray-300 hover:bg-gray-50 cursor-pointer"
                         onClick={() => handleNoticeClick(notice.id)}
                     >
-                        <div className="flex-shrink-0 w-20 text-center">{index+1}</div>
-                        <div className="flex-grow text-center truncate pl-8">{notice.boardTitle}</div>
+                        <div className="flex-grow text-left pl-16">{notice.noticeTitle}</div>
                         <div className="flex-shrink-0 w-64 text-center">{formatDate(notice.createdAt)}</div>
-                        <div className="flex-shrink-0 w-32 text-center">{notice.userId}</div>
+                        <div className="flex-shrink-0 w-32 text-center">{notice.nickname || notice.userId}</div>
                     </div>
                 ))}
             </div>
 
-            {/* More 버튼 */}
             <div className="flex justify-end mt-4">
                 <Link
                     to="/notice"
