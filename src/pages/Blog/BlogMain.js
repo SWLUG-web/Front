@@ -250,7 +250,7 @@ const BlogMain = () => {
                                 <div className="post-card-image-container">
                                     <img src="/apply_swlug.png" alt="Default Logo"/>
                                 </div>
-                                <p className="post-tag">{post.tag}</p>
+                                <p className="post-category">{post.categoryName}</p>
                                 <div className="post-title-container">
                                     <p className="post-title">{post.boardTitle}</p>
                                 </div>
