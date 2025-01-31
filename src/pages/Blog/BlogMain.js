@@ -284,8 +284,9 @@ const BlogMain = () => {
             </div>
 
             {/* 페이지네이션 */}
+
             {totalPages > 1 && (
-                <div className="flex justify-center space-x-2 text-gray-700">
+                <div className="pagination flex justify-center space-x-2 text-gray-700">
                     <button
                         onClick={() => handlePageChange(getPrevGroupFirstPage())}
                         disabled={currentPage <= 3}

@@ -1,14 +1,15 @@
-.tags-and-search {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 60px;
-}
-
 .tag-title {
     font-size: 20px !important;
     font-weight: bold;
-    margin-bottom: 15px;
     text-align: left;
+    margin-top: 50px;
+    padding-bottom: 5px;
+}
+
+.tags-and-search {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
 }
 
 .search-bar {
@@ -56,13 +57,12 @@
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    margin-bottom: 20px;
 }
 
 .posts {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
+    gap: 60px;
     width: 100%;
 }
 
@@ -72,7 +72,7 @@
     justify-content: flex-start;
     align-items: center;
     min-height: 380px;
-    padding: 15px;
+    padding: 15px 0;
     transition: transform 0.2s ease-in-out;
     border: none;
     text-align: center;
@@ -170,7 +170,8 @@
     display: flex;
     justify-content: flex-end;
     height: 35px;
-    margin: 50px auto 100px; /* 여기가 수정된 부분 */
+    margin-top: 40px;    /* 위쪽 마진만 설정 */
+    margin-bottom: 20px; /* 아래쪽 마진 줄임 */
 }
 
 .write-button {
@@ -194,9 +195,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
-    gap: 1rem;
+    margin-top: 0;    /* 위 간격 줄임 */
+    margin-bottom: 70px; /* 아래 간격 늘림 */
+    gap: 10px;
 }
+
+/* 중복된 .pagination 스타일 제거 */
 
 .pagination button {
     margin: 0 0.5rem;
