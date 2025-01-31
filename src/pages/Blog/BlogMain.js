@@ -251,9 +251,11 @@ const BlogMain = () => {
                                     <img src="/apply_swlug.png" alt="Default Logo"/>
                                 </div>
                                 <p className="post-tag">{post.tag}</p>
-                                <p className="post-title">{post.boardTitle}</p>
+                                <div className="post-title-container">
+                                    <p className="post-title">{post.boardTitle}</p>
+                                </div>
                                 <div className="post-info">
-                                    <p className="post-id">{post.displayNumber}</p>
+                                    <p className="post-writer">{post.nickname}</p>
                                     <p className="post-date">{formatDate(post.createAt)}</p>
                                 </div>
                             </div>
