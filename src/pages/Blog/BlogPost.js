@@ -99,23 +99,39 @@ const BlogPost = () => {
         "4": "활동",
     };
 
+    const formatDate = (date) => {
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        };
+        return new Date(date)
+            .toLocaleDateString('ko-KR', options)
+            .replace(/\s/g, '')
+            .replace(/.$/, '');  // 마지막 점 제거
+    };
+
     return (
         <div className="blog-post">
             <div className="post-category">{categoryMapping[post.category]}</div>
             <h1>{post.title}</h1>
-            <div className="post-id">{post.author}</div>
-
-            {currentUserId === post.userId && (
-                <div className="post-actions">
-                    <button className="edit-button" onClick={handleEdit}>
-                        수정
-                    </button>
+            <div className="post-info">
+                <div className="metadata">
+                    <span className="author">{post.author}</span>
                     <span className="divider">|</span>
-                    <button className="delete-button" onClick={handleDelete}>
-                        삭제
-                    </button>
+                    <span className="date">{formatDate(post.date)}</span>
                 </div>
-            )}
+                {currentUserId === post.userId && (
+                    <div className="button-group">
+                        <button className="edit-btn" onClick={handleEdit}>
+                            수정
+                        </button>
+                        <button className="delete-btn" onClick={handleDelete}>
+                            삭제
+                        </button>
+                    </div>
+                )}
+            </div>
 
             <img
                 src={post.image || "/Logo5.png"}
@@ -141,8 +157,8 @@ const BlogPost = () => {
                         <>
                             <span className="nav-label">&lt; 이전글</span>
                             <span className="nav-title">
-                    {truncateTitle(adjacentPosts.previous.blogTitle)}
-                </span>
+                                {truncateTitle(adjacentPosts.previous.blogTitle)}
+                            </span>
                         </>
                     ) : (
                         <span className="nav-label">&lt; 글이 없습니다</span>
@@ -154,9 +170,9 @@ const BlogPost = () => {
                 >
                     {adjacentPosts.next ? (
                         <>
-                <span className="nav-title">
-                    {truncateTitle(adjacentPosts.next.blogTitle)}
-                </span>
+                            <span className="nav-title">
+                                {truncateTitle(adjacentPosts.next.blogTitle)}
+                            </span>
                             <span className="nav-label">다음글 &gt;</span>
                         </>
                     ) : (
