@@ -28,16 +28,11 @@
 
 .blog-post img {
     max-width: 100%;
-    /* 이미지가 부모 컨테이너를 넘지 않도록 설정 */
     width: 200px;
-    /* 원하는 너비 */
     height: auto;
-    /* 비율을 유지하며 높이 자동 조절 */
     display: block;
     margin: 20px auto;
-    /* 이미지 중앙 정렬 */
     border-radius: 8px;
-    /* 이미지 둥근 테두리(선택 사항) */
 }
 
 .post-content {
@@ -51,7 +46,6 @@
     text-align: justify;
 }
 
-/* 제목 스타일 추가 */
 .post-content h1 {
     font-size: 2.5em;
     font-weight: bold;
@@ -84,9 +78,7 @@
 
 .post-tags {
     display: flex;
-    /* Flexbox로 레이아웃 설정 */
     justify-content: flex-start;
-    /* 왼쪽 정렬 */
     margin: 50px auto;
 }
 
@@ -103,10 +95,8 @@
 .post-actions {
     display: flex;
     justify-content: center;
-    /* 버튼 중앙 정렬 */
     align-items: center;
     gap: 10px;
-    /* 버튼 사이 간격 */
     font-size: 14px;
     color: #6a6a6a;
     margin: 20px auto;
@@ -136,12 +126,33 @@
     background: none;
     border: none;
     font-size: 14px;
-    color: #000000;
+    color: #202123;
     cursor: pointer;
     text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.navigation .nav-label {
+    font-size: 15px;
+    color: #202123;
+    font-weight: bold;
+}
+
+.navigation .nav-title {
+    font-size: 15px;
+    color: #202123;
+    font-weight: normal;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .navigation button:disabled {
     color: #ccc;
     cursor: not-allowed;
+}
+
+.navigation button:disabled .nav-label,
+.navigation button:disabled .nav-title {
+    color: #ccc;
 }
