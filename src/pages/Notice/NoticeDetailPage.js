@@ -58,6 +58,11 @@ const NoticeDetailPage = () => {
         navigate(`/notice/${id}`);
     };
 
+    const truncateTitle = (title) => {
+        if (!title) return '';
+        return title.length > 25 ? `${title.substring(0, 25)}...` : title;
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -108,13 +113,9 @@ const NoticeDetailPage = () => {
             </div>
             {isAuthenticated && (
                 <div className="notice-actions">
-                    <button onClick={handleEdit}>
-                        수정
-                    </button>
+                    <button onClick={handleEdit}>수정</button>
                     <span style={{margin: '0 10px', color: '#ddd'}}>|</span>
-                    <button onClick={handleDelete}>
-                        삭제
-                    </button>
+                    <button onClick={handleDelete}>삭제</button>
                 </div>
             )}
             <div
@@ -135,7 +136,9 @@ const NoticeDetailPage = () => {
                     {adjacentNotice.previous ? (
                         <>
                             <span className="nav-label">&lt; 이전글</span>
-                            <span className="nav-title">{adjacentNotice.previous.noticeTitle}</span>
+                            <span className="nav-title">
+                                {truncateTitle(adjacentNotice.previous.noticeTitle)}
+                            </span>
                         </>
                     ) : (
                         <span className="nav-label">&lt; 글이 없습니다</span>
@@ -152,7 +155,9 @@ const NoticeDetailPage = () => {
                 >
                     {adjacentNotice.next ? (
                         <>
-                            <span className="nav-title">{adjacentNotice.next.noticeTitle}</span>
+                            <span className="nav-title">
+                                {truncateTitle(adjacentNotice.next.noticeTitle)}
+                            </span>
                             <span className="nav-label">다음글 &gt;</span>
                         </>
                     ) : (

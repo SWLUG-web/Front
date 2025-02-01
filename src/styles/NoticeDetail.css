@@ -35,7 +35,6 @@
     text-align: justify;
 }
 
-/* 제목 스타일 추가 */
 .notice-content h1 {
     font-size: 2.5em;
     font-weight: bold;
@@ -96,14 +95,23 @@
     margin: 40px auto;
 }
 
-/* 네비게이션 레이블 (< 이전글, 다음글 >) 스타일 */
+.notice-navigation button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #202123;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
 .notice-navigation .nav-label {
     font-size: 15px;
     color: #202123;
     font-weight: bold;
 }
 
-/* 글 제목 스타일 */
 .notice-navigation .nav-title {
     font-size: 15px;
     color: #202123;
@@ -112,15 +120,12 @@
     padding-right: 8px;
 }
 
-.notice-navigation .nav-title:hover {
-    color: #202123;
-    text-decoration: none;
+.notice-navigation button:disabled {
+    color: #ccc;
+    cursor: not-allowed;
 }
 
-/* 버튼 비활성화 스타일 */
 .notice-navigation button:disabled .nav-label,
 .notice-navigation button:disabled .nav-title {
     color: #ccc;
-    text-decoration: none;
-    cursor: not-allowed;
 }

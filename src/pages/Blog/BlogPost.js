@@ -6,15 +6,13 @@ import axios from "axios";
 import {deletePost} from "../../services/blogAPI";
 
 const BlogPost = () => {
-    const { boardId } = useParams(); // URL에서 게시물 ID 추출
+    const { boardId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-    const [post, setPost] = useState(null); // 게시물 데이터 저장
-    const [loading, setLoading] = useState(true); // 로딩 상태
-    const [adjacentPosts, setAdjacentPosts] = useState({ previous: null, next: null }); // 이전/다음 글 데이터
+    const [post, setPost] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [adjacentPosts, setAdjacentPosts] = useState({ previous: null, next: null });
     const isMyPageEdit = location.state?.isMyPageEdit || false;
-
-    // 현재 사용자 ID (로그인 정보에서 가져오기)
     const currentUserId = localStorage.getItem("userId");
 
     useEffect(() => {
@@ -44,8 +42,13 @@ const BlogPost = () => {
     };
 
     const handleEdit = () => {
-        navigate("/board/write", { state: { post } }); // 게시물 데이터를 전달하며 글쓰기 페이지로 이동
+        navigate("/board/write", { state: { post } });
         window.scrollTo(0,0);
+    };
+
+    const truncateTitle = (title) => {
+        if (!title) return '';
+        return title.length > 20 ? `${title.substring(0, 20)}...` : title;
     };
 
     useEffect(() => {
@@ -80,7 +83,6 @@ const BlogPost = () => {
                 console.error("데이터 로딩 실패: ", error);
                 setLoading(false);
             }
-
         };
         fetchData()
     }, [boardId]);
@@ -90,40 +92,53 @@ const BlogPost = () => {
     if (!post) return <p>게시물을 찾을 수 없습니다.</p>;
 
     const categoryMapping = {
-    "0": "공지사항",
-    "1": "성과",
-    "2": "정보",
-    "3": "후기",
-    "4": "활동",
-};
+        "0": "공지사항",
+        "1": "성과",
+        "2": "정보",
+        "3": "후기",
+        "4": "활동",
+    };
 
+    const formatDate = (date) => {
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        };
+        return new Date(date)
+            .toLocaleDateString('ko-KR', options)
+            .replace(/\s/g, '')
+            .replace(/.$/, '');  // 마지막 점 제거
+    };
 
     return (
         <div className="blog-post">
             <div className="post-category">{categoryMapping[post.category]}</div>
             <h1>{post.title}</h1>
-            <div className="post-id">{post.author}</div>
-
-            {/* 작성자만 수정/삭제 버튼 보이기 */}
-            {currentUserId === post.userId && (
-                <div className="post-actions">
-                    <button className="edit-button" onClick={handleEdit}>
-                        수정
-                    </button>
+            <div className="post-info">
+                <div className="metadata">
+                    <span className="author">{post.author}</span>
                     <span className="divider">|</span>
-                    <button className="delete-button" onClick={handleDelete}>
-                        삭제
-                    </button>
+                    <span className="date">{formatDate(post.date)}</span>
                 </div>
-            )}
-            
-            {/* 이미지 표시 */}
-            <img 
-                src={post.image || "/Logo5.png"} 
-                className="post-image" 
+                {currentUserId === post.userId && (
+                    <div className="button-group">
+                        <button className="edit-btn" onClick={handleEdit}>
+                            수정
+                        </button>
+                        <button className="delete-btn" onClick={handleDelete}>
+                            삭제
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            <img
+                src={post.image || "/Logo5.png"}
+                className="post-image"
             />
 
-            <div className="post-content" dangerouslySetInnerHTML={{ __html: post.contents }} />
+            <div className="post-content" dangerouslySetInnerHTML={{__html: post.contents}}/>
 
             <div className="post-tags">
                 {post.tag && post.tag.map((tag, index) => (
@@ -133,7 +148,6 @@ const BlogPost = () => {
                 ))}
             </div>
 
-            {/* 이전 글/다음 글 네비게이션 */}
             <div className="navigation">
                 <button
                     onClick={() => adjacentPosts.previous && handleNavigate(adjacentPosts.previous.id)}
@@ -141,24 +155,28 @@ const BlogPost = () => {
                 >
                     {adjacentPosts.previous ? (
                         <>
-                            <span className="nav-label">&lt;&nbsp;&nbsp;이전글</span>
-                            <span className="nav-title">{adjacentPosts.previous.boardTitle}</span>
+                            <span className="nav-label">&lt; 이전글</span>
+                            <span className="nav-title">
+                                {truncateTitle(adjacentPosts.previous.blogTitle)}
+                            </span>
                         </>
                     ) : (
-                        "<  글이 없습니다"
+                        <span className="nav-label">&lt; 글이 없습니다</span>
                     )}
                 </button>
                 <button
                     onClick={() => adjacentPosts.next && handleNavigate(adjacentPosts.next.id)}
                     disabled={!adjacentPosts.next}
                 >
-                    {adjacentPosts.next ?(
+                    {adjacentPosts.next ? (
                         <>
-                            <span className="nav-title">{adjacentPosts.next.boardTitle}</span>
-                            <span className="nav-label">다음글&nbsp;&nbsp;&gt;</span>
+                            <span className="nav-title">
+                                {truncateTitle(adjacentPosts.next.blogTitle)}
+                            </span>
+                            <span className="nav-label">다음글 &gt;</span>
                         </>
                     ) : (
-                        "글이 없습니다  >"
+                        <span className="nav-label">글이 없습니다 &gt;</span>
                     )}
                 </button>
             </div>
