@@ -198,17 +198,8 @@ const BlogMain = () => {
         <div className="container mx-auto px-4 py-8 bg-white">
             <h1 className="apply-title font-bold text-center mb-6">Blog</h1>
 
-            {/* 태그 필터와 검색 */}
-            <div className="tags-and-search">
-                <div className="tags">
-                    <h3 className="tag-title">Tags</h3>
-                    <TagFilter
-                        tags={tags}
-                        selectedTag={selectedTag}
-                        setSelectedTag={handleTagSelect}
-                    />
-                </div>
-
+            {/* 검색 */}
+            <div className="flex justify-end mb-6">
                 <div className="search-bar flex items-center border rounded-full shadow-sm px-4 py-2">
                     <span className="text-sm text-gray-700 mr-2">제목</span>
                     <div className="border-r border-gray-400 h-4 mx-2"></div>
@@ -226,7 +217,18 @@ const BlogMain = () => {
                     >
                         🔍
                     </button>
-                </div>
+                </div>    
+            </div>
+            {/* 태그 필터 */}    
+            <div className="tags-total">
+                <div className="tags">
+                    <h3 className="tag-title">Tags</h3>
+                    <TagFilter
+                        tags={tags}
+                        selectedTag={selectedTag}
+                        setSelectedTag={handleTagSelect}
+                    />
+                </div>                
             </div>
 
             {/* 게시물 리스트 */}
@@ -250,11 +252,11 @@ const BlogMain = () => {
                                 <div className="post-card-image-container">
                                     <img src="/apply_swlug.png" alt="Default Logo"/>
                                 </div>
-                                <p className="post-category">{post.categoryName}</p>
+                                <p className="posts-category">{post.categoryName}</p>
                                 <div className="post-title-container">
                                     <p className="post-title">{post.boardTitle}</p>
                                 </div>
-                                <div className="post-info">
+                                <div className="post-info-main">
                                     <p className="post-writer">{post.nickname}</p>
                                     <p className="post-date">{formatDate(post.createAt)}</p>
                                 </div>

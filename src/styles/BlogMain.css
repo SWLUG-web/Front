@@ -2,14 +2,14 @@
     font-size: 20px !important;
     font-weight: bold;
     text-align: left;
-    margin-top: 50px;
     padding-bottom: 5px;
 }
 
-.tags-and-search {
+.tags-total {
     display: flex;
     justify-content: space-between;
     margin-bottom: 40px;
+    margin-right: 250px;
 }
 
 .search-bar {
@@ -95,7 +95,7 @@
     object-fit: contain;
 }
 
-.post-category {
+.posts-category {
     min-height: 20px;
     font-size: 14px;
     color: #007bff;
@@ -125,7 +125,7 @@
     text-align: center;
 }
 
-.post-info {
+.post-info-main {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -170,8 +170,10 @@
     display: flex;
     justify-content: flex-end;
     height: 35px;
-    margin-top: 40px;    /* 위쪽 마진만 설정 */
-    margin-bottom: 20px; /* 아래쪽 마진 줄임 */
+    margin-top: 40px;
+    /* 위쪽 마진만 설정 */
+    margin-bottom: 20px;
+    /* 아래쪽 마진 줄임 */
 }
 
 .write-button {
@@ -195,8 +197,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 0;    /* 위 간격 줄임 */
-    margin-bottom: 70px; /* 아래 간격 늘림 */
+    margin-top: 0;
+    /* 위 간격 줄임 */
+    margin-bottom: 70px;
+    /* 아래 간격 늘림 */
     gap: 10px;
 }
 
