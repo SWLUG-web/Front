@@ -250,7 +250,7 @@ const BlogMain = () => {
                                 onClick={() => handlePostClick(post.id)}
                             >
                                 <div className="post-card-image-container">
-                                    <img src="/apply_swlug.png" alt="Default Logo"/>
+                                    <img src="/img/apply_swlug.png" alt="Default Logo"/>
                                 </div>
                                 <p className="posts-category">{post.categoryName}</p>
                                 <div className="post-title-container">

@@ -69,7 +69,7 @@ const BlogPost = () => {
                     author: blogResponse.data.nickname,
                     contents: blogResponse.data.boardContents,
                     tag: blogResponse.data.tag,
-                    image: blogResponse.data.imageFiles,
+                    image: blogResponse.data.image,  // imageFiles에서 image로 수정
                     category: blogResponse.data.boardCategory
                 });
 
@@ -133,18 +133,27 @@ const BlogPost = () => {
                 )}
             </div>
 
-            <img
-                src={post.image || "/Logo5.png"}
-                className="post-image"
-            />
+            {/* 이미지가 있을 때만 이미지 표시 */}
+            {post.image && post.image.length > 0 && (
+                <div className="post-images">
+                    {post.image.map((imageUrl, index) => (
+                        <img
+                            key={index}
+                            src={imageUrl}
+                            className="post-image"
+                            alt={`${post.title} - image ${index + 1}`}
+                        />
+                    ))}
+                </div>
+            )}
 
             <div className="post-content" dangerouslySetInnerHTML={{__html: post.contents}}/>
 
             <div className="post-tags">
                 {post.tag && post.tag.map((tag, index) => (
                     <span key={index} className="tag">
-                        #{tag}
-                    </span>
+                       #{tag}
+                   </span>
                 ))}
             </div>
 
@@ -157,8 +166,8 @@ const BlogPost = () => {
                         <>
                             <span className="nav-label">&lt; 이전글</span>
                             <span className="nav-title">
-                                {truncateTitle(adjacentPosts.previous.blogTitle)}
-                            </span>
+                               {truncateTitle(adjacentPosts.previous.blogTitle)}
+                           </span>
                         </>
                     ) : (
                         <span className="nav-label">&lt; 글이 없습니다</span>
@@ -170,9 +179,9 @@ const BlogPost = () => {
                 >
                     {adjacentPosts.next ? (
                         <>
-                            <span className="nav-title">
-                                {truncateTitle(adjacentPosts.next.blogTitle)}
-                            </span>
+                           <span className="nav-title">
+                               {truncateTitle(adjacentPosts.next.blogTitle)}
+                           </span>
                             <span className="nav-label">다음글 &gt;</span>
                         </>
                     ) : (

@@ -84,13 +84,13 @@
 
 .blog-post img {
     max-width: 100%;
-    width: 200px;
+    width: auto; /* auto로 변경하여 원본 비율 유지 */
     height: auto;
     display: block;
     margin: 20px auto;
     border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-
 .post-content {
     margin: 40px auto;
 }
@@ -187,4 +187,47 @@
 .navigation button:disabled .nav-label,
 .navigation button:disabled .nav-title {
     color: #ccc;
+}
+
+/* BlogPost.css 수정 */
+
+/* 이미지 컨테이너 스타일 */
+.post-images {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 20px 0;
+    align-items: center;
+}
+
+
+
+/* CKEditor 내부 이미지 스타일 */
+.post-content img {
+    max-width: 800px !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 20px auto !important;
+}
+
+/* 게시글 전체 너비 수정 */
+.blog-post {
+    padding: 20px;
+    max-width: 1000px; /* 전체 너비 증가 */
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* CKEditor 내용물 스타일 */
+.post-content {
+    margin: 40px auto;
+    width: 100%;
+}
+
+/* 이미지 hover 효과 추가 */
+.blog-post img:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
 }
