@@ -7,7 +7,7 @@ import "../../styles/Notice.css"
 
 
 const NoticePage = () => {
-  const { isAuthenticated } = useSelector(state => state.auth); // 로그인 상태 가져오기
+  const { isAuthenticated, role } = useSelector(state => state.auth);
   const [notices, setNotices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -138,16 +138,15 @@ const NoticePage = () => {
         ) : loading ? (
             <div className="flex justify-center items-center py-20">Loading...</div>
         ) : notices.length > 0 ? (
-            <NoticeList notices={notices} />
+            <NoticeList notices={notices}/>
         ) : (
             <div className="flex justify-center items-center py-20 text-gray-500 border-t border-b">
               등록된 공지사항이 없습니다.
             </div>
         )}
 
-        {/* 글쓰기 버튼 컨테이너는 항상 존재하고, 버튼만 조건부 표시 */}
         <div className="write-button-container">
-          {isAuthenticated && (
+          {role === 0 && (
               <button
                   className="write-button"
                   onClick={() => {

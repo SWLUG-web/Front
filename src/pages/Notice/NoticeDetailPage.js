@@ -7,7 +7,7 @@ import "../../styles/NoticeDetail.css";
 const NoticeDetailPage = () => {
     const { noticeId } = useParams();
     const navigate = useNavigate();
-    const { isAuthenticated } = useSelector(state => state.auth);
+    const { isAuthenticated, role } = useSelector(state => state.auth);
     const [notice, setNotice] = useState(null);
     const [loading, setLoading] = useState(true);
     const [adjacentNotice, setAdjacentNotice] = useState({ previous: null, next: null });
