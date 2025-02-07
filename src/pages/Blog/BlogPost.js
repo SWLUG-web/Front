@@ -123,30 +123,11 @@ const BlogPost = () => {
                 </div>
                 {currentUserId === post.userId && (
                     <div className="button-group">
-                        <button className="edit-btn" onClick={handleEdit}>
-                            수정
-                        </button>
-                        <button className="delete-btn" onClick={handleDelete}>
-                            삭제
-                        </button>
+                        <button className="edit-btn" onClick={handleEdit}>수정</button>
+                        <button className="delete-btn" onClick={handleDelete}>삭제</button>
                     </div>
                 )}
             </div>
-
-            {/* 이미지가 있을 때만 이미지 표시 */}
-            {post.image && post.image.length > 0 && (
-                <div className="post-images">
-                    {post.image.map((imageUrl, index) => (
-                        <img
-                            key={index}
-                            src={imageUrl}
-                            className="post-image"
-                            alt={`${post.title} - image ${index + 1}`}
-                        />
-                    ))}
-                </div>
-            )}
-
             <div className="post-content" dangerouslySetInnerHTML={{__html: post.contents}}/>
 
             <div className="post-tags">

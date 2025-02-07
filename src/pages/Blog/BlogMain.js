@@ -250,7 +250,16 @@ const BlogMain = () => {
                                 onClick={() => handlePostClick(post.id)}
                             >
                                 <div className="post-card-image-container">
-                                    <img src="/img/apply_swlug.png" alt="Default Logo"/>
+                                    <img
+                                        src={post.image && post.image.length > 0
+                                            ? post.image[0]
+                                            : "/apply_swlug.png"}
+                                        alt={post.boardTitle || "게시물 이미지"}
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = "/apply_swlug.png";
+                                        }}
+                                    />
                                 </div>
                                 <p className="posts-category">{post.categoryName}</p>
                                 <div className="post-title-container">
