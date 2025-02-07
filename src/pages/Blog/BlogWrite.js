@@ -17,8 +17,7 @@ const BlogWrite = () => {
 	const isMyPageEdit = location.state?.isMyPageEdit || false;
 
 	const [tags, setTags] = useState(postToEdit?.tag || []);
-	const [uploadedImages, setUploadedImages] = useState([]);
-	const [selectedThumbnail, setSelectedThumbnail] = useState(postToEdit?.thumbnailImage || null);
+	const [uploadedImages, setUploadedImages] = useState(postToEdit?.image || []);
 	const MAX_TAGS = 10;
 
 	const [title, setTitle] = useState(postToEdit?.title || "");
@@ -29,7 +28,12 @@ const BlogWrite = () => {
 	function MyCustomUploadAdapterPlugin(editor) {
 		editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
 			return new UploadAdapter(loader, (imageUrl) => {
-				setUploadedImages(prev => [...prev, imageUrl]);
+				setUploadedImages(prev => {
+					if (!prev.includes(imageUrl)) {
+						return [...prev, imageUrl];
+					}
+					return prev;
+				});
 			});
 		}
 	}
@@ -97,7 +101,7 @@ const BlogWrite = () => {
 
 		try {
 			const postData = {
-				boardCategory: category,  // 문자열로 변환하지 않음
+				boardCategory: category,
 				boardTitle: title,
 				boardContent: contents,
 				tag: tags,
@@ -106,7 +110,8 @@ const BlogWrite = () => {
 			if (postToEdit) {
 				await updatePost({
 					id: postToEdit.id,
-					...postData
+					...postData,
+					imageUrls: uploadedImages
 				}, image);
 				alert("게시물이 수정되었습니다.");
 			} else {
@@ -381,6 +386,16 @@ const BlogWrite = () => {
 	const handleEditorChange = (event, editor) => {
 		const data = editor.getData();
 		setContents(data);
+
+		// 에디터 내용에서 이미지 URL 추출
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(data, 'text/html');
+		const images = Array.from(doc.querySelectorAll('img'));
+		const currentImageUrls = images
+			.map(img => img.getAttribute('src'))
+			.filter(src => src && src.startsWith('/api/blog/images/'));
+
+		setUploadedImages(currentImageUrls);
 	};
 
 	return (
