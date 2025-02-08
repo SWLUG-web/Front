@@ -98,7 +98,7 @@ const NoticePage = () => {
   };
 
   const goToWritePage = (boardType) => {
-    navigate("/board/write", { state: { boardType } });
+    navigate("/notice/write", { state: { boardType } });
   };
 
   return (
@@ -146,17 +146,16 @@ const NoticePage = () => {
         )}
 
         <div className="write-button-container">
-          {role === 0 && (
-              <button
-                  className="write-button"
-                  onClick={() => {
-                    goToWritePage("notice")
-                    window.scrollTo(0, 0);
-                  }}
-              >
-                글쓰기
-              </button>
-          )}
+          {/* role === 0 조건 임시 제거 */}
+          <button
+              className="write-button"
+              onClick={() => {
+                goToWritePage("notice")
+                window.scrollTo(0, 0);
+              }}
+          >
+            글쓰기
+          </button>
         </div>
 
         {/* 페이지네이션 */}
