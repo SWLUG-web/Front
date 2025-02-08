@@ -5,13 +5,6 @@ import { CKEditor, useCKEditorCloud } from '@ckeditor/ckeditor5-react';
 import UploadAdapter from '../Blog/UploadAdapter';
 import "../../styles/NoticeWrite.css";
 
-
-function MyCustomUploadAdapterPlugin(editor) {
-    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-        return new UploadAdapter(loader);
-    };
-}
-
 const LICENSE_KEY = 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NjgyNjIzOTksImp0aSI6ImQxMWFlMjhjLTRhNGEtNGQ4MC1hNTBmLTA3MTI5NmI5YjE4ZCIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiZGMyZWIzYjUifQ.bGfz0zMJry9GHH6ANiZ8qqhYMFF94RHXyA0e9FVZLeMYpS1c02VFc4zm-KRJdYR7dgFnuGAvj8VvP9uPoV-Glw';
 
 const NoticeWrite = () => {
@@ -21,12 +14,25 @@ const NoticeWrite = () => {
 
     const [title, setTitle] = useState(noticeToEdit?.noticeTitle || '');
     const [contents, setContents] = useState(noticeToEdit?.noticeContents || '');
-    const [images, setImages] = useState(noticeToEdit?.imageUrl || []);
+    const [uploadedImages, setUploadedImages] = useState(noticeToEdit?.imageUrl || []);
     const [isLayoutReady, setIsLayoutReady] = useState(false);
 
     const editorContainerRef = useRef(null);
     const editorRef = useRef(null);
     const cloud = useCKEditorCloud({ version: '44.1.0', translations: ['ko'] });
+
+    function MyCustomUploadAdapterPlugin(editor) {
+        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+            return new UploadAdapter(loader, (imageUrl) => {
+                setUploadedImages(prev => {
+                    if (!prev.includes(imageUrl)) {
+                        return [...prev, imageUrl];
+                    }
+                    return prev;
+                });
+            });
+        };
+    }
 
     useEffect(() => {
         setIsLayoutReady(true);
@@ -45,22 +51,21 @@ const NoticeWrite = () => {
         }
 
         try {
+            const noticeData = {
+                boardCategory: 0,  // 추가: 공지사항은 항상 카테고리 0
+                noticeTitle: title,
+                noticeContents: contents,
+                imageUrl: uploadedImages
+            };
+
             if (noticeToEdit) {
-                // 수정 요청
                 await updateNotice({
                     id: noticeToEdit.id,
-                    noticeTitle: title,
-                    noticeContents: contents,
-                    imageUrl: images
+                    ...noticeData
                 });
                 alert('공지사항이 수정되었습니다.');
             } else {
-                // 등록 요청
-                await createNotice({
-                    noticeTitle: title,
-                    noticeContents: contents,
-                    imageUrl: images
-                });
+                await createNotice(noticeData);
                 alert('공지사항이 등록되었습니다.');
             }
 
@@ -72,16 +77,20 @@ const NoticeWrite = () => {
         }
     };
 
+
     const handleEditorChange = (event, editor) => {
         const data = editor.getData();
         setContents(data);
 
-        // 이미지 URL 추출 및 저장
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = data;
-        const imageElements = tempDiv.getElementsByTagName('img');
-        const imageUrls = Array.from(imageElements).map(img => img.src);
-        setImages(imageUrls);
+        // 에디터 내용에서 이미지 URL 추출
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data, 'text/html');
+        const images = Array.from(doc.querySelectorAll('img'));
+        const currentImageUrls = images
+            .map(img => img.getAttribute('src'))
+            .filter(src => src && src.startsWith('/api/notice/images/'));
+
+        setUploadedImages(currentImageUrls);
     };
 
     const { ClassicEditor, editorConfig } = React.useMemo(() => {
@@ -96,93 +105,198 @@ const NoticeWrite = () => {
             BlockQuote,
             Bold,
             CloudServices,
+            Code,
             Essentials,
+            FontBackgroundColor,
+            FontColor,
+            FontFamily,
+            FontSize,
             Heading,
-            Image,
+            ImageBlock,
             ImageCaption,
+            ImageInline,
+            ImageInsert,
+            ImageInsertViaUrl,
+            ImageResize,
             ImageStyle,
+            ImageTextAlternative,
             ImageToolbar,
             ImageUpload,
             Indent,
+            IndentBlock,
+            Italic,
             Link,
+            LinkImage,
             List,
+            ListProperties,
             MediaEmbed,
             Paragraph,
             PasteFromOffice,
+            SimpleUploadAdapter,
+            Strikethrough,
             Table,
+            TableCaption,
+            TableCellProperties,
+            TableColumnResize,
+            TableProperties,
             TableToolbar,
             TextTransformation,
+            TodoList,
+            Underline
         } = cloud.CKEditor;
 
         return {
             ClassicEditor,
             editorConfig: {
+                toolbar: {
+                    items: [
+                        'heading',
+                        '|',
+                        'fontSize',
+                        'fontFamily',
+                        'fontColor',
+                        'fontBackgroundColor',
+                        '|',
+                        'bold',
+                        'italic',
+                        'underline',
+                        'strikethrough',
+                        'code',
+                        '|',
+                        'link',
+                        'insertImage',
+                        'mediaEmbed',
+                        'insertTable',
+                        'blockQuote',
+                        '|',
+                        'bulletedList',
+                        'numberedList',
+                        'todoList',
+                        'outdent',
+                        'indent'
+                    ],
+                    shouldNotGroupWhenFull: false
+                },
                 plugins: [
                     Autoformat,
                     AutoImage,
                     BlockQuote,
                     Bold,
                     CloudServices,
+                    Code,
                     Essentials,
+                    FontBackgroundColor,
+                    FontColor,
+                    FontFamily,
+                    FontSize,
                     Heading,
-                    Image,
+                    ImageBlock,
                     ImageCaption,
+                    ImageInline,
+                    ImageInsert,
+                    ImageInsertViaUrl,
+                    ImageResize,
                     ImageStyle,
+                    ImageTextAlternative,
                     ImageToolbar,
                     ImageUpload,
                     Indent,
+                    IndentBlock,
+                    Italic,
                     Link,
+                    LinkImage,
                     List,
+                    ListProperties,
                     MediaEmbed,
                     Paragraph,
                     PasteFromOffice,
+                    SimpleUploadAdapter,
+                    Strikethrough,
                     Table,
+                    TableCaption,
+                    TableCellProperties,
+                    TableColumnResize,
+                    TableProperties,
                     TableToolbar,
                     TextTransformation,
+                    TodoList,
+                    Underline,
                     MyCustomUploadAdapterPlugin
                 ],
-                toolbar: {
-                    items: [
-                        'heading',
-                        '|',
-                        'bold',
-                        'link',
-                        'insertImage',
-                        'insertTable',
-                        'bulletedList',
-                        'numberedList',
-                        '|',
-                        'outdent',
-                        'indent',
-                        '|',
-                        'undo',
-                        'redo'
-                    ]
+                fontFamily: {
+                    supportAllValues: true
+                },
+                fontSize: {
+                    options: [10, 12, 14, 'default', 18, 20, 22],
+                    supportAllValues: true
                 },
                 image: {
+                    resizeOptions: [
+                        {
+                            name: 'resizeImage:original',
+                            value: null,
+                            label: '원본 크기'
+                        },
+                        {
+                            name: 'resizeImage:50',
+                            value: '50',
+                            label: '50%'
+                        },
+                        {
+                            name: 'resizeImage:75',
+                            value: '75',
+                            label: '75%'
+                        }
+                    ],
+                    resizeUnit: '%',
                     toolbar: [
                         'imageStyle:inline',
                         'imageStyle:block',
                         'imageStyle:side',
                         '|',
                         'toggleImageCaption',
-                        'imageTextAlternative'
-                    ]
+                        'imageTextAlternative',
+                        'resizeImage'
+                    ],
+                    styles: {
+                        options: [
+                            'inline',
+                            'block',
+                            'side'
+                        ]
+                    }
                 },
+                licenseKey: LICENSE_KEY,
+                link: {
+                    addTargetToExternalLinks: true,
+                    defaultProtocol: 'https://'
+                },
+                simpleUpload: {
+                    uploadUrl: '/api/notice/upload-image',
+                },
+                placeholder: '내용을 입력하세요',
                 table: {
                     contentToolbar: [
                         'tableColumn',
                         'tableRow',
-                        'mergeTableCells'
+                        'mergeTableCells',
+                        'tableProperties',
+                        'tableCellProperties'
                     ]
-                },
-                licenseKey: LICENSE_KEY,
+                }
             }
         };
     }, [cloud, isLayoutReady]);
 
     return (
         <div className="notice-write">
+            <select
+                value="0"
+                disabled
+                className="category-select"
+            >
+                <option value="0">공지사항</option>
+            </select>
             <input
                 type="text"
                 placeholder="제목을 입력하세요"

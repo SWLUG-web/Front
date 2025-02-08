@@ -17,8 +17,7 @@ const BlogWrite = () => {
 	const isMyPageEdit = location.state?.isMyPageEdit || false;
 
 	const [tags, setTags] = useState(postToEdit?.tag || []);
-	const [uploadedImages, setUploadedImages] = useState([]);
-	const [selectedThumbnail, setSelectedThumbnail] = useState(postToEdit?.thumbnailImage || null);
+	const [uploadedImages, setUploadedImages] = useState(postToEdit?.image || []);
 	const MAX_TAGS = 10;
 
 	const [title, setTitle] = useState(postToEdit?.title || "");
@@ -29,12 +28,17 @@ const BlogWrite = () => {
 	function MyCustomUploadAdapterPlugin(editor) {
 		editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
 			return new UploadAdapter(loader, (imageUrl) => {
-				setUploadedImages(prev => [...prev, imageUrl]);
+				setUploadedImages(prev => {
+					if (!prev.includes(imageUrl)) {
+						return [...prev, imageUrl];
+					}
+					return prev;
+				});
 			});
 		}
 	}
 
-	// URL에서 boardType 설정
+	// boardType 설정 로직 수정
 	const boardType = useMemo(() => {
 		if (location.state?.boardType) {
 			return location.state.boardType;
@@ -47,26 +51,28 @@ const BlogWrite = () => {
 		return "";
 	}, [location.pathname, location.state?.boardType]);
 
-	// 카테고리 초기화
+
+	// 카테고리 초기값 설정 수정
 	const [category, setCategory] = useState(
-		postToEdit?.category?.toString() || (boardType === "notice" ? "0" : "")
+		postToEdit?.category || ""
 	);
 
-	// 게시판 옵션 설정
+	// 게시판 옵션 수정 - 값과 텍스트를 명확히 구분
 	const boardOptions = useMemo(() => {
 		if (boardType === "notice") {
 			return [<option value="0" key="0">공지사항</option>];
 		}
 		if (boardType === "blog") {
 			return [
-				<option value="1" key="1">후기</option>,
-				<option value="2" key="2">활동</option>,
-				<option value="3" key="3">정보</option>,
-				<option value="4" key="4">성과물</option>
+				<option value="1" key="1">성과</option>,
+				<option value="2" key="2">정보</option>,
+				<option value="3" key="3">후기</option>,
+				<option value="4" key="4">활동</option>
 			];
 		}
 		return [];
 	}, [boardType]);
+
 
 	const handleTagInput = (e) => {
 		if ((e.key === 'Enter' || e.key === ',') && e.target.value.trim() !== '') {
@@ -86,6 +92,7 @@ const BlogWrite = () => {
 		setTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
 	};
 
+	// handleSubmit 함수 수정
 	const handleSubmit = async () => {
 		if (!category) {
 			alert("게시판을 선택해주세요.");
@@ -93,22 +100,22 @@ const BlogWrite = () => {
 		}
 
 		try {
+			const postData = {
+				boardCategory: category,
+				boardTitle: title,
+				boardContent: contents,
+				tag: tags,
+			};
+
 			if (postToEdit) {
 				await updatePost({
 					id: postToEdit.id,
-					boardCategory: category,
-					boardTitle: title,
-					boardContent: contents,
-					tag: tags,
+					...postData,
+					imageUrls: uploadedImages
 				}, image);
 				alert("게시물이 수정되었습니다.");
 			} else {
-				await writePost({
-					boardCategory: category,
-					boardTitle: title,
-					boardContent: contents,
-					tag: tags,
-				}, image);
+				await writePost(postData, image);
 				alert("게시물이 등록되었습니다.");
 			}
 
@@ -379,6 +386,16 @@ const BlogWrite = () => {
 	const handleEditorChange = (event, editor) => {
 		const data = editor.getData();
 		setContents(data);
+
+		// 에디터 내용에서 이미지 URL 추출
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(data, 'text/html');
+		const images = Array.from(doc.querySelectorAll('img'));
+		const currentImageUrls = images
+			.map(img => img.getAttribute('src'))
+			.filter(src => src && src.startsWith('/api/blog/images/'));
+
+		setUploadedImages(currentImageUrls);
 	};
 
 	return (
@@ -388,9 +405,7 @@ const BlogWrite = () => {
 				onChange={(e) => setCategory(e.target.value)}
 				className="category-select"
 			>
-				<option value="" disabled hidden>
-					게시판 선택
-				</option>
+				<option value="" disabled>게시판 선택</option>
 				{boardOptions}
 			</select>
 			<input

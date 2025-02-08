@@ -8,98 +8,129 @@
     gap: 20px;
 }
 
+.category-select {
+    width: 20%;
+    padding: 7px;
+    font-size: 16px;
+    color: #6A6A6A;
+    border: 1px solid #6A6A6A;
+}
+
+.category-select:disabled {
+    color: #6A6A6A;
+    background-color: #fff;
+    opacity: 1;
+}
+
 .title-input {
     width: 100%;
     border: none;
     border-bottom: 1px solid #6A6A6A;
     font-size: 24px;
-    padding: 10px 0;
+    padding: 10px 0px;
     margin-bottom: 20px;
     outline: none;
 }
 
-.editor-container {
+.content-input {
     width: 100%;
+    min-height: 300px;
+    border: none;
+    outline: none;
+    font-size: 16px;
     margin-bottom: 20px;
-}
-
-.ck-editor__editable {
-    min-height: 400px;
 }
 
 .buttons-container {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.cancel-button {
-    background-color: #6c757d;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
+    justify-content: end;
+    gap: 20px;
 }
 
 .submit-button {
     background-color: #000;
-    color: white;
-    padding: 10px 20px;
+    color: #fff;
+    padding: 10px 30px;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    border-radius: 20px;
     font-size: 14px;
-}
-
-.cancel-button:hover {
-    background-color: #5a6268;
+    cursor: pointer;
 }
 
 .submit-button:hover {
     background-color: #333;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@media print {
+    body {
+        margin: 0 !important;
+    }
+}
+
+.main-container {
+    font-family: 'Lato';
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
 .ck-content {
-    font-family: 'Pretendard-Regular', sans-serif;
+    font-family: 'Lato';
     line-height: 1.6;
     word-break: break-word;
 }
 
 .ck-editor__editable {
-    min-height: 400px;
-}
-
-/* CKEditor 관련 스타일 */
-.ck-content h1 {
-    font-size: 2em;
-    margin: 1em 0;
-}
-
-.ck-content h2 {
-    font-size: 1.5em;
-    margin: 0.83em 0;
-}
-
-.ck-content p {
-    margin: 1em 0;
+    min-height: 500px !important;
 }
 
 .ck-content img {
-    max-width: 100%;
-    height: auto;
+    max-width: 800px !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 20px auto !important;
+    display: block !important;
 }
 
-.ck-content table {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 1em 0;
+/* 이미지 업로드 영역 스타일 */
+.ck-file-dialog-button {
+    margin: 10px !important;
 }
 
-.ck-content td,
-.ck-content th {
-    border: 1px solid #ddd;
-    padding: 8px;
+/* CKEditor 내 제목 스타일 */
+.ck-content h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+.ck-content h2 {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.ck-content h3 {
+    font-size: 1.75em;
+    font-weight: bold;
+}
+
+.ck-content h4 {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.ck-content h5 {
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
+.ck-content h6 {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.ck-editor__editable ol {
+    padding-left: 20px;
 }
