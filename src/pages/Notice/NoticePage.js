@@ -15,6 +15,8 @@ const NoticePage = () => {
   const [error, setError] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
+  const userRole = localStorage.getItem("userRole"); // 로컬 스토리지에서 역할 가져오기
+  const allowedRoles = ["ROLE_ADMIN"];
 
   const noticesPerPage = 10;
 
@@ -146,7 +148,7 @@ const NoticePage = () => {
         )}
 
         <div className="write-button-container">
-          {/* role === 0 조건 임시 제거 */}
+          {isAuthenticated && allowedRoles.includes(userRole) && (
           <button
               className="write-button"
               onClick={() => {
@@ -156,6 +158,7 @@ const NoticePage = () => {
           >
             글쓰기
           </button>
+          )}
         </div>
 
         {/* 페이지네이션 */}
