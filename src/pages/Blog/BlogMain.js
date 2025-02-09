@@ -18,6 +18,9 @@ const BlogMain = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
     const [totalElements, setTotalElements] = useState(0);
+    const userRole = localStorage.getItem("userRole"); // 로컬 스토리지에서 역할 가져오기
+    const allowedRoles = ["ROLE_USER", "ROLE_ADMIN"]; // 글쓰기 허용된 역할
+
 
     const postsPerPage = 9; // 한 페이지에 표시할 게시물 수
     const navigate = useNavigate(); // 페이지 이동을 위한 hook
@@ -35,9 +38,11 @@ const BlogMain = () => {
 
             // 검색어 전처리 제거 - 서버에서 처리
             const response = await axios.get(
-                `/api/blog?page=${page}&category=${selectedCategory}&searchTerm=${search}&size=${postsPerPage}&tags=${tags}`
+                `/api/blog?page=${page}&category=${selectedCategory}&searchTerm=${search}&size=${postsPerPage}&tags=${tags}`,
+                {
+                    withCredentials: true, // 세션 쿠키 포함
+                }
             );
-
             setPosts(response.data.blogs);
             setTotalPages(response.data.totalPages);
             setTotalElements(response.data.totalElements);
@@ -279,13 +284,15 @@ const BlogMain = () => {
                 </div>
             )}
 
+
             {/* 글쓰기 버튼 컨테이너는 항상 존재하고, 버튼만 조건부 표시 */}
+
             <div className="write-button-container">
-                {isAuthenticated && (
+                {isAuthenticated && allowedRoles.includes(userRole) && (
                     <button
                         className="write-button"
                         onClick={() => {
-                            goToWritePage("blog")
+                            goToWritePage("blog");
                             window.scrollTo(0, 0);
                         }}
                     >
