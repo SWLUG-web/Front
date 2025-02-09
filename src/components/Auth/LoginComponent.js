@@ -29,6 +29,7 @@ function LoginComponent() {
         try {
           const response = await axios.get('/api/mypage');
           if (response.data.userId) {
+
             dispatch(loginSuccess({
               user: {
                 id: response.data.userId,
@@ -59,6 +60,8 @@ function LoginComponent() {
       });
 
       if (response.data.success) {
+        //console.log(response.data.role)
+        localStorage.setItem("userRole", response.data.role) //사용자 역할 localsotrage에 저장
         const userInfoResponse = await axios.get('/api/mypage');
 
         dispatch(loginSuccess({
