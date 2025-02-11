@@ -54,12 +54,12 @@ function MyPage() {
   }, [navigate]);
 
   const handleDelete = async (e, boardId) => {
-    e.stopPropagation(); // 이벤트 전파 중지
+    e.stopPropagation();
     if (window.confirm("정말 삭제하시겠습니까?")) {
       try {
         const response = await deletePost({id: boardId});
         if (response.status === 200) {
-          const updatedPosts = posts.filter((post) => post.boardId !== boardId);
+          const updatedPosts = posts.filter((post) => post.id !== boardId); // boardId -> id
           setPosts(updatedPosts);
           setTotalPage(Math.ceil(updatedPosts.length / postsPerPage));
           alert('게시물이 성공적으로 삭제되었습니다.');
@@ -132,8 +132,7 @@ function MyPage() {
                         </button>
                         <button
                             className="delete-btn"
-                            onClick={(e) => handleDelete(e, post.boardId)}
-                            disabled={post.isDelete > 0}
+                            onClick={(e) => handleDelete(e, post.id)}  // post.boardId -> post.id                            disabled={post.isDelete > 0}
                         >
                           삭제
                         </button>
