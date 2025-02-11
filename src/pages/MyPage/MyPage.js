@@ -53,10 +53,10 @@ function MyPage() {
     fetchUserPosts();
   }, [navigate]);
 
-  const handleDelete = async (boardId) => {
+  const handleDelete = async (e, boardId) => {
+    e.stopPropagation(); // 이벤트 전파 중지
     if (window.confirm("정말 삭제하시겠습니까?")) {
       try {
-
         const response = await deletePost({id: boardId});
         if (response.status === 200) {
           const updatedPosts = posts.filter((post) => post.boardId !== boardId);
@@ -71,13 +71,18 @@ function MyPage() {
     }
   };
 
-  const handleEdit = (post) => {
+  const handleEdit = (e, post) => {
+    e.stopPropagation(); // 이벤트 전파 중지
     navigate('/board/write', {
       state: {
         post,
         isMyPageEdit: true
       }
     });
+  };
+
+  const handlePostClick = (postId) => {
+    navigate(`/board/${postId}`);
   };
 
   const handlePageChange = (page) => {
@@ -103,24 +108,31 @@ function MyPage() {
                 currentPosts.map((post, index) => {
                   const displayNumber = posts.length - ((currentPage - 1) * postsPerPage + index);
                   return (
-                      <div className="post-item" key={post.id}>
+                      <div
+                          className="post-item"
+                          key={post.id}
+                          onClick={() => handlePostClick(post.id)}
+                          style={{ cursor: 'pointer' }}
+                      >
                         <span className="post-number">{displayNumber}</span>
                         <div className="post-title">
-                          <span className="title-text">{post.title}</span>
+                    <span className="title-text">
+                      {post.title}
+                    </span>
                           {post.isPin && <span className="pin-badge">공지</span>}
                           {post.isSecure > 0 && <span className="secure-badge">비공개</span>}
                         </div>
                         <span className="post-date">{post.date}</span>
                         <button
                             className="edit-btn"
-                            onClick={() => handleEdit(post)}
+                            onClick={(e) => handleEdit(e, post)}
                             disabled={post.isDelete > 0}
                         >
                           수정
                         </button>
                         <button
                             className="delete-btn"
-                            onClick={() => handleDelete(post.boardId)}
+                            onClick={(e) => handleDelete(e, post.boardId)}
                             disabled={post.isDelete > 0}
                         >
                           삭제
