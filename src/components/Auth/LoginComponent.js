@@ -6,7 +6,7 @@ import { loginSuccess, loginFailure, setLoading } from '../../slices/authSlice';
 import "../../styles/LoginComponent.css";
 import "../../styles/common.css";
 
-//확인
+
 
 function LoginComponent() {
   const dispatch = useDispatch();
