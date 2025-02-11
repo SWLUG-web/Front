@@ -4,6 +4,8 @@ import { createNotice, updateNotice } from '../../services/noticeAPI';
 import { CKEditor, useCKEditorCloud } from '@ckeditor/ckeditor5-react';
 import UploadAdapter from '../Blog/UploadAdapter';
 import "../../styles/NoticeWrite.css";
+import {useSelector} from "react-redux";
+
 
 const LICENSE_KEY = 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NjgyNjIzOTksImp0aSI6ImQxMWFlMjhjLTRhNGEtNGQ4MC1hNTBmLTA3MTI5NmI5YjE4ZCIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiZGMyZWIzYjUifQ.bGfz0zMJry9GHH6ANiZ8qqhYMFF94RHXyA0e9FVZLeMYpS1c02VFc4zm-KRJdYR7dgFnuGAvj8VvP9uPoV-Glw';
 
@@ -11,6 +13,17 @@ const NoticeWrite = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const noticeToEdit = location.state?.notice || null;
+    const userRole = localStorage.getItem("userRole");
+    const {isAuthenticated} = useSelector(state => state.auth);
+    const allowedRoles = ["ROLE_ADMIN"];
+
+    useEffect(() => {
+        if (!isAuthenticated || !allowedRoles.includes(userRole)) {
+            alert("접근 권한이 없습니다.");
+            navigate('/notice');
+            return;
+        }
+    }, [isAuthenticated, userRole, navigate]);
 
     const [title, setTitle] = useState(noticeToEdit?.noticeTitle || '');
     const [contents, setContents] = useState(noticeToEdit?.noticeContents || '');
