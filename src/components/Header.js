@@ -9,6 +9,23 @@ const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isBlogHover, setIsBlogHover] = useState(false);
 
+  const getCurrentPath = () => {
+    return window.location.pathname;
+  };
+
+  const getCurrentCategory = () => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('category');
+  };
+
+  const isCurrentPath = (path) => {
+    return getCurrentPath() === path;
+  };
+
+  const isCurrentCategory = (category) => {
+    return getCurrentCategory() === category && getCurrentPath() === '/blog';
+  };
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       const userId = localStorage.getItem('userId');
@@ -60,13 +77,19 @@ const Header = () => {
           </div>
           <nav className="flex-1">
             <ul className="flex justify-center items-center space-x-8 text-lg font-medium text-gray-700" style={{ marginLeft: "0px" }}>
-              <li><a href="/intro" className="hover:text-blue-600">소개</a></li>
+              <li>
+                <a href="/intro" className={`hover:text-blue-600 ${isCurrentPath('/intro') ? 'font-bold' : ''}`}>
+                  소개
+                </a>
+              </li>
               <li
                   onMouseEnter={() => setIsBlogHover(true)}
                   onMouseLeave={() => setIsBlogHover(false)}
                   className="relative"
               >
-                <a href="/blog" className="hover:text-blue-600">블로그</a>
+                <a href="/blog" className={`hover:text-blue-600 ${isCurrentPath('/blog') ? 'font-bold' : ''}`}>
+                  블로그
+                </a>
                 {isBlogHover && (
                     <div
                         className="absolute top-full left-1/2 transform -translate-x-1/2 rounded-lg px-8 py-2"
@@ -80,16 +103,28 @@ const Header = () => {
                           background: "#f3f3f3",
                         }}
                     >
-                      <a href="/blog?category=1" className="hover:underline hover:font-bold">성과</a>
-                      <a href="/blog?category=2" className="hover:underline hover:font-bold">정보</a>
-                      <a href="/blog?category=3" className="hover:underline hover:font-bold">후기</a>
-                      <a href="/blog?category=4" className="hover:underline hover:font-bold">활동</a>
+                      <a href="/blog?category=1" className={`hover:underline hover:font-bold ${isCurrentCategory('1') ? 'font-bold' : ''}`}>성과</a>
+                      <a href="/blog?category=2" className={`hover:underline hover:font-bold ${isCurrentCategory('2') ? 'font-bold' : ''}`}>정보</a>
+                      <a href="/blog?category=3" className={`hover:underline hover:font-bold ${isCurrentCategory('3') ? 'font-bold' : ''}`}>후기</a>
+                      <a href="/blog?category=4" className={`hover:underline hover:font-bold ${isCurrentCategory('4') ? 'font-bold' : ''}`}>활동</a>
                     </div>
                 )}
               </li>
-              <li><a href="/notice" className="hover:text-blue-600">공지</a></li>
-              <li><a href="/apply" className="hover:text-blue-600">지원</a></li>
-              <li><a href="/faq" className="hover:text-blue-600">FAQ</a></li>
+              <li>
+                <a href="/notice" className={`hover:text-blue-600 ${isCurrentPath('/notice') ? 'font-bold' : ''}`}>
+                  공지
+                </a>
+              </li>
+              <li>
+                <a href="/apply" className={`hover:text-blue-600 ${isCurrentPath('/apply') ? 'font-bold' : ''}`}>
+                  지원
+                </a>
+              </li>
+              <li>
+                <a href="/faq" className={`hover:text-blue-600 ${isCurrentPath('/faq') ? 'font-bold' : ''}`}>
+                  FAQ
+                </a>
+              </li>
             </ul>
           </nav>
           <div className="relative">
