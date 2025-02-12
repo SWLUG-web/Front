@@ -20,6 +20,15 @@ const NoticePage = () => {
 
   const noticesPerPage = 10;
 
+  const handleNoticeTitleClick = () => {
+    setCurrentPage(1);
+    setSearchTerm("");
+    navigate("/notice");
+    window.scrollTo(0, 0);
+    fetchNotices(1, "");
+  };
+
+
   const fetchNotices = async (page, search) => {
     try {
       setError(null);
@@ -105,7 +114,10 @@ const NoticePage = () => {
 
   return (
       <div className="container mx-auto px-4 py-8 bg-white">
-        <h1 className="apply-title text-3xl font-bold text-center mb-6">
+        <h1
+            className="apply-title text-3xl font-bold text-center mb-6 cursor-pointer hover:text-gray-700"
+            onClick={handleNoticeTitleClick}
+        >
           공지사항
         </h1>
 
@@ -149,15 +161,15 @@ const NoticePage = () => {
 
         <div className="write-button-container">
           {isAuthenticated && allowedRoles.includes(userRole) && (
-          <button
-              className="write-button"
-              onClick={() => {
-                goToWritePage("notice")
-                window.scrollTo(0, 0);
-              }}
-          >
-            글쓰기
-          </button>
+              <button
+                  className="write-button"
+                  onClick={() => {
+                    goToWritePage("notice")
+                    window.scrollTo(0, 0);
+                  }}
+              >
+                글쓰기
+              </button>
           )}
         </div>
 

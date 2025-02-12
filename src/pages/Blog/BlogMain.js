@@ -54,11 +54,22 @@ const BlogMain = () => {
         }
     };
 
+
+    const handleBlogTitleClick = () => {
+        setCurrentPage(1);
+        setSelectedCategory("");
+        setSelectedTag("");
+        setSearchTerm("");
+        navigate("/blog");
+        window.scrollTo(0, 0);
+        fetchBlogs(1, "", "");
+    };
+
     useEffect(() => {
         const setAllTags = async () => {
             try {
-                const allTags = await getAllTags(); // ✅ 비동기 호출이므로 await 추가
-                setTags(allTags); // ✅ allTags.data가 정상적으로 들어오도록 변경
+                const allTags = await getAllTags();
+                setTags(allTags);
             } catch (error) {
                 setError('모든 태그를 불러오는데 실패했습니다.');
                 console.error("Error fetching tags:", error);
@@ -66,11 +77,16 @@ const BlogMain = () => {
         };
 
         setAllTags();
+        fetchBlogs(currentPage, searchTerm, selectedTag);
+    }, [currentPage, selectedCategory]);
 
-        if (!selectedTag) {
-            fetchBlogs(currentPage, searchTerm);
-        }
-    }, [currentPage]);
+    const categoryMapping = {
+        "0": "공지사항",
+        "1": "성과",
+        "2": "정보",
+        "3": "후기",
+        "4": "활동",
+    };
 
 
     useEffect(() => {
@@ -201,8 +217,12 @@ const BlogMain = () => {
 
     return (
         <div className="container mx-auto px-4 py-8 bg-white">
-            <h1 className="apply-title font-bold text-center mb-6">Blog</h1>
-
+            <h1
+                className="apply-title font-bold text-center mb-6 cursor-pointer hover:text-gray-700"
+                onClick={handleBlogTitleClick}
+            >
+                Blog
+            </h1>
             {/* 검색 */}
             <div className="flex justify-end mb-6">
                 <div className="search-bar flex items-center border rounded-full shadow-sm px-4 py-2">
