@@ -19,6 +19,11 @@ const BlogPost = () => {
         window.scrollTo(0,0);
     }, [boardId]);
 
+    const handleCategoryClick = (category) => {
+        navigate(`/blog?category=${category}`);
+        window.scrollTo(0, 0);
+    };
+
     const handleNavigate = (id) => {
         navigate(`/board/${id}`);
         window.scrollTo(0, 0);
@@ -113,7 +118,16 @@ const BlogPost = () => {
 
     return (
         <div className="blog-post">
-            <div className="post-category">{categoryMapping[post.category]}</div>
+            <div
+                className="post-category"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleCategoryClick(post.category);
+                }}
+                style={{cursor: 'pointer'}}
+            >
+                {categoryMapping[post.category]}
+            </div>
             <h1>{post.title}</h1>
             <div className="post-info">
                 <div className="metadata">
