@@ -27,7 +27,7 @@ const ApplyPage = () => {
                 {isApplyPeriod ? (
                     <>
                         <p className="apply-description text-center">
-                            서울여자대학교 정보보호학과 소학회 SWLUG에서 2n기 신입학회를 모집합니다.
+                            서울여자대학교 정보보호학과 소학회 SWLUG에서 29기 신입학회를 모집합니다.
                         </p>
                         <p className="apply-period text-center text-lg">모집 기간: ~ 2025.03.07 (금)</p>
                         <div className="apply-buttons">
