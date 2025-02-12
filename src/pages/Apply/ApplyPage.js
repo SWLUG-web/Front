@@ -126,7 +126,7 @@ const ApplyPage = () => {
                                                 <div className="curriculum-card">
                                                     <h3 className="card-title">기타 활동</h3>
                                                     <p className="card-description">• 선후배간 활발한 교류, MT</p>
-                                                    <p className="card-description">• 1학기 소학회 중간 세미나 (1학년 및 2학년 신입 가능
+                                                    <p className="card-description">• 1학기 소학회 중간 세미나 (1학년 및 2학년 신입 기수
                                                         대상)</p>
                                                     <p className="card-description">• 소학회 내부 CTF</p>
                                                     <p className="card-description">• 교내외 연합세미나 진행 및 프로젝트 발표</p>
