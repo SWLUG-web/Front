@@ -414,7 +414,7 @@ function ResetPassword() {
                   disabled={!emailVerified}
               />
               {passwordMatch && (
-                  <img src="/pwCheck.png" alt="check" className="check-icon" />
+                  <img src="/pwCheck.png" alt="check" className="check-icon"/>
               )}
             </div>
           </div>
@@ -436,8 +436,8 @@ function ResetPassword() {
             </button>
           </div>
           {success.submit && (
-              <div className="message-container">
-                <div className="success-message">{success.submit}</div>
+              <div className="submit-message-container">
+                <div className="submit-success-message">{success.submit}</div>
               </div>
           )}
         </div>
