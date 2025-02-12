@@ -54,9 +54,9 @@ const ApplyPage = () => {
                             <div className="divider mx-auto"></div>
                             <h2 className="info-title text-2xl font-semibold text-center mt-8">지원 일정</h2>
                             <ul className="info-list text-center">
-                                <li><b>(1차) 서류 모집 기간: 2025년 2월 24일 (월) - 3월 7일 (금)</b></li>
-                                <li>서류 합격자 발표: 2025년 3월 9일 (일)</li>
-                                <li><b>(2차) 면접: 2025년 3월 13일 (목) - 3월 14일 (금)</b></li>
+                                <li>(1차) 서류 모집 기간: 2025년 2월 24일 (월) - 3월 7일 (금)</li>
+                                <li>서류 합격자 발표: 2025년 3월 9일 (일)</li><br/>
+                                <li>(2차) 면접: 2025년 3월 13일 (목) - 3월 14일 (금)</li>
                                 <li>최종 합격자 발표: 2024년 3월 15일 (토)</li>
                             </ul>
                             <div className="divider"></div>
